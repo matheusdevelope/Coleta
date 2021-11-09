@@ -1,0 +1,13 @@
+Login com email e senha criados no retaguarda.
+pagina inicial com coletas com envio pendente para retaguarda
+(posso abrir uma stack(ou modal) com os detalhes dessa coleta)
+botão para criar nova coleta (abre stack com inputs)
+conforme vai inserindo, uma lista abaixo é gerada com os itens incluidos
+nessa tela vai ter um botão para voltar e uma para salvar a coleta.
+
+na tela inicial uma coleta pode ser editada, ter seus itens excluidos ou ser totalmente excluida.
+
+no longpress sobre a coleta na tela inicial, terá caixa de seleção para marcar as coletas que serão enviadas para o retaguarda, com um botão de ok para envio.
+
+após ser enviada, a coleta sai da tela inicial para a tela de COLETAS ENVIADAS
+ essa tem a  lista das coletas enviadas com o status de envio baseado no retaguarda
