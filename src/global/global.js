@@ -4,6 +4,8 @@ const Global = {
     blue: 'rgba(28, 93, 153, 1)',
     bluegreen: 'rgba(99, 159, 171, 1)',
     bluelight: 'rgba(187, 205, 229, 1)',
+    bluelight2:'#cfe4fa',
+    bluelight3:'#d9eafc',
 
     textColor: 'rgba(34, 34, 34, 1)',
     fontSize:'18px',
@@ -21,6 +23,7 @@ const Global = {
     iconSave:'save',
     iconBack:'arrow-left',
     iconSearchBox:'search',
+    colorPlaceholder:'rgba(34, 34, 34, 1)'
     
 }
 

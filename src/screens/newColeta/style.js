@@ -11,7 +11,6 @@ export const Text = styled.Text`
 font-size: ${Global.fontSize};
 color: ${Global.blue};
 `
-export const Input = styled.TextInput`
-font-size: ${Global.fontSize};
-color: ${Global.blue};
+export const Line = styled.View`
+flex-direction:row;
 `

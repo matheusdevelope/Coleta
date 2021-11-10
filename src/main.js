@@ -5,6 +5,7 @@ import Home from './screens/home/home'
  import Icon from 'react-native-vector-icons/FontAwesome';
 import NewColeta from './screens/newColeta/newColeta';
 import GText from './global/texts';
+import { Login } from './screens/teste/teste';
 // import ColetasEnviadas from './screens/ColetasEnviadas';
 // import Configuration from './screens/configuration';
 // import EnviarColetas from './screens/EnviarColetas'
@@ -37,7 +38,7 @@ export default ({ navigation }) => {
     const HomeDrawer= ()=>{
       return (
           
-          <Drawer.Navigator initialRouteName={GText.MyColetas}
+          <Drawer.Navigator initialRouteName={GText.NewColeta}
           drawerContentOptions={{
            // activeTintColor: '#e91e63',
             labelStyle:{fontSize:20},
