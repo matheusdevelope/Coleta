@@ -7,7 +7,10 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "adb": "adb tcpip 5555 && adb connect localhost:5555",
+    "go": "yarn android --deviceId=localhost:5555"
+
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.5",

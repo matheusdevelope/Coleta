@@ -1,13 +1,20 @@
-import React from 'react';
-import {
-  Text,
-  View,
-} from 'react-native';
-import Home from './src/screens/home/home'
+  
+import 'react-native-gesture-handler';
+import * as React from 'react';
+ import {LogBox } from 'react-native';
+ LogBox.ignoreLogs(['Reanimated 2']);
+
+import { NavigationContainer } from '@react-navigation/native';
+import Main from './src/main'
+import Home from './src/screens/home/home';
+
+
 export default function App() {
   return (
-    <View>
-      <Home/>
-    </View>
-  )
+       <NavigationContainer>
+           <Main>
+          </Main> 
+         
+        </NavigationContainer>
+  );
 }

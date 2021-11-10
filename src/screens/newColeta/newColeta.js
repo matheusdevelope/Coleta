@@ -1,32 +1,30 @@
 import { useNavigation } from "@react-navigation/core";
 import React from "react";
 import Header from "../../componentes/header/header.js";
-import SearchBox from "../../componentes/searchBox/searchBox.js";
 import Global from "../../global/global.js";
 import GText from "../../global/texts.js";
+import InputAreaNewColeta from "./inputsArea.js";
 import {Container} from './style.js'
 
-function Home(){
+function NewColeta(){
     const navigation = useNavigation()
 
-    function ButtonSearch(data) {
-        console.log(data)
-    }
     function ButtonHeaderRight(data) {
-        navigation.navigate(GText.NewColeta)
+        //save changes and includes the go to :
+        navigation.navigate(GText.MyColetas)
     }
     function ButtonHeaderLeft(data) {
-        navigation.openDrawer()
+        //ask if really want exit, the data will be lost, then go back
+        navigation.goBack()
     }
     
     return(
         <Container>
-            <Header title={GText.title} name='navicon' name2='plus-square'
+            <Header title={GText.NewColeta} name={Global.iconBack} name2={Global.iconSave}
             size={Global.sizeIconHeader} color={Global.colorIconHeader}
             onClickLeft={()=>{ButtonHeaderLeft()}} onClickRight={()=>{ButtonHeaderRight()}}/>
-            <SearchBox placeholder={GText.SearchBox} name={Global.iconSearchBox} 
-            size={Global.sizeIconSearch} color={Global.colorIconSearch} onClick={ButtonSearch}/>
+            <InputAreaNewColeta/>
         </Container>
     )
 }
-export default Home
+export default NewColeta
