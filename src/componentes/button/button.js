@@ -6,7 +6,7 @@ import {Container} from './style'
 function Button({name, size, color, onClick}) {
     return(
         <Container onPress={()=>{onClick()}}>
-            <Icon name={name} size={size} color={color}/>
+            <Icon name='plus' size={size} color={color}/>
         </Container>
     )
 }
