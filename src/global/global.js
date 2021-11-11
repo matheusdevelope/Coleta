@@ -18,11 +18,15 @@ const Global = {
 
     sizeIconHeader:30,
     sizeIconSearch:20,
+    SizeIconSelectInput:30,
+
     colorIconHeader:'rgba(255, 255, 255, 1)',
     colorIconSearch:'rgba(34, 34, 34, 1)',
+    ColorIconSelectInput:'rgba(34, 34, 34, 1)',
     iconSave:'save',
     iconBack:'arrow-left',
     iconSearchBox:'search',
+    IconSelectInput:'angle-down',
     colorPlaceholder:'rgba(34, 34, 34, 1)'
     
 }

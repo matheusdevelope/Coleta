@@ -7,7 +7,7 @@ const GText = {
     Send: 'Enviar',
     Cancel: 'Cancelar',
     SearchBox: 'Nome Cliente',
-
+    Include: 'Incluir',
 
 
 

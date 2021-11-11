@@ -1,53 +1,58 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button, StyleSheet } from 'react-native';
+
+import ButtonC from '../../componentes/button/button';
 import { Form } from '@unform/mobile';
 import Input from '../../componentes/inputForm/input';
-import { Line } from './style';
+import { Line, LineButton } from './style';
 import GText from '../../global/texts';
 import Global from '../../global/global';
 
 export default function SignIn() {
+    const [input, setInput] = useState('')
+
     const formRef = useRef(null);
     function handleSubmit(data) {
         console.log(data);
         // { email: 'test@example.com', password: '123456' }
     }
+
+    function ButtonsSelect() {
+
+    }
+    console.log('inputArea')
     return (
         <Form ref={formRef} onSubmit={handleSubmit}>
             <Input name={GText.nNameClient} placeholder={GText.pNameClient} style={styles.input} />
             <Line>
                 <Input name={GText.nServicesExec} placeholder={GText.pServicesExec} style={styles.inputDivided} />
-
             </Line>
             <Line>
                 <Input name={GText.nDimension} placeholder={GText.pDimension} style={styles.inputDivided} />
-                <Input name={GText.nSerieNumber} placeholder={GText.pSerieNumber} style={styles.inputDivided} />
+                <Input name={GText.nSerieNumber} placeholder={GText.pSerieNumber} keyboardType="numeric" style={styles.inputDivided} />
                 <Input name={GText.nDesign} placeholder={GText.pDesign} style={styles.inputDivided} />
 
             </Line>
             <Line>
                 <Input name={GText.nBrand} placeholder={GText.pBrand} style={styles.inputDivided} />
                 <Input name={GText.nBoard} placeholder={GText.pBoard} style={styles.inputDivided} />
-                <Input name={GText.nValue} placeholder={GText.pValue} style={styles.inputDivided} />
+                <Input name={GText.nValue} placeholder={GText.pValue} style={styles.inputDivided} keyboardType="numeric" />
             </Line>
             <Input name={GText.nObservation} placeholder={GText.pObservation} style={styles.input} />
 
-            <Button title="Sign in" onPress={() => formRef.current.submitForm()} />
+
+
+            {/* <LineButton>
+                <Input name={GText.nWarranty} placeholder={GText.pWarranty} />
+                <ButtonC name={Global.IconSelectInput} size={Global.SizeIconSelectInput}
+                    color={Global.ColorIconSelectInput} />
+            </LineButton> */}
+
+
+            <Button title={GText.Include} onPress={() => formRef.current.submitForm()} />
         </Form>
     );
 }
-// placeholder = 'Cliente:'
-// placeholder = 'CPF/CNPJ'
-// placeholder = 'Celular:'
-// placeholder = 'Serviço:'
-// placeholder = 'Bitola:'
-// placeholder = 'Serie:'
-// placeholder = 'Desenho:'
-// placeholder = 'Marca:'
-// placeholder = 'Placa:'
-// placeholder = '00,00'
-// placeholder = 'Observação:'
-
 
 export const styles = StyleSheet.create({
     inputDivided: {

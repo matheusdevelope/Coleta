@@ -4,6 +4,7 @@ import Header from "../../componentes/header/header.js";
 import Global from "../../global/global.js";
 import GText from "../../global/texts.js";
 import InputAreaNewColeta from "./inputsArea.js";
+import InputSelect from "./inputSelect.js";
 import {Container} from './style.js'
 
 function NewColeta(){
@@ -17,13 +18,24 @@ function NewColeta(){
         //ask if really want exit, the data will be lost, then go back
         navigation.goBack()
     }
-    
+    function handleChangeSelect(data) {
+        console.log('data')
+    }
+    const items=[
+        { label: "JavaScript", value: "JavaScript" },
+        { label: "TypeStript", value: "TypeStript" },
+        { label: "Python", value: "Python" },
+        { label: "Java", value: "Java" },
+        { label: "C++", value: "C++" },
+        { label: "C", value: "C" },
+    ]
     return(
         <Container>
             <Header title={GText.NewColeta} name={Global.iconBack} name2={Global.iconSave}
             size={Global.sizeIconHeader} color={Global.colorIconHeader}
             onClickLeft={()=>{ButtonHeaderLeft()}} onClickRight={()=>{ButtonHeaderRight()}}/>
             <InputAreaNewColeta/>
+            <InputSelect options={items} onChange={handleChangeSelect} placeholder={GText.pWarranty}/>
         </Container>
     )
 }

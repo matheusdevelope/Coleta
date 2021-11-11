@@ -33,7 +33,6 @@ function Input({ name, label, onChangeText, ...rest }) {
       },
     });
   }, [fieldName, registerField]);
-
   const handleChangeText = useCallback(
     text => {
       if (inputRef.current) inputRef.current.value = text;
@@ -49,6 +48,7 @@ function Input({ name, label, onChangeText, ...rest }) {
         onChangeText={handleChangeText}
         defaultValue={defaultValue}
         placeholderTextColor={Global.colorPlaceholder}
+        autoCorrect={false}
         {...rest}
       />
     </>
