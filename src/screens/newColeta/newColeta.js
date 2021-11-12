@@ -4,7 +4,6 @@ import Header from "../../componentes/header/header.js";
 import Global from "../../global/global.js";
 import GText from "../../global/texts.js";
 import InputAreaNewColeta from "./inputsArea.js";
-import InputSelect from "./inputSelect.js";
 import {Container} from './style.js'
 
 function NewColeta(){
@@ -35,8 +34,7 @@ function NewColeta(){
             size={Global.sizeIconHeader} color={Global.colorIconHeader}
             onClickLeft={()=>{ButtonHeaderLeft()}} onClickRight={()=>{ButtonHeaderRight()}}/>
             <InputAreaNewColeta/>
-            <InputSelect options={items} onChange={handleChangeSelect} placeholder={GText.pWarranty}/>
-        </Container>
+         </Container>
     )
 }
 export default NewColeta

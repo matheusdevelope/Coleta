@@ -9,24 +9,32 @@ const Global = {
 
     textColor: 'rgba(34, 34, 34, 1)',
     fontSize:'18px',
+    fontSize_n:18,
     fontSizeTitle:'30px',
     padding:'8px',
     margin:'8px',
     width:'8px',
     borderRadius:'8px',
     widthButtonHeader:'50px',
-
+    marginInputs:'4px',
+    marginInputs_n:8,
     sizeIconHeader:30,
     sizeIconSearch:20,
     SizeIconSelectInput:30,
-
+    paddingHeightInputs:'4px',
+    paddingHeightInputs_N:4,
+    backgroundInputs:'#FFF',
+    MaxHeigtOptionsSelect:'180px',
     colorIconHeader:'rgba(255, 255, 255, 1)',
     colorIconSearch:'rgba(34, 34, 34, 1)',
     ColorIconSelectInput:'rgba(34, 34, 34, 1)',
     iconSave:'save',
     iconBack:'arrow-left',
     iconSearchBox:'search',
-    IconSelectInput:'angle-down',
+    IconSelectInputClose:'angle-down',
+    IconSelectInputOpen:'angle-up',
+    IconAdd:'plus',
+    sizeiconAdd:40,
     colorPlaceholder:'rgba(34, 34, 34, 1)'
     
 }

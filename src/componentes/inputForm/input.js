@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useCallback } from 'react';
-import { Text, TextInput, StyleSheet } from 'react-native';
+import { Text, TextInput } from 'react-native';
 import { useField } from '@unform/core';
 import Global from '../../global/global';
+
 function Input({ name, label, onChangeText, ...rest }) {
   const inputRef = useRef(null);
   const { fieldName, registerField, defaultValue, error } = useField(name);

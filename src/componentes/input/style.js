@@ -11,7 +11,7 @@ border-radius: ${Global.borderRadius};
 export const Input = styled.TextInput`
 font-size: ${Global.fontSize};
 color: ${Global.black};
-padding-left:${Global.padding};
-padding-right:${Global.padding};
+padding:${Global.paddingHeightInputs} ${Global.padding};
+
 
 `

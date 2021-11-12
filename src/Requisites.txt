@@ -11,3 +11,11 @@ no longpress sobre a coleta na tela inicial, terá caixa de seleção para marca
 
 após ser enviada, a coleta sai da tela inicial para a tela de COLETAS ENVIADAS
  essa tem a  lista das coletas enviadas com o status de envio baseado no retaguarda
+
+
+
+
+
+
+
+rodar na primeira instalação no linux:   chmod 755 android/gradlew 
