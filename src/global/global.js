@@ -1,3 +1,5 @@
+import { Dimensions} from 'react-native'
+const { width, height } = Dimensions.get('window')
 const Global = {
     black: 'rgba(34, 34, 34, 1)',
     white: 'rgba(255, 255, 255, 1)',
@@ -6,15 +8,19 @@ const Global = {
     bluelight: 'rgba(187, 205, 229, 1)',
     bluelight2:'#cfe4fa',
     bluelight3:'#d9eafc',
-
+    backgroundModal:'rgba(34, 34, 34, 0.3)',
     textColor: 'rgba(34, 34, 34, 1)',
+    red:'rgba(255, 0, 0, 0.5)',
     fontSize:'18px',
     fontSize_n:18,
     fontSizeTitle:'30px',
+    fontSizeTitle_n:30,
     padding:'8px',
+    padding_n:8,
     margin:'5px',
     width:'8px',
     borderRadius:'8px',
+    borderRadius_n:8,
     widthButtonHeader:'50px',
     marginInputs:'4px',
     marginInputs_n:5,
@@ -29,14 +35,23 @@ const Global = {
     colorIconSearch:'rgba(34, 34, 34, 1)',
     ColorIconSelectInput:'rgba(34, 34, 34, 1)',
     iconSave:'save',
-    iconBack:'arrow-left',
+    iconBack:'angle-left',
     iconSearchBox:'search',
     IconSelectInputClose:'angle-down',
     IconSelectInputOpen:'angle-up',
     IconAdd:'plus',
+    IconNew:'plus-square',
+    IconTrash:'trash',
+IconEdit:'edit',
+IconSync:'refresh',
+IconMenu:'navicon',
     sizeiconAdd:40,
-    colorPlaceholder:'rgba(34, 34, 34, 1)'
-    
+    colorPlaceholder:'rgba(34, 34, 34, 1)',
+    MaxHeigtBoxItemColeta:'70',
+    MaxHeigtBoxColeta:'80',
+    colorObservation:'rgba(99, 159, 171, 1)',
+    width: width,
+    colorButtonDelete:'rgba(28, 93, 153, 1)',
 }
 
 export default Global

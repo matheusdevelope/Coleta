@@ -6,3 +6,7 @@ export const Container = styled.TouchableOpacity`
 align-items: center;
 justify-content: center;
 `
+export const Text = styled.Text`
+font-size: ${Global.fontSize};
+color:${Global.textColor}
+`

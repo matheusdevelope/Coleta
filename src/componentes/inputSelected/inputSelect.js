@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
-import { TextInput, ScrollView, StyleSheet,TouchableNativeFeedback } from 'react-native';
+import { TextInput, ScrollView, StyleSheet, TouchableNativeFeedback } from 'react-native';
 import { useField } from '@unform/core';
 import Global from '../../global/global';
 import Button from '../button/button';
@@ -86,14 +86,12 @@ function InputSelect({ name, onChangeText, options, placeholder, editable, ...re
                     color={Global.ColorIconSelectInput} onClick={() => { handleOptions('button') }}
                 />
             </LineButton>
-             <ViewSelectOptions style={[styles.style, { display: active ? 'flex' : 'none' }]} 
-             background={TouchableNativeFeedback.Ripple('#00000040', false)}
-        useForeground={true}> 
-            {/* <ViewSelectOptions style={{ display: active ? 'flex' : 'none' }}> */}
-                <ScrollView overflow='visible' style={[styles.style1,{backgroundColor:'#7584'}]}  >
+            <ViewSelectOptions style={{ display: active ? 'flex' : 'none' }}            >
+                {/* <ViewSelectOptions style={{ display: active ? 'flex' : 'none' }}> */}
+                <ScrollView >
                     {optionsfiltered.map((data, key) => {
                         return (
-                            <ButtonOptions key={key} onPress={() => { handleSelected(data.value) }} style={[styles.style2,{backgroundColor:'#7584'}]} >
+                            <ButtonOptions key={key} onPress={() => { handleSelected(data.value) }}>
                                 <Text >{data.label}</Text>
                             </ButtonOptions>
                         )
@@ -106,84 +104,84 @@ function InputSelect({ name, onChangeText, options, placeholder, editable, ...re
 }
 export default InputSelect;
 
- export const styles = StyleSheet.create({
-//     style: {
-//         maxHeight: Global.MaxHeigtOptionsSelect,
-//         borderRadius: 4,//Global.borderRadius,
-//         backgroundColor: Global.white,
-//          //margin:0  1  0 Global.marginInputs,
-//          position: 'absolute',
-//          bottom: -(Global.MaxHeigtOptionsSelect + 2),//-Global.MaxHeigtOptionsSelect,
-//          right: 4,
-//          left: 0,
-//          zIndex: 4,
-//         elevation: 5,
-//     }
-style:{
-    shadowColor: 'gery',
-    backgroundColor: 'white',
-    padding: 18,
-    overflow: Platform.OS === 'android' ? 'hidden' : 'visible',
-
-    // iOS
-    shadowOffset: {width: 0, height: 2},
-    shadowRadius: 18,
-    shadowOpacity: 0.2,
-    borderRadius: 12,
-
-    // Android
-    elevation: 8,
-    position: 'absolute',
-//          bottom: -(Global.MaxHeigtOptionsSelect + 2),//-Global.MaxHeigtOptionsSelect,
-//          right: 4,
-//          left: 0,
-//          zIndex: 4,
-
-   
-  },
-  style1:{
-    shadowColor: 'gery',
-    backgroundColor: 'white',
-    padding: 18,
-    overflow: Platform.OS === 'android' ? 'hidden' : 'visible',
-
-    // iOS
-    shadowOffset: {width: 0, height: 2},
-    shadowRadius: 18,
-    shadowOpacity: 0.2,
-    borderRadius: 12,
-
-    // Android
-    elevation: 10,
-    position: 'absolute',
-//          bottom: -(Global.MaxHeigtOptionsSelect + 2),//-Global.MaxHeigtOptionsSelect,
-//          right: 4,
-//          left: 0,
-//          zIndex: 4,
-
-   
-  }
-  ,
-  style2:{
-    shadowColor: 'gery',
-    backgroundColor: 'white',
-    padding: 18,
-    overflow: Platform.OS === 'android' ? 'hidden' : 'visible',
-
-    // iOS
-    shadowOffset: {width: 0, height: 2},
-    shadowRadius: 18,
-    shadowOpacity: 0.2,
-    borderRadius: 12,
-
-    // Android
-    elevation: 12,
-    position: 'absolute',
+export const styles = StyleSheet.create({
+    //     style: {
+    //         maxHeight: Global.MaxHeigtOptionsSelect,
+    //         borderRadius: 4,//Global.borderRadius,
+    //         backgroundColor: Global.white,
+    //          //margin:0  1  0 Global.marginInputs,
+    //          position: 'absolute',
     //          bottom: -(Global.MaxHeigtOptionsSelect + 2),//-Global.MaxHeigtOptionsSelect,
     //          right: 4,
     //          left: 0,
     //          zIndex: 4,
-   
-  }
- });
+    //         elevation: 5,
+    //     }
+    style: {
+        shadowColor: 'gery',
+        backgroundColor: 'white',
+        padding: 18,
+        overflow: Platform.OS === 'android' ? 'hidden' : 'visible',
+
+        // iOS
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 18,
+        shadowOpacity: 0.2,
+        borderRadius: 12,
+
+        // Android
+        elevation: 8,
+        position: 'absolute',
+        //          bottom: -(Global.MaxHeigtOptionsSelect + 2),//-Global.MaxHeigtOptionsSelect,
+        //          right: 4,
+        //          left: 0,
+        //          zIndex: 4,
+
+
+    },
+    style1: {
+        shadowColor: 'gery',
+        backgroundColor: 'white',
+        padding: 18,
+        overflow: Platform.OS === 'android' ? 'hidden' : 'visible',
+
+        // iOS
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 18,
+        shadowOpacity: 0.2,
+        borderRadius: 12,
+
+        // Android
+        elevation: 10,
+        position: 'absolute',
+        //          bottom: -(Global.MaxHeigtOptionsSelect + 2),//-Global.MaxHeigtOptionsSelect,
+        //          right: 4,
+        //          left: 0,
+        //          zIndex: 4,
+
+
+    }
+    ,
+    style2: {
+        shadowColor: 'gery',
+        backgroundColor: 'white',
+        padding: 18,
+        overflow: Platform.OS === 'android' ? 'hidden' : 'visible',
+
+        // iOS
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 18,
+        shadowOpacity: 0.2,
+        borderRadius: 12,
+
+        // Android
+        elevation: 12,
+        position: 'absolute',
+        //          bottom: -(Global.MaxHeigtOptionsSelect + 2),//-Global.MaxHeigtOptionsSelect,
+        //          right: 4,
+        //          left: 0,
+        //          zIndex: 4,
+
+    }
+});
 
