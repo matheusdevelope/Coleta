@@ -6,6 +6,7 @@ import Home from './screens/home/home'
 import NewColeta from './screens/newColeta/newColeta';
 import GText from './global/texts';
 import { Login } from './screens/teste/teste';
+import Dropdown2 from './componentes/demo2'
 // import ColetasEnviadas from './screens/ColetasEnviadas';
 // import Configuration from './screens/configuration';
 // import EnviarColetas from './screens/EnviarColetas'

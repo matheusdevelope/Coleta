@@ -2,7 +2,9 @@ import styled from 'styled-components/native'
 import Global from '../../global/global'
 
 export const Container = styled.SafeAreaView`
+flex: 1;
 `
+
 export const Line = styled.View`
 flex-direction:row;
 width: auto;

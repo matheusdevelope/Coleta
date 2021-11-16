@@ -3,7 +3,7 @@ import { Text, TextInput } from 'react-native';
 import { useField } from '@unform/core';
 import Global from '../../global/global';
 
-function Input({ name, label, onChangeText, ...rest }) {
+function Input({ name, label, onChangeText, expansive,...rest }) {
   const inputRef = useRef(null);
   const { fieldName, registerField, defaultValue, error } = useField(name);
   useEffect(() => {
