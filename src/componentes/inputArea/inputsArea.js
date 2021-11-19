@@ -7,13 +7,6 @@ import Global from '../../global/global';
 import InputSelect from '../inputSelected/inputSelect.js';
 import Button from '../button/button';
 import { Line } from './style'
-import Itens from '../../services/SQLite/tables/Itens'
-import Clients from '../../services/SQLite/tables/clients'
-import Marcas from '../../services/SQLite/tables/brands'
-import Perfil from '../../services/SQLite/tables/profile'
-import Empresa from '../../services/SQLite/tables/company'
-import Filial from '../../services/SQLite/tables/branch'
-import { Clientes, Coletas } from '../../../DadosOffline/Coletas Lista';
 
 export default function InputArea({ itens }) {
 
@@ -23,43 +16,39 @@ export default function InputArea({ itens }) {
     // { email: 'test@example.com', password: '123456' }
   }
 
-  // useEffect(()=>{
-  //   DB.find(401)
-  //   .then((e)=>{
-  //     formRef.current.setData(e[0])
-  //     console.log(e)
-  //   })
-  //   .catch(e=>console.log(e))
-
-  // },[])
-
-  // async function CarregarBase(params) {
-  //   let codcli = 0
-  //     const d = Object.keys(Coletas).length
-  //      for (let index = 0; index < d; index++) {
-  //       // console.log(Clientes[index])
-  //       // codcli = Clientes[index].CodCliente
-  //       // Clientes[index].CodCliente !== codcli
-  //       // ?
-  //       console.log('for: ',Coletas[index].IdMobile)
-  //       await Itens.create(Coletas[index])
-       
-  //       // :
-  //       // console.log(Clientes[index])
-  //      }
-  // // console.log(Coletas[4])
-  
-  // }
-  // CarregarBase()
-   Itens.all()
-  // console.log(Coletas[4].IdMobile)
-
+  const options = {
+    clients:{
+      name:GText.infoDB.Table.Brands.name,
+      fieldvalue:GText.infoDB.Table.Brands.fields.id,
+      fieldlabel:GText.infoDB.Table.Brands.fields.name
+    },
+    brands:{
+      name:GText.infoDB.Table.Brands.name,
+      fieldvalue:GText.infoDB.Table.Brands.fields.id,
+      fieldlabel:GText.infoDB.Table.Brands.fields.name
+    },
+    branch:{
+      name:GText.infoDB.Table.Branch.name,
+      fieldvalue:GText.infoDB.Table.Branch.fields.id,
+      fieldlabel:GText.infoDB.Table.Branch.fields.name
+    },
+    situation:{
+      name:GText.infoDB.Table.Situation.name,
+      fieldvalue:GText.infoDB.Table.Situation.fields.id,
+      fieldlabel:GText.infoDB.Table.Situation.fields.name
+    },
+    warranty:{
+      name:GText.infoDB.Table.Branch.name,
+      fieldvalue:GText.infoDB.Table.Branch.fields.id,
+      fieldlabel:GText.infoDB.Table.Branch.fields.name
+    }
+  }
 
   return (
 
     <Form ref={formRef} onSubmit={handleSubmit} >
       <Line>
-        <InputSelect options={itens} name={GText.infoInputs.nNameClient} placeholder={GText.infoInputs.pNameClient} editable />
+        <InputSelect options={options.clients} name={GText.infoInputs.nNameClient} placeholder={GText.infoInputs.pNameClient} editable />
       </Line>
 
       <Line>
@@ -72,16 +61,16 @@ export default function InputArea({ itens }) {
 
       </Line>
       <Line>
-        <InputSelect options={itens} name={GText.infoInputs.nBrand} placeholder={GText.infoInputs.pBrand} editable />
+        <InputSelect options={options.brands} name={GText.infoInputs.nBrand} placeholder={GText.infoInputs.pBrand} editable />
         <Input name={GText.infoInputs.nBoard} placeholder={GText.infoInputs.pBoard} style={styles.inputDivided} />
         <Input name={GText.infoInputs.nValue} placeholder={GText.infoInputs.pValue} style={styles.inputDivided} keyboardType="numeric" />
       </Line>
       <Input name={GText.infoInputs.nObservation} placeholder={GText.infoInputs.pObservation} style={styles.input} />
 
       <Line>
-        <InputSelect name={GText.infoInputs.nWarranty} options={itens} placeholder={GText.infoInputs.pWarranty} />
-        <InputSelect name={GText.infoInputs.nCodBranch} options={itens} placeholder={GText.infoInputs.pCodBranch} />
-        <InputSelect name={GText.infoInputs.nCodSituation} options={itens} placeholder={GText.infoInputs.pCodSituation} />
+        <InputSelect name={GText.infoInputs.nWarranty} options={options.warranty} placeholder={GText.infoInputs.pWarranty} />
+        <InputSelect name={GText.infoInputs.nCodBranch} options={options.branch} placeholder={GText.infoInputs.pCodBranch} />
+        <InputSelect name={GText.infoInputs.nCodSituation} options={options.situation} placeholder={GText.infoInputs.pCodSituation} />
       </Line>
       {
         fiedlsHide.map((data, key) => {

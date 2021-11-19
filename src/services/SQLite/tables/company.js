@@ -44,7 +44,7 @@ Company()
           ${GText.infoDB.Table.Company.fields.id},
           ${GText.infoDB.Table.Company.fields.name}
         ) 
-        values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+        values (?, ?);`,
         [
           obj[`${GText.infoDB.Table.Company.fields.id}`],
           obj[`${GText.infoDB.Table.Company.fields.name}`]
@@ -201,6 +201,7 @@ const all = () => {
               let item = res.rows.item(i);
               let results = []
               results.push(item);
+              console.log(results)
               resolve(results)  //return de object when the Promisse is complete
             }
           }

@@ -1,20 +1,19 @@
 import GText from "../../../global/texts";
 import db from "../SQLiteDatabase";
-
+ 
 /**
  * INICIALIZAÇÃO DA TABELA
  * - Executa sempre, mas só cria a tabela caso não exista (primeira execução)
  */
 
-  function Branch() {
+  function Branch2() {
     db.transaction((tx) => {
       tx.executeSql(
         `CREATE TABLE IF NOT EXISTS ${GText.infoDB.Table.Branch.name} 
       (
         ${GText.infoDB.Table.Branch.fields.id} INTEGER PRIMARY KEY,
-        ${GText.infoDB.Table.Branch.fields.name}  TEXT
-        ${GText.infoDB.Table.Branch.fields.type}  TEXT
-
+        ${GText.infoDB.Table.Branch.fields.name}  TEXT,
+        ${GText.infoDB.Table.Branch.fields.category} TEXT
     );
       `,
         [],
@@ -27,7 +26,9 @@ import db from "../SQLiteDatabase";
       );
     });
   }
-Branch()
+
+  Branch2()
+
 /**
  * CRIAÇÃO DE UM NOVO REGISTRO
  * - Recebe um objeto;
@@ -36,6 +37,7 @@ Branch()
  *  - Pode retornar erro (reject) caso exista erro no SQL ou nos parâmetros.
  */
  const create = (obj) => {
+  console.log(obj)
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //SQL Comand
@@ -43,22 +45,24 @@ Branch()
         `INSERT INTO ${GText.infoDB.Table.Branch.name} (
           ${GText.infoDB.Table.Branch.fields.id},
           ${GText.infoDB.Table.Branch.fields.name},
-          ${GText.infoDB.Table.Branch.fields.type}
+          ${GText.infoDB.Table.Branch.fields.category}
         ) 
-        values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+        values (?, ?, ?);`,
         [
           obj[`${GText.infoDB.Table.Branch.fields.id}`],
           obj[`${GText.infoDB.Table.Branch.fields.name}`],
-          obj[`${GText.infoDB.Table.Branch.fields.type}`]
+          obj[`${GText.infoDB.Table.Branch.fields.category}`]
         ],
         //generate a object with the result of SQL
         (sqlTxn, res) => {
+          console.log(res)
           let len = res.rows.length;
           if (len > 0) {
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
               let results = []
               results.push(item);
+              console.log(results)
               resolve(results)  //return de object when the Promisse is complete
             }
           }
@@ -85,12 +89,10 @@ const update = (id, obj) => {
       //comando SQL modificável
       tx.executeSql(
         `UPDATE ${GText.infoDB.Table.Branch.name} SET 
-          ${GText.infoDB.Table.Branch.fields.name}=?,
-          ${GText.infoDB.Table.Branch.fields.type}=?
+          ${GText.infoDB.Table.Branch.fields.name}=?
         WHERE ${GText.infoDB.Table.Branch.fields.id}=?;`,
         [
           obj[`${GText.infoDB.Table.Branch.fields.name}`],
-          obj[`${GText.infoDB.Table.Branch.fields.type}`],
           id],
         //generate a object with the result of SQL
         (sqlTxn, res) => {
@@ -133,7 +135,7 @@ const find = (id) => {
           if (len > 0) {
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = []
+              let results = [];
               results.push(item);
               resolve(results)  //return de object when the Promisse is complete
             }
@@ -199,12 +201,15 @@ const all = () => {
         `SELECT * FROM ${GText.infoDB.Table.Branch.name};`,
         [],
         (sqlTxn, res) => {
+          
           let len = res.rows.length;
+          console.log(res)
           if (len > 0) {
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
               let results = []
               results.push(item);
+              console.log(results)
               resolve(results)  //return de object when the Promisse is complete
             }
           }

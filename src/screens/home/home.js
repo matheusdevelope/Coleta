@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/core";
 import React, { useState } from "react";
 import { useRef } from "react";
-import { Coletas } from "../../../DadosOffline/Coletas Lista.js";
+// import { Coletas } from "../../../DadosOffline/Coletas Lista.js";
 import ColetasList from "../../componentes/coletasList/coletasList.js";
 import Header from "../../componentes/header/header.js";
 import ConfirmationModal from "../../componentes/modalConfirmation/modalConfirmation.js";
@@ -14,7 +14,7 @@ function Home() {
     const ModalRef = useRef()
     const [search, setSearch] = useState('')
 
-    const data = Coletas.filter(data => data.NomeCliente.toLowerCase().includes(search.toLowerCase()))
+    const data = []// Coletas.filter(data => data.NomeCliente.toLowerCase().includes(search.toLowerCase()))
 
     function ButtonHeaderRight(data) {
         navigation.navigate(GText.NewColeta)

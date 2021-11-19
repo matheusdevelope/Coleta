@@ -1,20 +1,28 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
-import { TextInput, ScrollView, StyleSheet, TouchableNativeFeedback } from 'react-native';
+import { TextInput, ScrollView, StyleSheet } from 'react-native';
 import { useField } from '@unform/core';
 import Global from '../../global/global';
 import Button from '../button/button';
 import { ButtonOptions, Container, LineButton, Text, ViewSelectOptions } from './style';
+import { GetValuesInputSelect } from '../../services/routesdb';
 
 
 function InputSelect({ name, onChangeText, options, placeholder, editable, ...rest }) {
+    const inputRef = useRef(null);
     const [input, setInput] = useState('')
     const [active, setActive] = useState(false)
+    const [data, setdata] = useState([])
+    const { fieldName, registerField, defaultValue, error } = useField(name);
 
     const optionsfiltered = editable ?
-        options.filter(data => data.value.toLowerCase().includes(input.toLowerCase()))
+        data.filter(data => data.label.toLowerCase().includes(input.toLowerCase()))
         :
-        options
+        data
 
+    async function GetData() {
+        const ret = await GetValuesInputSelect(options)
+        setdata(ret)
+    }
     function handleOptions(data) {
         data == 'button' ?
             setActive(!active)
@@ -24,12 +32,22 @@ function InputSelect({ name, onChangeText, options, placeholder, editable, ...re
                 setActive(true)
     }
     function handleSelected(data) {
-        setInput(data)
-        inputRef.current.value = data
+        setInput(data.label.toString())
+        inputRef.current.value = data.label.toString()
         handleOptions('button')
     }
-    const inputRef = useRef(null);
-    const { fieldName, registerField, defaultValue, error } = useField(name);
+    const handleChangeText = useCallback(
+        text => {
+            if (inputRef.current) inputRef.current.value = text;
+            if (onChangeText) onChangeText(text);
+            setInput(text)
+        },
+        [onChangeText],
+    );
+
+    useEffect(() => {
+        GetData()
+    }, [])   
     useEffect(() => {
         inputRef.current.value = defaultValue;
     }, [defaultValue]);
@@ -58,14 +76,6 @@ function InputSelect({ name, onChangeText, options, placeholder, editable, ...re
             },
         });
     }, [fieldName, registerField]);
-    const handleChangeText = useCallback(
-        text => {
-            if (inputRef.current) inputRef.current.value = text;
-            if (onChangeText) onChangeText(text);
-            setInput(text)
-        },
-        [onChangeText],
-    );
 
     return (
         <Container>
@@ -91,7 +101,7 @@ function InputSelect({ name, onChangeText, options, placeholder, editable, ...re
                 <ScrollView >
                     {optionsfiltered.map((data, key) => {
                         return (
-                            <ButtonOptions key={key} onPress={() => { handleSelected(data.value) }}>
+                            <ButtonOptions key={key} onPress={() => { handleSelected(data) }}>
                                 <Text >{data.label}</Text>
                             </ButtonOptions>
                         )

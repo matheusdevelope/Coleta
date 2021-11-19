@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/core';
 import React from 'react';
-import { Coletas } from '../../../DadosOffline/Coletas Lista';
+// import { Coletas } from '../../../DadosOffline/Coletas Lista';
 import Header from '../../componentes/header/header';
 import ItensList from '../../componentes/itensList/itensList';
 import Global from '../../global/global';
@@ -31,7 +31,7 @@ const Details = ({route}) => {
                     <Text>{GText.money} {data.ValorTotal}</Text>
                 </Line>
             </SubHeader>
-            <ItensList itens={Coletas} />
+            <ItensList itens={[]} />
         </Container>
     )
 }

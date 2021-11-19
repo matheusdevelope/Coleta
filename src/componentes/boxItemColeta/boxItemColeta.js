@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Profile } from '../../../DadosOffline/Coletas Lista';
+// import { Profile } from '../../../DadosOffline/Coletas Lista';
 import Global from '../../global/global';
 import GText from '../../global/texts';
 import Button from '../button/button';
@@ -11,8 +11,9 @@ import { Container, Line, Text, ButtonBox } from './style';
 const BoxItemColeta = ({ data }) => {
     const [toggle, setToggle] = useState(false)
     function getName(data, field) {
-        const ret = Profile.company.branch.find(ob => ob.id = data)
-        return ret[field]
+        // const ret = []// Profile.company.branch.find(ob => ob.id = data)
+        // return ret[field]
+return 'provisorio'
     }
     function handleDelete(data) {
         console.log(data)

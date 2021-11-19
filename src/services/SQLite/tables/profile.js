@@ -52,7 +52,7 @@ import db from "../SQLiteDatabase";
           ${GText.infoDB.Table.Profile.fields.initSequence},
           ${GText.infoDB.Table.Profile.fields.finalSequence}
         ) 
-        values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+        values (?, ?, ?, ?, ?, ?, ?);`,
         [
           obj[`${GText.infoDB.Table.Profile.fields.id}`],
           obj[`${GText.infoDB.Table.Profile.fields.name}`],
@@ -225,6 +225,7 @@ const all = () => {
               let item = res.rows.item(i);
               let results = []
               results.push(item);
+              console.log(results)
               resolve(results)  //return de object when the Promisse is complete
             }
           }

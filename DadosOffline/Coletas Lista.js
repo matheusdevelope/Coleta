@@ -1,47 +1,56 @@
 // import React from "react"
 
-// export const Profile = {
-//         id: 1,
-//         name: 'Matheus',
-//         email:'emersonmatheustu@gmail.com',
-//         codSalesman:17,
-//         company:1,
-//         defaultBranch:null,
-//         initSequence:300000,
-//         finalSequence:400000   
-// }
-// export const company={
-//     id: 1,
-//     name:'Recapadora Sinop'
-// }
-// }
-// export const branch= [
-//     {
-//         id: 1,
-//         name: 'Recapadora',
-//         type: 'Rodoviário'
-//     },
-//     {
-//         id: 2,
-//         name: 'SS Reformas',
-//         type: 'Agricola'
-//     }
-// ]
+ export const Profile = {
+         id: 1,
+         nome: 'Matheus',
+         email:'emersonmatheustu@gmail.com',
+         CodVendedor:17,
+         empresa:1,
+         filialpadrao:null,
+         iniciosequencia:300000,
+         fimsequencia:400000
+ }
+ export const company={
+     CodEmpresa: 1,
+     nome:'Recapadora Sinop'
+ 
+ }
+ export const branch= [
+     {
+         CodFilial: 1,
+         Nome: 'Recapadora',
+         Categoria: 'Rodoviario'
+     },
+     {
+        CodFilial: 2,
+         Nome: 'SS Reformas',
+         Categoria: 'Agricola'
+     }
+ ]
+ export const situation=[
+    {
+        CodSituacao:1,
+        Descricao:'Garantia'
+    },
+    {
+        CodSituacao:2,
+        Descricao:'Cortesia'
+    },
+    
+ ]
+ export const warranty=[
+    {
+        CodGarantia:'S',
+        Descricao:'Com Garantia'
+    },
+    {
+        CodGarantia:'N',
+        Descricao:'Sem Garantia'
+    },
+ ]
 
-// export const branch= [
-//     {
-//         id: 1,
-//         name: 'Recapadora',
-//         type: 'Rodoviário'
-//     },
-//     {
-//         id: 2,
-//         name: 'SS Reformas',
-//         type: 'Agricola'
-//     }
-// ]
 
-// export const Marcas = [{"CodMarca":1,"Nome":"PIRELLI"},{"CodMarca":2,"Nome":"ODYKING"},{"CodMarca":3,"Nome":"KAMA"},{"CodMarca":4,"Nome":"PRESA"},{"CodMarca":5,"Nome":"GOODYEAR"},{"CodMarca":6,"Nome":"MICHELLIN"},{"CodMarca":7,"Nome":"MAGNOM"},{"CodMarca":8,"Nome":"CONTINENTAL"},{"CodMarca":9,"Nome":"BF GOODRICH"},{"CodMarca":10,"Nome":"WESTLAKE"},{"CodMarca":11,"Nome":"DURABLE"},{"CodMarca":12,"Nome":"TRISTAR"},{"CodMarca":13,"Nome":"BRIDGESTONE"},{"CodMarca":14,"Nome":"STEELMARK"},{"CodMarca":15,"Nome":"SUNSET"},{"CodMarca":16,"Nome":"FIRESTONE"},{"CodMarca":17,"Nome":"FATE"},{"CodMarca":18,"Nome":"DUNLOP"},{"CodMarca":19,"Nome":"DOUBLE STAR"},{"CodMarca":20,"Nome":"KELLY"},{"CodMarca":21,"Nome":"DAYTON"},{"CodMarca":22,"Nome":"FORMULA"},{"CodMarca":23,"Nome":"AUSTONE"},{"CodMarca":24,"Nome":"DERUIBO"},{"CodMarca":25,"Nome":"SAILUN"},{"CodMarca":26,"Nome":"X-BRI"},{"CodMarca":27,"Nome":"OTANI"},{"CodMarca":28,"Nome":"ANTEO"},{"CodMarca":29,"Nome":"ECOWAY"},{"CodMarca":30,"Nome":"WEL PLUS"},{"CodMarca":31,"Nome":"NEUPAR"},{"CodMarca":32,"Nome":"VIKRANT"},{"CodMarca":33,"Nome":"GITI"},{"CodMarca":34,"Nome":"IMPORTADO"},{"CodMarca":35,"Nome":"LING LONG"},{"CodMarca":36,"Nome":"APOLLO"},{"CodMarca":37,"Nome":"TRIANGLE"},{"CodMarca":38,"Nome":"FARESTONE"},{"CodMarca":39,"Nome":"CENTELA"},{"CodMarca":40,"Nome":"TORNEL"},{"CodMarca":41,"Nome":"BKT"},{"CodMarca":42,"Nome":"ADVANCE"},{"CodMarca":43,"Nome":"TITAN"},{"CodMarca":44,"Nome":"GENERAL"},{"CodMarca":45,"Nome":"STRADA"},{"CodMarca":46,"Nome":"DRC"},{"CodMarca":47,"Nome":"CNH"}]
+ export const Marcas = [{"CodMarca":1,"Nome":"PIRELLI"},{"CodMarca":2,"Nome":"ODYKING"},{"CodMarca":3,"Nome":"KAMA"},{"CodMarca":4,"Nome":"PRESA"},{"CodMarca":5,"Nome":"GOODYEAR"},{"CodMarca":6,"Nome":"MICHELLIN"},{"CodMarca":7,"Nome":"MAGNOM"},{"CodMarca":8,"Nome":"CONTINENTAL"},{"CodMarca":9,"Nome":"BF GOODRICH"},{"CodMarca":10,"Nome":"WESTLAKE"},{"CodMarca":11,"Nome":"DURABLE"},{"CodMarca":12,"Nome":"TRISTAR"},{"CodMarca":13,"Nome":"BRIDGESTONE"},{"CodMarca":14,"Nome":"STEELMARK"},{"CodMarca":15,"Nome":"SUNSET"},{"CodMarca":16,"Nome":"FIRESTONE"},{"CodMarca":17,"Nome":"FATE"},{"CodMarca":18,"Nome":"DUNLOP"},{"CodMarca":19,"Nome":"DOUBLE STAR"},{"CodMarca":20,"Nome":"KELLY"},{"CodMarca":21,"Nome":"DAYTON"},{"CodMarca":22,"Nome":"FORMULA"},{"CodMarca":23,"Nome":"AUSTONE"},{"CodMarca":24,"Nome":"DERUIBO"},{"CodMarca":25,"Nome":"SAILUN"},{"CodMarca":26,"Nome":"X-BRI"},{"CodMarca":27,"Nome":"OTANI"},{"CodMarca":28,"Nome":"ANTEO"},{"CodMarca":29,"Nome":"ECOWAY"},{"CodMarca":30,"Nome":"WEL PLUS"},{"CodMarca":31,"Nome":"NEUPAR"},{"CodMarca":32,"Nome":"VIKRANT"},{"CodMarca":33,"Nome":"GITI"},{"CodMarca":34,"Nome":"IMPORTADO"},{"CodMarca":35,"Nome":"LING LONG"},{"CodMarca":36,"Nome":"APOLLO"},{"CodMarca":37,"Nome":"TRIANGLE"},{"CodMarca":38,"Nome":"FARESTONE"},{"CodMarca":39,"Nome":"CENTELA"},{"CodMarca":40,"Nome":"TORNEL"},{"CodMarca":41,"Nome":"BKT"},{"CodMarca":42,"Nome":"ADVANCE"},{"CodMarca":43,"Nome":"TITAN"},{"CodMarca":44,"Nome":"GENERAL"},{"CodMarca":45,"Nome":"STRADA"},{"CodMarca":46,"Nome":"DRC"},{"CodMarca":47,"Nome":"CNH"}]
 
 
 

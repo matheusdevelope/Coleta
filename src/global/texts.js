@@ -224,7 +224,7 @@ const GText = {
             Brands: {
                 name: 'Marcas',
                 fields: {
-                    id: 'CodCliente',
+                    id: 'CodMarca',
                     name: 'Nome',
                     fantasyName: 'NomeFantasia',
                     phone: 'Telefone',
@@ -239,7 +239,7 @@ const GText = {
                     name: 'Nome',
                     email: 'Email',
                     company:'CodEmpresa',
-                    defaultBranch:'FilialPadrão',
+                    defaultBranch:'FilialPadrao',
                     initSequence: 'InicioSequenciaColeta',
                     finalSequence: 'FimSequenciaColeta'
                 }
@@ -252,13 +252,31 @@ const GText = {
                 }
             },
             Branch: {
-                name: 'Filial',
+                name: 'Filial3',
                 fields: {
                     id: 'CodFilial',
-                    name: 'Recapadora',
-                    type: 'Rodoviário'
+                    name: 'Nome',
+                    category: 'Categoria',
                 }
             },
+            Situation:{
+                name:'Situacao',
+                typeKey:'INTEGER',
+                fields:{
+                  id:'CodSituacao',
+                name:'Descricao'  
+                }
+                
+            },
+            Warranty:{
+                name:'Garantia',
+                typeKey:'TEXT',
+                fields:{
+                  id:'CodGarantia',
+                name:'Descricao'  
+                }
+                
+            }
     }
 },
 }

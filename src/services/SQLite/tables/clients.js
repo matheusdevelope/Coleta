@@ -38,7 +38,6 @@ Clients()
  *  - Pode retornar erro (reject) caso exista erro no SQL ou nos parâmetros.
  */
 const create = (obj) => {
-  console.log('entrada',obj)
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //SQL Comand
@@ -62,16 +61,16 @@ const create = (obj) => {
         ],
         //generate a object with the result of SQL
         (sqlTxn, res) => {
+          let results = []
           let len = res.rows.length;
           if (len > 0) {
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = []
+             
               results.push(item);
-              resolve(results)  //return de object when the Promisse is complete
-              console.log(len)
             }
           }
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message, obj)
@@ -215,16 +214,18 @@ const all = () => {
         `SELECT * FROM ${GText.infoDB.Table.Clients.name};`,
         [],
         (sqlTxn, res) => {
+          let results = []
           let len = res.rows.length;
           if (len > 0) {
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = []
+             
               results.push(item);
-              console.log(results)
-              resolve(results)  //return de object when the Promisse is complete
+            //  console.log(results)
+             
             }
           }
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message)

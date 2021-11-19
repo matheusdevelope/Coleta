@@ -7,7 +7,7 @@ import Global from "../../global/global";
 import GText from "../../global/texts";
 import { Container } from "./style.js";
 import { useNavigation } from "@react-navigation/core";
-import { Coletas } from "../../../DadosOffline/Coletas Lista";
+// import { Coletas } from "../../../DadosOffline/Coletas Lista";
 import ConfirmationModal from '../../componentes/modalConfirmation/modalConfirmation'
 
 function SendedItens(){
@@ -15,7 +15,7 @@ function SendedItens(){
     const ModalRef = useRef()
     const [search, setSearch] = useState('')
 
-    const data = Coletas.filter(data => data.NomeCliente.toLowerCase().includes(search.toLowerCase()))
+    const data =[]// Coletas.filter(data => data.NomeCliente.toLowerCase().includes(search.toLowerCase()))
 
     function ButtonHeaderRight(data) {
         //Sync data 
