@@ -6,12 +6,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 function Button({ name, label, styleLabel, size, color, onClick, ...rest }) {
     return (
         <Container onPress={() => { onClick() }} {...rest}>
-            {label !== undefined && name == undefined ?
+            {label !== undefined ?
                 <Text style={styleLabel}>{label}</Text>
                 :
                 <Icon name={name} size={size} color={color} />
             }
-
         </Container>
     )
 }

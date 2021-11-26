@@ -18,7 +18,6 @@ return 'provisorio'
     function handleEditItem() {
       //  console.log('box')
         EditItem(data)
-        handleDelete()
     }
 
     return (

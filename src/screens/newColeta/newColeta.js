@@ -15,7 +15,7 @@ import clients from "../../services/SQLite/tables/clients.js";
 import profile from "../../services/SQLite/tables/profile.js";
 import Itens from "../../services/SQLite/tables/Itens";
 import company from "../../services/SQLite/tables/company";
-function NewColeta({ route }) {
+function NewColeta({ route }) { 
     const ListRef = useRef(null)
     const InputRef = useRef(null);
     const navigation = useNavigation()
@@ -40,11 +40,11 @@ function NewColeta({ route }) {
         //       }
         //     Itens.all()
 
-        profile.create(Profile)
-        profile.all()
+        // profile.create(Profile)
+        // profile.all()
 
-        company.create(Company)
-        company.all()
+        // company.create(Company)
+        // company.all()
 
         const d = Object.keys(Branch).length
         for (let index = 0; index < d; index++) {
@@ -53,11 +53,11 @@ function NewColeta({ route }) {
 
         branch.all()
 
-        const e = Object.keys(Clientes).length
-        for (let index = 0; index < e; index++) {
-            clients.create(Clientes[index])
-        }
-        clients.all()
+        // const e = Object.keys(Clientes).length
+        // for (let index = 0; index < e; index++) {
+        //     clients.create(Clientes[index])
+        // }
+        // clients.all()
         const f = Object.keys(Warranty).length
         for (let index = 0; index < f; index++) {
             warranty.create(Warranty[index])
@@ -75,10 +75,11 @@ function NewColeta({ route }) {
         }
         brands.all()
     }
+   // CreateDataOffline()
+
     function EditItem(data) {
         InputRef.current.SetDataFielsOnEdit(data)
     }
-    
 
     return (
         <Container>

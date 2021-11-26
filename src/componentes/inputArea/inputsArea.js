@@ -6,10 +6,11 @@ import GText, { fiedlsHide } from '../../global/texts';
 import Global from '../../global/global';
 import InputSelect from '../inputSelected/inputSelect.js';
 import Button from '../button/button';
-import { Line } from './style';
+import { Line} from './style';
 import { GetLastItemOnDB, GetProfileDB } from '../../services/routesData/routesData';
-function InputArea({InsertNewItemOnList},ref) {
+function InputArea({InsertNewItemOnList},ref) { 
   const formRef = useRef(null);
+  const HigherItem = useRef(0);
   useImperativeHandle(ref, () => ({
     SetDataFielsOnEdit:(data)=>{
       formRef.current.setData(data)
@@ -62,19 +63,19 @@ function InputArea({InsertNewItemOnList},ref) {
   function SetCountItem() {
     let newItem = ''
     let Item = Number(formRef.current.getFieldValue(GText.infoInputs.fiedlsHide.Item)) 
-    let HigherItem = Number(formRef.current.getFieldValue(GText.infoInputs.fiedlsHide.HigherItem))
-  ///não esta  funcionado ainda
-    if(Item>HigherItem){
-      newItem = Item + 1
-      formRef.current.setFieldValue(GText.infoInputs.nDimension, newItem.toString())
-      formRef.current.setFieldValue(GText.infoInputs.fiedlsHide.HigherItem, newItem.toString())
+    let Higher = HigherItem.current 
+    if(Item<Higher) {
+      newItem = Higher
+      formRef.current.setFieldValue(GText.infoInputs.fiedlsHide.Item, newItem.toString())
+      HigherItem.current = newItem
     }
     else{
-      newItem = HigherItem + 1
-      formRef.current.setFieldValue(GText.infoInputs.nDimension, newItem.toString())
+      newItem = Item + 1
       formRef.current.setFieldValue(GText.infoInputs.fiedlsHide.Item, newItem.toString())
-    // formRef.current.setFieldValue(GText.infoInputs.fiedlsHide.HigherItem, newItem.toString())
+      HigherItem.current = newItem
     }
+    
+   
   }
   /**
        * The "LastNumberOfColeta" get and set the sequencial id to orders;
@@ -92,8 +93,7 @@ function InputArea({InsertNewItemOnList},ref) {
       return LastNumberOfColeta[0][GText.infoInputs.fiedlsHide.ColetaNumber].toString()
     }
   }
-  async function GetDataDB(data) {
-
+  async function GetDataDB() {
     const DataNow = new Date()
     const GetDate = ('0' + DataNow.getDate()).substr(-2) + "/" + ("0" + (DataNow.getMonth() + 1)).substr(-2) + "/" + DataNow.getFullYear()
     const Hour = (DataNow.getHours().toString() + ":" + DataNow.getMinutes().toString()).toString()
@@ -106,14 +106,12 @@ function InputArea({InsertNewItemOnList},ref) {
       return
     }
     else {
-    //  NumberColeta(ret)
       /**
        * This set the data to the hide fields, like data, hour, who makes the order...
        */
       const InitialData = [
         { name: GText.infoInputs.fiedlsHide.CodImport, initialData: null },
         { name: GText.infoInputs.fiedlsHide.Item, initialData: '1' },
-        { name: GText.infoInputs.fiedlsHide.HigherItem, initialData: '1' },
         { name: GText.infoInputs.fiedlsHide.CodCompany, initialData: ret[GText.infoDB.Table.Profile.fields.company].toString() },
         { name: GText.infoInputs.fiedlsHide.CodSalesmanI, initialData: ret[GText.infoDB.Table.Profile.fields.id].toString() },
         { name: GText.infoInputs.fiedlsHide.CodPriority, initialData: null },
@@ -158,7 +156,6 @@ function InputArea({InsertNewItemOnList},ref) {
         <InputSelect options={options.clients} name={GText.infoInputs.nNameClient}
           placeholder={GText.infoInputs.pNameClient} editable SetDataHideFields={SetDataHideFields} />
       </Line>
-
       <Line>
         <Input name={GText.infoInputs.nServicesExec} placeholder={GText.infoInputs.pServicesExec} style={styles.inputDivided} />
       </Line>
@@ -166,7 +163,6 @@ function InputArea({InsertNewItemOnList},ref) {
         <Input name={GText.infoInputs.nDimension} placeholder={GText.infoInputs.pDimension} keyboardType="numeric" style={styles.inputDivided} />
         <Input name={GText.infoInputs.nSerieNumber} placeholder={GText.infoInputs.pSerieNumber} keyboardType="numeric" style={styles.inputDivided} />
         <Input name={GText.infoInputs.nDesign} placeholder={GText.infoInputs.pDesign} style={styles.inputDivided} />
-
       </Line>
       <Line>
         <InputSelect options={options.brands} name={GText.infoInputs.nBrand}
@@ -175,7 +171,6 @@ function InputArea({InsertNewItemOnList},ref) {
         <Input name={GText.infoInputs.nValue} placeholder={GText.infoInputs.pValue} style={styles.inputDivided} keyboardType="numeric" />
       </Line>
       <Input name={GText.infoInputs.nObservation} placeholder={GText.infoInputs.pObservation} style={styles.input} />
-
       <Line>
         <InputSelect name={GText.infoInputs.nWarranty} options={options.warranty}
           placeholder={GText.infoInputs.pWarranty} SetDataHideFields={SetDataHideFields} />
@@ -193,9 +188,7 @@ function InputArea({InsertNewItemOnList},ref) {
       }
       <Button name={Global.IconAdd} size={Global.sizeiconAdd} color={Global.bluelight}
         onClick={() => formRef.current.submitForm()}
-        style={{
-          borderRadius: 10, backgroundColor: Global.blue, margin: 8
-        }} />
+        style={{borderRadius: 10, backgroundColor: Global.blue, margin: 8}} />
     </Form>
   );
 }
