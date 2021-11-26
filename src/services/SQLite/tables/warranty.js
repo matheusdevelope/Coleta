@@ -23,6 +23,10 @@ import db from "../SQLiteDatabase";
           console.log("error on creating table " + error.message);
         },
       );
+      function droptable() {
+        tx.executeSql(`DROP TABLE ${GText.infoDB.Table.Warranty.name} ;`);
+      }
+     // droptable()
     });
   }
 

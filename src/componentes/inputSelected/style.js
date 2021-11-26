@@ -11,6 +11,7 @@ font-size: ${Global.fontSize};
 color:${Global.textColor};
 padding: ${Global.padding};
 width: 100%;
+
 `
 export const LineButton = styled.View`
 flex-direction:row;

@@ -6,30 +6,31 @@ import db from "../SQLiteDatabase";
  * - Executa sempre, mas só cria a tabela caso não exista (primeira execução)
  */
 
-  function Itens() {
-    db.transaction((tx) => {
-      //   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
-      //   //tx.executeSql("DROP TABLE cars;");
-      //   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
+function Itens() {
+  db.transaction((tx) => {
+    //   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
+    function droptable() {
+      tx.executeSql(`DROP TABLE ${GText.infoDB.Table.Itens.name} ;`);
+    }
+    //droptable()
+    //   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
 
+    function createTable() {
       tx.executeSql(
-        // brand TEXT, 
-        //   model TEXT, 
-        //   hp INT),
         `CREATE TABLE IF NOT EXISTS ${GText.infoDB.Table.Itens.name} 
      (
-       ${GText.infoDB.Table.Itens.fields.IdMobile} INTEGER ,
+       ${GText.infoDB.Table.Itens.fields.IdMobile} INTEGER PRIMARY KEY AUTOINCREMENT,
        ${GText.infoDB.Table.Itens.fields.CodImport}  INT,
        ${GText.infoDB.Table.Itens.fields.CodCompany} INT,
-       ${GText.infoDB.Table.Itens.fields.CodBranch}  INT,
+       ${GText.infoDB.Table.Itens.fields.Branch}  TEXT,
        ${GText.infoDB.Table.Itens.fields.CodSalesmanI}  INT,
        ${GText.infoDB.Table.Itens.fields.CodPriority} INT,
-       ${GText.infoDB.Table.Itens.fields.ColetaDate}  DATE,
+       ${GText.infoDB.Table.Itens.fields.ColetaDate}  TEXT,
        ${GText.infoDB.Table.Itens.fields.CodSalesman} INT,
        ${GText.infoDB.Table.Itens.fields.CodCollector} INT,
        ${GText.infoDB.Table.Itens.fields.CodTechnician}  INT,
        ${GText.infoDB.Table.Itens.fields.CodClient} INT,
-       ${GText.infoDB.Table.Itens.fields.CodSituation} INT,
+       ${GText.infoDB.Table.Itens.fields.Situation} INT,
        ${GText.infoDB.Table.Itens.fields.CodProduct} INT,
        ${GText.infoDB.Table.Itens.fields.CodBrand}  INT,
        ${GText.infoDB.Table.Itens.fields.CodType} INT,
@@ -37,11 +38,11 @@ import db from "../SQLiteDatabase";
        ${GText.infoDB.Table.Itens.fields.Item} INT,
        ${GText.infoDB.Table.Itens.fields.ColetaNumber} TEXT,
        ${GText.infoDB.Table.Itens.fields.Status}  TEXT,
-       ${GText.infoDB.Table.Itens.fields.InclusionDate}  DATE,
-       ${GText.infoDB.Table.Itens.fields.InclusionHour} TIME,
+       ${GText.infoDB.Table.Itens.fields.InclusionDate}  TEXT,
+       ${GText.infoDB.Table.Itens.fields.InclusionHour} TEXT,
        ${GText.infoDB.Table.Itens.fields.InclusionUser}  TEXT,
        ${GText.infoDB.Table.Itens.fields.InclusionStation} TEXT,
-       ${GText.infoDB.Table.Itens.fields.Date}  DATE,
+       ${GText.infoDB.Table.Itens.fields.Date}  TEXT,
        ${GText.infoDB.Table.Itens.fields.NameClient}  TEXT,
        ${GText.infoDB.Table.Itens.fields.IdIdentityClient} TEXT,
        ${GText.infoDB.Table.Itens.fields.Phone} TEXT,
@@ -61,23 +62,30 @@ import db from "../SQLiteDatabase";
        ${GText.infoDB.Table.Itens.fields.Observation}  TEXT,
        ${GText.infoDB.Table.Itens.fields.Value}  NUMERIC,
        ${GText.infoDB.Table.Itens.fields.CancelObservation} TEXT,
-       ${GText.infoDB.Table.Itens.fields.CancelDate}   DATE,
+       ${GText.infoDB.Table.Itens.fields.CancelDate}   TEXT,
        ${GText.infoDB.Table.Itens.fields.CancelHour} TIME,
        ${GText.infoDB.Table.Itens.fields.CancelUser} TEXT,
-       ${GText.infoDB.Table.Itens.fields.CancelStation} TEXT
+       ${GText.infoDB.Table.Itens.fields.CancelStation} TEXT, 
+       ${GText.infoDB.Table.Itens.fields.CodSituation} TEXT,
+       ${GText.infoDB.Table.Itens.fields.CodWarranty} TEXT,
+       ${GText.infoDB.Table.Itens.fields.CodBranch} TEXT
+       
    );
      `,
         [],
         (sqlTxn, res) => {
-          // // console.log("table created successfully");
+        //    console.log("table created successfully", GText.infoDB.Table.Itens.fields.CodWarranty);
         },
         error => {
           console.log("error on creating table " + error.message);
         },
       );
-    });
-  }
- Itens()
+    }
+    createTable()
+
+  });
+}
+Itens()
 
 
 /**
@@ -88,13 +96,11 @@ import db from "../SQLiteDatabase";
  *  - Pode retornar erro (reject) caso exista erro no SQL ou nos parâmetros.
  */
 const create = (obj) => {
-  console.log(obj.IdMobile)
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
         `INSERT INTO ${GText.infoDB.Table.Itens.name} (
-          ${GText.infoDB.Table.Itens.fields.IdMobile} ,
           ${GText.infoDB.Table.Itens.fields.CodImport}  ,
           ${GText.infoDB.Table.Itens.fields.CodCompany} ,
           ${GText.infoDB.Table.Itens.fields.CodBranch}  ,
@@ -140,18 +146,22 @@ const create = (obj) => {
           ${GText.infoDB.Table.Itens.fields.CancelDate}  ,
           ${GText.infoDB.Table.Itens.fields.CancelHour} ,
           ${GText.infoDB.Table.Itens.fields.CancelUser} ,
-          ${GText.infoDB.Table.Itens.fields.CancelStation}
+          ${GText.infoDB.Table.Itens.fields.CancelStation} ,
+          ${GText.infoDB.Table.Itens.fields.CodSituation} ,
+          ${GText.infoDB.Table.Itens.fields.CodBranch} ,
+          ${GText.infoDB.Table.Itens.fields.CodWarranty}
         ) 
-        
-        values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+        values (
+          ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,
+          ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`,
         [
-          obj[`${GText.infoDB.Table.Itens.fields.IdMobile}`],
           obj[`${GText.infoDB.Table.Itens.fields.CodImport}`],
           obj[`${GText.infoDB.Table.Itens.fields.CodCompany}`],
           obj[`${GText.infoDB.Table.Itens.fields.CodBranch}`],
-          obj[`${GText.infoDB.Table.Itens.fields.CodSalesmanI}`],
           obj[`${GText.infoDB.Table.Itens.fields.CodPriority}`],
           obj[`${GText.infoDB.Table.Itens.fields.ColetaDate}`],
+          obj[`${GText.infoDB.Table.Itens.fields.CodSalesmanI}`],
+          obj[`${GText.infoDB.Table.Itens.fields.CodSalesman}`],
           obj[`${GText.infoDB.Table.Itens.fields.CodCollector}`],
           obj[`${GText.infoDB.Table.Itens.fields.CodTechnician}`],
           obj[`${GText.infoDB.Table.Itens.fields.CodClient}`],
@@ -190,19 +200,24 @@ const create = (obj) => {
           obj[`${GText.infoDB.Table.Itens.fields.CancelDate}`],
           obj[`${GText.infoDB.Table.Itens.fields.CancelHour}`],
           obj[`${GText.infoDB.Table.Itens.fields.CancelUser}`],
-          obj[`${GText.infoDB.Table.Itens.fields.CancelStation}`]
+          obj[`${GText.infoDB.Table.Itens.fields.CancelStation}`],
+          obj[`${GText.infoDB.Table.Itens.fields.CodSituation}`],
+          obj[`${GText.infoDB.Table.Itens.fields.CodBranch}`],
+          obj[`${GText.infoDB.Table.Itens.fields.CodWarranty}`]
 
         ],
         (sqlTxn, res) => {
+          // console.log(sqlTxn)
+          let results = []
           let len = res.rows.length;
           if (len > 0) {
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = []
               results.push(item);
-              resolve(results)  //return de object when the Promisse is complete
             }
           }
+         // console.log(results)
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message, obj)
@@ -212,7 +227,6 @@ const create = (obj) => {
     });
   });
 };
-
 /**
  * ATUALIZA UM REGISTRO JÁ EXISTENTE
  * - Recebe o ID do registro e um OBJETO com valores atualizados;
@@ -427,21 +441,62 @@ const all = () => {
         `SELECT * FROM ${GText.infoDB.Table.Itens.name};`,
         [],
         (sqlTxn, res) => {
+          let results = []
           let len = res.rows.length;
-          console.log(res.rows)
           if (len > 0) {
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = []
               results.push(item);
-              console.log(results)
-              resolve(results)  //return de object when the Promisse is complete
             }
           }
+         // console.log(results)
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message)
           console.log(`error on findAll ${GText.infoDB.Table.Itens.name} ` + error.message);
+        }
+      );
+    });
+  });
+};
+
+/**
+ * BUSCA TODOS OS REGISTROS DE UMA DETERMINADA TABELA
+ * - Não recebe parâmetros;
+ * - Retorna uma Promise:
+ *  - O resultado da Promise é uma lista (Array) de objetos;
+ *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL;
+ *  - Pode retornar um array vazio caso não existam registros.
+ */
+ const findLastItem = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      //comando SQL modificável
+      tx.executeSql(
+
+        ////tem que pesquisar com fazer o "TOP 1 no sqlite"
+
+        `SELECT * FROM ${GText.infoDB.Table.Itens.name} 
+        ORDER BY ${GText.infoDB.Table.Itens.fields.IdMobile} DESC  ;`,
+        [],
+        (sqlTxn, res) => {
+          let results = null
+          let len = res.rows.length;
+          if (len > 0) {
+            results = []
+            results.push(res.rows.item(0))
+            // for (let i = 0; i < len; i++) {
+            //   let item = res.rows.item(i);
+            //   results.push(item);
+            // }
+          }
+         // console.log(results)
+          resolve(results)  //return de object when the Promisse is complete
+        },
+        error => {
+          reject(error.message)
+          console.log(`error on FindLastItem ${GText.infoDB.Table.Itens.name} ` + error.message);
         }
       );
     });
@@ -521,6 +576,7 @@ export default {
   update,
   find,
   findLike,
+  findLastItem,
   all,
   remove,
   removeAll

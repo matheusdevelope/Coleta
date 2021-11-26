@@ -21,7 +21,7 @@ const all = (name, fieldvalue, fieldlabel) => {
         },
         error => {
           reject(error.message)
-          console.log(`error on findAll ${GText.infoDB.Table.Branch.name} ` + error.message);
+         // console.log(`error on findAll ${GText.infoDB.Table.Branch.name} ` + error.message);
         }
       );
     });

@@ -219,19 +219,19 @@ const all = () => {
         `SELECT * FROM ${GText.infoDB.Table.Profile.name};`,
         [],
         (sqlTxn, res) => {
+          let results = []
           let len = res.rows.length;
           if (len > 0) {
            for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = []
               results.push(item);
-              console.log(results)
-              resolve(results)  //return de object when the Promisse is complete
             }
           }
+        //  console.log(results)
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
-          reject(error.message)
+          reject([])
           console.log(`error on findAll ${GText.infoDB.Table.Profile.name} ` + error.message);
         }
       );

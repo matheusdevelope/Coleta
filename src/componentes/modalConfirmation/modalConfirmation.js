@@ -21,6 +21,7 @@ function ConfirmationModal({buttonRight }, ref) {
     function toggle() {
         setVisible(!visible)
     }
+   // console.log('exec')
     return (
         <Modal visible={visible} onRequestClose={toggle} transparent={true} ref={ref}  >
             <Container activeOpacity={1} onPress={toggle} >

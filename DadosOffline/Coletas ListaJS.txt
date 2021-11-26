@@ -1,20 +1,21 @@
 // import React from "react"
 
  export const Profile = {
-         Nome: 'Matheus',
-         Email:'emersonmatheustu@gmail.com',
+         id: 1,
+         nome: 'Matheus',
+         email:'emersonmatheustu@gmail.com',
          CodVendedor:17,
-         CodEmpresa:1,
-         FilialPadrao:null,
-         InicioSequenciaColeta:300000,
-         FimSequenciaColeta:400000
+         empresa:1,
+         filialpadrao:null,
+         iniciosequencia:300000,
+         fimsequencia:400000
  }
- export const Company={
+ export const company={
      CodEmpresa: 1,
      nome:'Recapadora Sinop'
  
  }
- export const Branch= [
+ export const branch= [
      {
          CodFilial: 1,
          Nome: 'Recapadora',
@@ -25,27 +26,6 @@
          Nome: 'SS Reformas',
          Categoria: 'Agricola'
      }
- ]
- export const Situation=[
-    {
-        CodSituacao:1,
-        Descricao:'Garantia'
-    },
-    {
-        CodSituacao:2,
-        Descricao:'Cortesia'
-    },
-    
- ]
- export const Warranty=[
-    {
-        CodGarantia:'S',
-        Descricao:'Com Garantia'
-    },
-    {
-        CodGarantia:'N',
-        Descricao:'Sem Garantia'
-    },
  ]
 
 

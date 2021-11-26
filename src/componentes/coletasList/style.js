@@ -4,6 +4,8 @@ import Global from '../../global/global'
 export const FlatList = styled.FlatList`
 
 `
+export const SafeAreaView = styled.SafeAreaView`
+`
 export const Container = styled.View`
 min-height: ${((Global.MaxHeigtBoxItemColeta) + 'px')};
 width: ${(Global.width +'px')};

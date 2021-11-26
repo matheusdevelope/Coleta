@@ -1,20 +1,26 @@
 import { useNavigation } from "@react-navigation/core";
-import React, { useState } from "react";
-import { useRef } from "react";
-// import { Coletas } from "../../../DadosOffline/Coletas Lista.js";
+import React, { useEffect, useState, useRef } from "react";
 import ColetasList from "../../componentes/coletasList/coletasList.js";
 import Header from "../../componentes/header/header.js";
 import ConfirmationModal from "../../componentes/modalConfirmation/modalConfirmation.js";
 import SearchBox from "../../componentes/searchBox/searchBox.js";
 import Global from "../../global/global.js";
 import GText from "../../global/texts.js";
+import Itens from "../../services/SQLite/tables/Itens.js";
 import { Container } from './style.js'
 function Home() {
     const navigation = useNavigation()
     const ModalRef = useRef()
     const [search, setSearch] = useState('')
+    const [data, setData] = useState([])
 
-    const data = []// Coletas.filter(data => data.NomeCliente.toLowerCase().includes(search.toLowerCase()))
+    useEffect(()=>{
+        async function GetItens(){
+           const ret = await Itens.all() 
+            setData(ret)
+        }
+        GetItens()
+    },[])
 
     function ButtonHeaderRight(data) {
         navigation.navigate(GText.NewColeta)
@@ -44,8 +50,7 @@ function Home() {
             <SearchBox placeholder={GText.SearchBox} name={Global.iconSearchBox}
                 size={Global.sizeIconSearch} color={Global.colorIconSearch} input={search} setInput={setSearch} />
             <ColetasList data={data} buttonLeft={OpenConfirmation} buttonRight={handleEdit} />
-            <ConfirmationModal ref={ModalRef} buttonRight={handleCancel} />
-
+            <ConfirmationModal ref={ModalRef}  buttonRight={handleCancel} />
         </Container>
     )
 }

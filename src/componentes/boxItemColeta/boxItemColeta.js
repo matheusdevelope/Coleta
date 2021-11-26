@@ -1,28 +1,30 @@
 import React, { useState } from 'react';
-// import { Profile } from '../../../DadosOffline/Coletas Lista';
 import Global from '../../global/global';
 import GText from '../../global/texts';
 import Button from '../button/button';
 
 import { Container, Line, Text, ButtonBox } from './style';
 
-
-
-const BoxItemColeta = ({ data }) => {
+const BoxItemColeta = ({ data, DeleteItem, EditItem}) => {
     const [toggle, setToggle] = useState(false)
     function getName(data, field) {
         // const ret = []// Profile.company.branch.find(ob => ob.id = data)
         // return ret[field]
 return 'provisorio'
     }
-    function handleDelete(data) {
-        console.log(data)
+    function handleDelete() {
+        DeleteItem(data)
+    }
+    function handleEditItem() {
+      //  console.log('box')
+        EditItem(data)
+        handleDelete()
     }
 
     return (
         <Container>
             <Line>
-                <ButtonBox onLongPress={() => { setToggle(!toggle) }}>
+                <ButtonBox onPress={handleEditItem} onLongPress={() => { setToggle(!toggle) }}>
                     <Text style={{ margin: 'auto', fontSize: Global.fontSize_n }}>
                         Item: {data[GText.infoInputs.nItem]}
                     </Text>
@@ -46,7 +48,7 @@ return 'provisorio'
 
                 </ButtonBox>
                 <Button name={'trash'} size={40} color={Global.colorButtonDelete}
-                    onClick={() => { handleDelete(data) }}
+                    onClick={handleDelete}
                     style={{
                         margin: 8,
                         display: toggle ? 'flex' : 'none'
