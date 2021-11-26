@@ -18,3 +18,6 @@ export default function App() {
         </NavigationContainer>
   );
 }
+
+
+// --openssl-legacy-provider start
