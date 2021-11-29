@@ -11,6 +11,7 @@ const Global = {
     backgroundModal:'rgba(34, 34, 34, 0.3)',
     textColor: 'rgba(34, 34, 34, 1)',
     red:'rgba(255, 0, 0, 0.5)',
+    redInputs:'rgba(255, 1, 0, 0.04)',
     fontSize:'18px',
     fontSize_n:18,
     fontSizeTitle:'30px',

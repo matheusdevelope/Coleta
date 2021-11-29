@@ -6,51 +6,95 @@ import GText, { fiedlsHide } from '../../global/texts';
 import Global from '../../global/global';
 import InputSelect from '../inputSelected/inputSelect.js';
 import Button from '../button/button';
-import { Line} from './style';
+import { Line } from './style';
 import { GetLastItemOnDB, GetProfileDB } from '../../services/routesData/routesData';
-function InputArea({InsertNewItemOnList},ref) { 
+function InputArea({ InsertNewItemOnList }, ref) {
   const formRef = useRef(null);
+  const DataDB = useRef(null);
   const HigherItem = useRef(0);
-  useImperativeHandle(ref, () => ({
-    SetDataFielsOnEdit:(data)=>{
-      formRef.current.setData(data)
-    }
-}));
+  const GT = GText.infoInputs
+
   const options = {
     clients: {
       name: GText.infoDB.Table.Clients.name,
       fieldvalue: GText.infoDB.Table.Clients.fields.id,
       fieldlabel: GText.infoDB.Table.Clients.fields.name,
-      nameFieldHide: GText.infoInputs.nCodClient
+      nameFieldHide: GT.nCodClient
     },
     brands: {
       name: GText.infoDB.Table.Brands.name,
       fieldvalue: GText.infoDB.Table.Brands.fields.id,
       fieldlabel: GText.infoDB.Table.Brands.fields.name,
-      nameFieldHide: GText.infoInputs.nCodBrand
+      nameFieldHide: GT.nCodBrand
     },
     branch: {
       name: GText.infoDB.Table.Branch.name,
       fieldvalue: GText.infoDB.Table.Branch.fields.id,
       fieldlabel: GText.infoDB.Table.Branch.fields.category,
-      nameFieldHide: GText.infoInputs.nCodBranch
+      nameFieldHide: GT.nCodBranch
     },
     situation: {
       name: GText.infoDB.Table.Situation.name,
       fieldvalue: GText.infoDB.Table.Situation.fields.id,
       fieldlabel: GText.infoDB.Table.Situation.fields.name,
-      nameFieldHide: GText.infoInputs.nCodSituation
+      nameFieldHide: GT.nCodSituation
     },
     warranty: {
       name: GText.infoDB.Table.Warranty.name,
       fieldvalue: GText.infoDB.Table.Warranty.fields.id,
       fieldlabel: GText.infoDB.Table.Warranty.fields.name,
-      nameFieldHide: GText.infoInputs.nCodWarranty
+      nameFieldHide: GT.nCodWarranty
     }
   }
+  const fieldsToClear = [
+    GT.nServicesExec,
+    GT.nDimension,
+    GT.nSerieNumber,
+    GT.nDesign,
+    GT.nBrand,
+    GT.nValue,
+    GT.nWarranty,
+    GT.nSituation,
+  ]
+  const fieldsNeedsValue = [
+    GT.nNameClient,
+    GT.nServicesExec,
+    GT.nDimension,
+    GT.nSerieNumber,
+    GT.nDesign,
+    GT.nBrand,
+    GT.nValue,
+    GT.nWarranty,
+    GT.nSituation,
+  ]
+  function setErrorsFields(data) {
+    let ret = false
+    formRef.current.setErrors({})
+    fieldsNeedsValue.forEach((obj) => {
+      let value = data[obj]
+      value !== undefined
+      ?
+      value = value.length
+      :
+      value = 0
+       if (value === 0 ) {
+         ret = true
+         formRef.current.setFieldError(obj,Global.redInputs)
+       }
+    })
+    return ret
+  }
+  function ClearFields() {
+    fieldsToClear.forEach((obj) => {
+      formRef.current.clearField(obj)
+    })
+  }
   function handleSubmit(data) {
+    if( !setErrorsFields(data) ){
+    ClearFields()
     InsertNewItemOnList(data)
     SetCountItem()
+    }    
   }
   /**
    * -Function to set data on the hide fields of the InputArea;
@@ -62,90 +106,105 @@ function InputArea({InsertNewItemOnList},ref) {
   }
   function SetCountItem() {
     let newItem = ''
-    let Item = Number(formRef.current.getFieldValue(GText.infoInputs.fiedlsHide.Item)) 
-    let Higher = HigherItem.current 
-    if(Item<Higher) {
+    let Item = Number(formRef.current.getFieldValue(GT.fiedlsHide.Item))
+    let Higher = HigherItem.current
+    if (Item < Higher) {
       newItem = Higher
-      formRef.current.setFieldValue(GText.infoInputs.fiedlsHide.Item, newItem.toString())
+      formRef.current.setFieldValue(GT.fiedlsHide.Item, newItem.toString())
       HigherItem.current = newItem
     }
-    else{
+    else {
       newItem = Item + 1
-      formRef.current.setFieldValue(GText.infoInputs.fiedlsHide.Item, newItem.toString())
+      formRef.current.setFieldValue(GT.fiedlsHide.Item, newItem.toString())
       HigherItem.current = newItem
     }
-    
-   
+
+
   }
   /**
        * The "LastNumberOfColeta" get and set the sequencial id to orders;
        * This make a top 1 desc select on local Db to get the last ID and SUM +1;
        * on first time of use, the value of db is null, then we take the INITIAL Sequence of the user profile
        */
-   async function NumberColeta(ret) {
-   //  console.log(ret ) //[GText.infoDB.Table.Profile.fields.initSequence])
+  async function NumberColeta(ret) {
     let LastNumberOfColeta = await GetLastItemOnDB()
     if (LastNumberOfColeta === null) {
       return ret[GText.infoDB.Table.Profile.fields.initSequence].toString()
     }
     else {
-      LastNumberOfColeta[0][GText.infoInputs.fiedlsHide.ColetaNumber] = Number(LastNumberOfColeta[0][GText.infoInputs.fiedlsHide.ColetaNumber]) + 1
-      return LastNumberOfColeta[0][GText.infoInputs.fiedlsHide.ColetaNumber].toString()
+      LastNumberOfColeta[0][GT.fiedlsHide.ColetaNumber] = Number(LastNumberOfColeta[0][GT.fiedlsHide.ColetaNumber]) + 1
+      return LastNumberOfColeta[0][GT.fiedlsHide.ColetaNumber].toString()
     }
   }
-  async function GetDataDB() {
+  async function InitialValueFields() {
     const DataNow = new Date()
     const GetDate = ('0' + DataNow.getDate()).substr(-2) + "/" + ("0" + (DataNow.getMonth() + 1)).substr(-2) + "/" + DataNow.getFullYear()
     const Hour = (DataNow.getHours().toString() + ":" + DataNow.getMinutes().toString()).toString()
-
-    let ret = []
-    ret = await GetProfileDB()
-    ret = ret[0]
+    let ret = DataDB.current.profile
     if (ret == undefined) {
       alert('Dados Não Sincronizados')
       return
     }
     else {
-      /**
-       * This set the data to the hide fields, like data, hour, who makes the order...
-       */
+      const GTF = GT.fiedlsHide
       const InitialData = [
-        { name: GText.infoInputs.fiedlsHide.CodImport, initialData: null },
-        { name: GText.infoInputs.fiedlsHide.Item, initialData: '1' },
-        { name: GText.infoInputs.fiedlsHide.CodCompany, initialData: ret[GText.infoDB.Table.Profile.fields.company].toString() },
-        { name: GText.infoInputs.fiedlsHide.CodSalesmanI, initialData: ret[GText.infoDB.Table.Profile.fields.id].toString() },
-        { name: GText.infoInputs.fiedlsHide.CodPriority, initialData: null },
-        { name: GText.infoInputs.fiedlsHide.ColetaDate, initialData: GetDate },
-        { name: GText.infoInputs.fiedlsHide.CodSalesman, initialData: ret[GText.infoDB.Table.Profile.fields.id].toString() },
-        { name: GText.infoInputs.fiedlsHide.CodCollector, initialData: ret[GText.infoDB.Table.Profile.fields.id].toString() },
-        { name: GText.infoInputs.fiedlsHide.CodTechnician, initialData: '1' },
-        { name: GText.infoInputs.fiedlsHide.CodProduct, initialData: '1' },
-        { name: GText.infoInputs.fiedlsHide.CodType, initialData: null },
-        { name: GText.infoInputs.fiedlsHide.CodCancel, initialData: null },
-        { name: GText.infoInputs.fiedlsHide.ColetaNumber, initialData: await NumberColeta(ret) },
-        { name: GText.infoInputs.fiedlsHide.Status, initialData: ret[GText.infoInputs.InitialStatusItem] },
-        { name: GText.infoInputs.fiedlsHide.InclusionDate, initialData: GetDate },
-        { name: GText.infoInputs.fiedlsHide.InclusionHour, initialData: Hour },
-        { name: GText.infoInputs.fiedlsHide.InclusionUser, initialData: ret[GText.infoDB.Table.Profile.fields.name].toString() },
-        { name: GText.infoInputs.fiedlsHide.InclusionStation, initialData: GText.infoInputs.InitialPlatform },
-        { name: GText.infoInputs.fiedlsHide.IdIdentityClient, initialData: null },
-        { name: GText.infoInputs.fiedlsHide.Phone, initialData: null },
-        { name: GText.infoInputs.fiedlsHide.ImportColeta, initialData: GText.infoInputs.InitialImportValue },
-        { name: GText.infoInputs.fiedlsHide.NameProduct, initialData: null },
-        { name: GText.infoInputs.fiedlsHide.Modelo, initialData: null },
-        { name: GText.infoInputs.fiedlsHide.FireNumber, initialData: null },
-        { name: GText.infoInputs.fiedlsHide.InitialExam, initialData: null },
-        { name: GText.infoInputs.fiedlsHide.CancelObservation, initialData: null },
-        { name: GText.infoInputs.fiedlsHide.CancelDate, initialData: null },
-        { name: GText.infoInputs.fiedlsHide.CancelHour, initialData: null },
-        { name: GText.infoInputs.fiedlsHide.CancelUser, initialData: null },
-        { name: GText.infoInputs.fiedlsHide.CancelStation, initialData: null }
+        { name: GTF.CodImport, initialData: null },
+        { name: GTF.Item, initialData: '1' },
+        { name: GTF.CodCompany, initialData: ret[GText.infoDB.Table.Profile.fields.company].toString() },
+        { name: GTF.CodSalesmanI, initialData: ret[GText.infoDB.Table.Profile.fields.id].toString() },
+        { name: GTF.CodPriority, initialData: null },
+        { name: GTF.ColetaDate, initialData: GetDate },
+        { name: GTF.CodSalesman, initialData: ret[GText.infoDB.Table.Profile.fields.id].toString() },
+        { name: GTF.CodCollector, initialData: ret[GText.infoDB.Table.Profile.fields.id].toString() },
+        { name: GTF.CodTechnician, initialData: '1' },
+        { name: GTF.CodProduct, initialData: '1' },
+        { name: GTF.CodType, initialData: null },
+        { name: GTF.CodCancel, initialData: null },
+        { name: GTF.ColetaNumber, initialData: DataDB.current.numberColeta },
+        { name: GTF.Status, initialData: ret[GT.InitialStatusItem] },
+        { name: GTF.InclusionDate, initialData: GetDate },
+        { name: GTF.InclusionHour, initialData: Hour },
+        { name: GTF.InclusionUser, initialData: ret[GText.infoDB.Table.Profile.fields.name].toString() },
+        { name: GTF.InclusionStation, initialData: GT.InitialPlatform },
+        { name: GTF.IdIdentityClient, initialData: null },
+        { name: GTF.Phone, initialData: null },
+        { name: GTF.ImportColeta, initialData: GT.InitialImportValue },
+        { name: GTF.NameProduct, initialData: null },
+        { name: GTF.Modelo, initialData: null },
+        { name: GTF.FireNumber, initialData: null },
+        { name: GTF.InitialExam, initialData: null },
+        { name: GTF.CancelObservation, initialData: null },
+        { name: GTF.CancelDate, initialData: null },
+        { name: GTF.CancelHour, initialData: null },
+        { name: GTF.CancelUser, initialData: null },
+        { name: GTF.CancelStation, initialData: null }
       ]
       InitialData.forEach((data) => {
         formRef.current.setFieldValue(data.name, data.initialData)
       })
     }
   }
+  async function GetDataDB() {
+    const ret = await GetProfileDB()
+    const numberColeta = await NumberColeta()
+    const obj = {
+      profile: ret[0],
+      numberColeta
+    }
+    DataDB.current = obj
+    InitialValueFields()
+  }
+  useImperativeHandle(ref, () => ({
+    SetDataFielsOnEdit: (data) => {
+      formRef.current.setData(data)
+    },
+    resetForm: () => {
+      formRef.current.setErrors({})
+      formRef.current.reset()
+      HigherItem.current = 0
+      InitialValueFields()
+    }
+  }));
   useEffect(() => {
     GetDataDB()
   }, [])
@@ -153,31 +212,31 @@ function InputArea({InsertNewItemOnList},ref) {
   return (
     <Form ref={formRef} onSubmit={handleSubmit} >
       <Line>
-        <InputSelect options={options.clients} name={GText.infoInputs.nNameClient}
-          placeholder={GText.infoInputs.pNameClient} editable SetDataHideFields={SetDataHideFields} />
+        <InputSelect options={options.clients} name={GT.nNameClient}
+          placeholder={GT.pNameClient} editable SetDataHideFields={SetDataHideFields} />
       </Line>
       <Line>
-        <Input name={GText.infoInputs.nServicesExec} placeholder={GText.infoInputs.pServicesExec} style={styles.inputDivided} />
+        <Input name={GT.nServicesExec} placeholder={GT.pServicesExec} style={styles.inputDivided} />
       </Line>
       <Line>
-        <Input name={GText.infoInputs.nDimension} placeholder={GText.infoInputs.pDimension} keyboardType="numeric" style={styles.inputDivided} />
-        <Input name={GText.infoInputs.nSerieNumber} placeholder={GText.infoInputs.pSerieNumber} keyboardType="numeric" style={styles.inputDivided} />
-        <Input name={GText.infoInputs.nDesign} placeholder={GText.infoInputs.pDesign} style={styles.inputDivided} />
+        <Input name={GT.nDimension} placeholder={GT.pDimension} keyboardType="numeric" style={styles.inputDivided} />
+        <Input name={GT.nSerieNumber} placeholder={GT.pSerieNumber} keyboardType="numeric" style={styles.inputDivided} />
+        <Input name={GT.nDesign} UpperCase placeholder={GT.pDesign} style={styles.inputDivided} />
       </Line>
       <Line>
-        <InputSelect options={options.brands} name={GText.infoInputs.nBrand}
-          placeholder={GText.infoInputs.pBrand} editable SetDataHideFields={SetDataHideFields} />
-        <Input name={GText.infoInputs.nBoard} placeholder={GText.infoInputs.pBoard} style={styles.inputDivided} />
-        <Input name={GText.infoInputs.nValue} placeholder={GText.infoInputs.pValue} style={styles.inputDivided} keyboardType="numeric" />
+        <InputSelect options={options.brands} name={GT.nBrand}
+          placeholder={GT.pBrand} editable SetDataHideFields={SetDataHideFields} />
+        <Input name={GT.nBoard} UpperCase placeholder={GT.pBoard} style={styles.inputDivided} />
+        <Input name={GT.nValue} placeholder={GT.pValue} style={styles.inputDivided} keyboardType="numeric" />
       </Line>
-      <Input name={GText.infoInputs.nObservation} placeholder={GText.infoInputs.pObservation} style={styles.input} />
+      <Input name={GT.nObservation} placeholder={GT.pObservation} style={styles.input} />
       <Line>
-        <InputSelect name={GText.infoInputs.nWarranty} options={options.warranty}
-          placeholder={GText.infoInputs.pWarranty} SetDataHideFields={SetDataHideFields} />
-        <InputSelect name={GText.infoInputs.nBranch} options={options.branch}
-          placeholder={GText.infoInputs.pBranch} SetDataHideFields={SetDataHideFields} />
-        <InputSelect name={GText.infoInputs.nSituation} options={options.situation}
-          placeholder={GText.infoInputs.pSituation} SetDataHideFields={SetDataHideFields} />
+        <InputSelect name={GT.nWarranty} options={options.warranty}
+          placeholder={GT.pWarranty} SetDataHideFields={SetDataHideFields} />
+        <InputSelect name={GT.nBranch} options={options.branch}
+          placeholder={GT.pBranch} SetDataHideFields={SetDataHideFields} />
+        <InputSelect name={GT.nSituation} options={options.situation}
+          placeholder={GT.pSituation} SetDataHideFields={SetDataHideFields} />
       </Line>
       {
         fiedlsHide.map((data, key) => {
@@ -188,7 +247,7 @@ function InputArea({InsertNewItemOnList},ref) {
       }
       <Button name={Global.IconAdd} size={Global.sizeiconAdd} color={Global.bluelight}
         onClick={() => formRef.current.submitForm()}
-        style={{borderRadius: 10, backgroundColor: Global.blue, margin: 8}} />
+        style={{ borderRadius: 10, backgroundColor: Global.blue, margin: 8 }} />
     </Form>
   );
 }
@@ -204,7 +263,7 @@ export const styles = StyleSheet.create({
     marginTop: Global.marginInputs_n,
     marginRight: Global.marginInputs_n - 4,
     marginLeft: Global.marginInputs_n - 4,
-    backgroundColor: Global.backgroundInputs,
+    // backgroundColor: Global.backgroundInputs,
     maxHeight: 36
   },
   input: {
@@ -215,6 +274,6 @@ export const styles = StyleSheet.create({
     marginTop: Global.marginInputs_n,
     marginRight: Global.marginInputs_n - 4,
     marginLeft: Global.marginInputs_n - 4,
-    backgroundColor: Global.backgroundInputs
+    // backgroundColor: Global.backgroundInputs
   }
 })

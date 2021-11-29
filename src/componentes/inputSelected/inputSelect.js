@@ -8,22 +8,22 @@ import { GetValuesInputSelect } from '../../services/routesdb';
 
 function InputSelect({ name, onChangeText, options, placeholder, editable, SetDataHideFields, ...rest }) {
     const inputRef = useRef(null);
+    const List = useRef([]);
+    const ListFiltered = useRef([])
+    
     const [input, setInput] = useState('')
     const [active, setActive] = useState(false)
-    const [data, setdata] = useState([])
     const { fieldName, registerField, defaultValue, error } = useField(name);
 
-    const optionsfiltered = editable ?
-        data.filter(data => data.label.toLowerCase().includes(input.toLowerCase()))
-        :
-        data
+
     async function GetData() {
-        const ret = await GetValuesInputSelect(options)
-        setdata(ret)
+        List.current = await GetValuesInputSelect(options)
+        ListFiltered.current = List.current
     }
     function SetDataAnotherInput(data) {
         SetDataHideFields(data, options.nameFieldHide)
     }
+
     function handleOptions(data) {
         data == 'button' ?
             setActive(!active)
@@ -33,19 +33,25 @@ function InputSelect({ name, onChangeText, options, placeholder, editable, SetDa
                 setActive(true)
     }
     function handleSelected(data) {
-        setInput(data.label.toString())
+        ListFiltered.current = List.current
         inputRef.current.value = data.label.toString()
+        setInput(data.label.toString())
         SetDataAnotherInput(data.value.toString())
         handleOptions('button')
+    }
+    function filterLister(input) {
+        return List.current.filter(data => data.label.toLowerCase().includes(input.toLowerCase()))
     }
     const handleChangeText = useCallback(
         text => {
             if (inputRef.current) inputRef.current.value = text;
             if (onChangeText) onChangeText(text);
+            ListFiltered.current = filterLister(text)
             setInput(text)
         },
         [onChangeText],
     );
+
     useEffect(() => {
         GetData()
     }, [])
@@ -80,8 +86,10 @@ function InputSelect({ name, onChangeText, options, placeholder, editable, SetDa
 
     return (
         <Container>
-            <LineButton>
-                <TextInput style={{ flex: 1, fontSize: Global.fontSize_n, padding: Global.paddingHeightInputs_N }}
+            <LineButton style={{backgroundColor:error?error:Global.backgroundInputs}}>
+                <TextInput
+                
+                style={{ flex: 1, fontSize: Global.fontSize_n, padding: Global.paddingHeightInputs_N }}
                     ref={inputRef}
                     onChangeText={handleChangeText}
                     defaultValue={defaultValue}
@@ -98,7 +106,7 @@ function InputSelect({ name, onChangeText, options, placeholder, editable, SetDa
             </LineButton>
             <ViewSelectOptions style={{ display: active ? 'flex' : 'none' }}>
                 <FlatList
-                    data={optionsfiltered}
+                    data={ListFiltered.current}
                     renderItem={({ item }) => (
                         <ButtonOptions onPress={() => { handleSelected(item) }}>
                             <Text >{item.label}</Text>

@@ -5,6 +5,9 @@ export const FlatList = styled.FlatList`
 
 `
 export const SafeAreaView = styled.SafeAreaView`
+margin-bottom: 10px;
+padding: 10px;
+flex: 1;
 `
 export const Container = styled.View`
 min-height: ${((Global.MaxHeigtBoxItemColeta) + 'px')};

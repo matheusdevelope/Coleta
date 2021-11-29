@@ -9,20 +9,19 @@ const ItensList = ({ EditItem }, ref) => {
     const [List, setList] = useState([])
     const ControlEditing = useRef(false)
     const field = GText.infoDB.Table.Itens.fields.Item
-
+    async function InsertItensOnDB() {
+        const lenght = List.length
+        for (let i = 0; i < lenght; i++) {
+            await CreateItensDB(List[i])
+        }
+    }
     function handleEditItem(data){
         if(!ControlEditing.current){
             EditItem(data)
             DeleteItem(data)
             ControlEditing.current = true
         }else{
-            alert('Termine de editar o item anterior')
-        }
-    }
-    async function InsertItensOnDB() {
-        const lenght = List.length
-        for (let i = 0; i < lenght; i++) {
-            await CreateItensDB(List[i])
+            alert('Termine de editar o item anterior!')
         }
     }
     function DeleteItem(data) {
@@ -31,21 +30,38 @@ const ItensList = ({ EditItem }, ref) => {
         copy.splice(index, 1)
         setList([...copy])
     }
-
-    useImperativeHandle(ref, () => ({
-        InsertOnList: (data) => {
+    function VerifyAndChangeClient(list, newItem) {
+        if(list[0][GText.infoInputs.nCodClient] !== newItem[GText.infoInputs.nCodClient]){
+            list.forEach((obj)=>{
+                obj[GText.infoInputs.nCodClient] = newItem[GText.infoInputs.nCodClient]
+                obj[GText.infoInputs.nNameClient] = newItem[GText.infoInputs.nNameClient]
+            })
+            return list
+        }else{
+            return list
+        }
+    }
+    function CreateList(data) {
             //this enable the next item edit
             ControlEditing.current = false
             //Insert New Item on List
             let copyList = List
             copyList.push(data)
+            copyList = VerifyAndChangeClient(copyList,data)
             //Order list by selected field
             copyList.sort((a, b) => Number(a[field]) > Number(b[field]) ? 1 : Number(b[field]) > Number(a[field]) ? -1 : 0)
             //Refresch list with news itens
             setList([...copyList])
+    }
+    useImperativeHandle(ref, () => ({
+        InsertOnList: (data) => {
+            CreateList(data)
         },
         InsertOnDB: () => {
             InsertItensOnDB()
+        },
+        resetList:()=>{
+            setList([])
         }
     }));
     return (

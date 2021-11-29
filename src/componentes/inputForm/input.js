@@ -3,7 +3,7 @@ import { Text, TextInput } from 'react-native';
 import { useField } from '@unform/core';
 import Global from '../../global/global';
 
-function Input({ name, label, onChangeText, expansive,...rest }) {
+function Input({ name, label, onChangeText, expansive,UpperCase, style ,...rest }) {
   const inputRef = useRef(null);
   const { fieldName, registerField, defaultValue, error } = useField(name);
   useEffect(() => {
@@ -36,8 +36,12 @@ function Input({ name, label, onChangeText, expansive,...rest }) {
   }, [fieldName, registerField]);
   const handleChangeText = useCallback(
     text => {
-      if (inputRef.current) inputRef.current.value = text;
-      if (onChangeText) onChangeText(text);
+      let copy = ''
+      UpperCase ?
+      copy = text.toUpperCase() :
+      copy = text
+      if (inputRef.current) inputRef.current.value = copy;
+      if (onChangeText) onChangeText(copy);
     },
     [onChangeText],
   );
@@ -51,6 +55,7 @@ function Input({ name, label, onChangeText, expansive,...rest }) {
         placeholderTextColor={Global.colorPlaceholder}
         autoCorrect={false}
         {...rest}
+        style={[style,{backgroundColor:error?error:Global.backgroundInputs}]}
       />
     </>
   );

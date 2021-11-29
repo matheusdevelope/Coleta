@@ -24,6 +24,8 @@ function NewColeta({ route }) {
     function ButtonHeaderRight(data) {
         //save changes and includes the go to :
         ListRef.current.InsertOnDB()
+        InputRef.current.resetForm()
+        ListRef.current.resetList()
         navigation.navigate(GText.MyColetas)
     }
     function ButtonHeaderLeft(data) {
