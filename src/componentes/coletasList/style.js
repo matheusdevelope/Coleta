@@ -22,6 +22,7 @@ margin:0 ${Global.marginInputs};
 export const Text = styled.Text`
 font-size: ${Global.fontSize};
 color: ${Global.textColor};
+/* flex: 1; */
 `
 export const Line = styled.View`
 flex-direction: row;

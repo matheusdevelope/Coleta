@@ -16,7 +16,6 @@ return 'provisorio'
         DeleteItem(data)
     }
     function handleEditItem() {
-      //  console.log('box')
         EditItem(data)
     }
 
@@ -34,9 +33,9 @@ return 'provisorio'
                         <Text>{data[GText.infoInputs.nBrand]}</Text>
                     </Line>
                     <Line>
-                        <Text>{getName(GText.infoInputs.nCodBranch, 'type')}</Text>
+                        <Text>{GText.infoInputs.nBranch}</Text>
                         <Text>{data[GText.infoInputs.nBoard]}</Text>
-                        <Text>{GText.infoInputs.money} {data[GText.infoInputs.nValue]}</Text>
+                        <Text>{GText.money} {data[GText.infoInputs.nValue]}</Text>
                     </Line>
                     {
                         data[GText.infoInputs.nObservation] !== null &&

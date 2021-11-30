@@ -2,13 +2,13 @@ import React, { useRef, useEffect, forwardRef, useImperativeHandle } from 'react
 import { StyleSheet } from 'react-native';
 import { Form } from '@unform/mobile';
 import Input from '../inputForm/input';
-import GText, { fiedlsHide } from '../../global/texts';
+import GText, { fiedlsHide, fieldsToString } from '../../global/texts';
 import Global from '../../global/global';
 import InputSelect from '../inputSelected/inputSelect.js';
 import Button from '../button/button';
 import { Line } from './style';
 import { GetLastItemOnDB, GetProfileDB } from '../../services/routesData/routesData';
-function InputArea({ InsertNewItemOnList }, ref) {
+function InputArea({ InsertNewItemOnList, itens}, ref) {
   const formRef = useRef(null);
   const DataDB = useRef(null);
   const HigherItem = useRef(0);
@@ -72,7 +72,7 @@ function InputArea({ InsertNewItemOnList }, ref) {
     formRef.current.setErrors({})
     fieldsNeedsValue.forEach((obj) => {
       let value = data[obj]
-      value !== undefined
+      value !== undefined &    value !== null 
       ?
       value = value.length
       :
@@ -82,6 +82,9 @@ function InputArea({ InsertNewItemOnList }, ref) {
          formRef.current.setFieldError(obj,Global.redInputs)
        }
     })
+    /////debuf only
+    ret = false
+    ////debu only
     return ret
   }
   function ClearFields() {
@@ -136,7 +139,7 @@ function InputArea({ InsertNewItemOnList }, ref) {
       return LastNumberOfColeta[0][GT.fiedlsHide.ColetaNumber].toString()
     }
   }
-  async function InitialValueFields() {
+  async function InitialValueFields(LastItemOnEdit) {
     const DataNow = new Date()
     const GetDate = ('0' + DataNow.getDate()).substr(-2) + "/" + ("0" + (DataNow.getMonth() + 1)).substr(-2) + "/" + DataNow.getFullYear()
     const Hour = (DataNow.getHours().toString() + ":" + DataNow.getMinutes().toString()).toString()
@@ -149,7 +152,7 @@ function InputArea({ InsertNewItemOnList }, ref) {
       const GTF = GT.fiedlsHide
       const InitialData = [
         { name: GTF.CodImport, initialData: null },
-        { name: GTF.Item, initialData: '1' },
+        { name: GTF.Item, initialData: LastItemOnEdit ===undefined ? '1' : LastItemOnEdit.toString() },
         { name: GTF.CodCompany, initialData: ret[GText.infoDB.Table.Profile.fields.company].toString() },
         { name: GTF.CodSalesmanI, initialData: ret[GText.infoDB.Table.Profile.fields.id].toString() },
         { name: GTF.CodPriority, initialData: null },
@@ -184,9 +187,9 @@ function InputArea({ InsertNewItemOnList }, ref) {
       })
     }
   }
-  async function GetDataDB() {
+  async function GetDataDBNewColeta() {
     const ret = await GetProfileDB()
-    const numberColeta = await NumberColeta()
+    const numberColeta = await NumberColeta(ret[0])
     const obj = {
       profile: ret[0],
       numberColeta
@@ -194,8 +197,32 @@ function InputArea({ InsertNewItemOnList }, ref) {
     DataDB.current = obj
     InitialValueFields()
   }
+  async function GetDataOnEdit(itens) {
+    const ret = await GetProfileDB()
+    let LastItem = await GetLastItemOnDB(GT.nColetaNumber, itens[GT.nColetaNumber])
+    LastItem = LastItem[0][GT.nItem] + 1
+    const numberColeta = itens[GT.nColetaNumber].toString()
+    const obj = {
+      profile: ret[0],
+      numberColeta
+    }
+    SetDataHideFields(itens[GT.nNameClient], GT.nNameClient)
+    
+    DataDB.current = obj
+    InitialValueFields(LastItem)
+  }
   useImperativeHandle(ref, () => ({
     SetDataFielsOnEdit: (data) => {
+      let teste1 = data
+      fieldsToString.forEach(obj=>{
+      let temp = teste1[obj]
+      if(temp !== undefined & temp !== null){
+        temp = temp.toString()
+      }else{
+        temp = ''
+      }
+      teste1[obj] = temp
+      })
       formRef.current.setData(data)
     },
     resetForm: () => {
@@ -206,7 +233,11 @@ function InputArea({ InsertNewItemOnList }, ref) {
     }
   }));
   useEffect(() => {
-    GetDataDB()
+if(itens !== undefined){
+  GetDataOnEdit(itens)
+}else{
+  GetDataDBNewColeta()
+}
   }, [])
 
   return (

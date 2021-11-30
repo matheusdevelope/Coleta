@@ -23,8 +23,17 @@ export async function GetBrandsDB(params) {
 export async function GetBranchsDB(params) {
     return await Branch.all()
 }
-export async function GetItensDB(params) {
+export async function GetItensDB(field, param) {
+  if (field !== undefined){
+    return await Itens.findLike(field,param)
+  }else{
     return await Itens.all()
+  }
+    
+
+}
+export async function DeleteItensDB(field, param) {
+    return await Itens.remove(field,param)
 }
 export async function CreateItensDB(data) {
   return await Itens.create(data)
@@ -32,11 +41,13 @@ export async function CreateItensDB(data) {
 export async function GetProfileDB(params) {
   return await Profile.all()
 }
-export async function GetLastItemOnDB(params) {
-  
-  return await Itens.findLastItem()
+export async function GetLastItemOnDB(field, param) {
+  return await Itens.findLastItem(field, param)
 }
+export async function GetItensGrouped(params) {
   
+  return await Itens.allGrouped()
+}
 
 export function GetDataDBFormatInput(table, fieldValue, fieldLabel) {
         return new Promise((resolve, reject) => {

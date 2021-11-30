@@ -21,15 +21,21 @@ function NewColeta({ route }) {
     const navigation = useNavigation()
     const data = route.params
 
-    function ButtonHeaderRight(data) {
+   async function ButtonHeaderRight() {
         //save changes and includes the go to :
-        ListRef.current.InsertOnDB()
+       await ListRef.current.InsertOnDB()
         InputRef.current.resetForm()
         ListRef.current.resetList()
+        data !== undefined ?
+        navigation.navigate(GText.Details,data)
+        :
         navigation.navigate(GText.MyColetas)
     }
-    function ButtonHeaderLeft(data) {
+    function ButtonHeaderLeft() {
         //ask if really want exit, the data will be lost, then go back
+        data !== undefined ?
+        navigation.navigate(GText.Details,data)
+        :
         navigation.goBack()
     }
     function InsertNewItemOnList(data) {
@@ -88,8 +94,8 @@ function NewColeta({ route }) {
             <Header title={GText.NewColeta} name={Global.iconBack} name2={Global.iconSave}
                 size={Global.sizeIconHeader} color={Global.colorIconHeader} style={{ marginLeft: 8 }}
                 onClickLeft={() => { ButtonHeaderLeft() }} onClickRight={() => { ButtonHeaderRight() }} />
-            <InputArea ref={InputRef} InsertNewItemOnList={InsertNewItemOnList}   />
-            <ItensList ref={ListRef} EditItem={EditItem} />
+            <InputArea ref={InputRef} itens={data} InsertNewItemOnList={InsertNewItemOnList}   />
+            <ItensList ref={ListRef} itens={data} EditItem={EditItem} />
         </Container>
     )
 }

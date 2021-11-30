@@ -22,7 +22,7 @@ function Input({ name, label, onChangeText, expansive,UpperCase, style ,...rest 
       },
       setValue(ref, value) {
         if (inputRef.current) {
-          inputRef.current.setNativeProps({ text: value });
+          inputRef.current.setNativeProps({ text: value});
           inputRef.current.value = value;
         }
       },

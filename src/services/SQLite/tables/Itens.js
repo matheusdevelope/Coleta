@@ -406,15 +406,15 @@ const findLike = (field, param) => {
         `SELECT * FROM ${GText.infoDB.Table.Itens.name} WHERE ${field} LIKE ?;`,
         [param],
         (sqlTxn, res) => {
+          let results = []
           let len = res.rows.length;
           if (len > 0) {
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = []
               results.push(item);
-              resolve(results)  //return de object when the Promisse is complete
             }
           }
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message)
@@ -461,6 +461,56 @@ const all = () => {
   });
 };
 
+// (SELECT TOP 1 Table2.${GText.infoDB.Table.Itens.fields.Item}
+//   FROM ${GText.infoDB.Table.Itens.name} Table2
+//   WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} 
+//   = Table1.${GText.infoDB.Table.Itens.fields.ColetaNumber}
+//   order by ${GText.infoDB.Table.Itens.fields.Item} desc 
+//   ) As ${GText.LastItem} ,
+
+const allGrouped = (nameTable, groupField) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      //comando SQL modificável
+      tx.executeSql(
+        `SELECT 
+        (SELECT SUM(Table2.${GText.infoDB.Table.Itens.fields.Value} )
+          FROM ${GText.infoDB.Table.Itens.name} Table2
+          WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} 
+          = Table1.${GText.infoDB.Table.Itens.fields.ColetaNumber}
+          ) As ${GText.ValueTotal} ,
+          (SELECT COUNT(Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} )
+          FROM ${GText.infoDB.Table.Itens.name} Table2
+          WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} 
+          = Table1.${GText.infoDB.Table.Itens.fields.ColetaNumber}
+          ) As ${GText.ItensTotal} ,
+          ${GText.infoDB.Table.Itens.fields.ColetaNumber},
+          ${GText.infoDB.Table.Itens.fields.NameClient} 
+        FROM ${GText.infoDB.Table.Itens.name} Table1
+                Group By ${GText.infoDB.Table.Itens.fields.ColetaNumber}
+        order by ${GText.infoDB.Table.Itens.fields.IdMobile} desc ;`,
+        [],
+        (sqlTxn, res) => {
+          let results = []
+          let len = res.rows.length;
+          if (len > 0) {
+            for (let i = 0; i < len; i++) {
+              let item = res.rows.item(i);
+              results.push(item);
+            }
+          }
+         // console.log(results)
+          resolve(results)  //return de object when the Promisse is complete
+        },
+        error => {
+          reject(error.message)
+          console.log(`error on findAll ${GText.infoDB.Table.Itens.name} ` + error.message);
+        }
+      );
+    });
+  });
+};
+
 /**
  * BUSCA TODOS OS REGISTROS DE UMA DETERMINADA TABELA
  * - Não recebe parâmetros;
@@ -469,15 +519,20 @@ const all = () => {
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL;
  *  - Pode retornar um array vazio caso não existam registros.
  */
- const findLastItem = () => {
+ const findLastItem = (field, param) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-
+        param == undefined
+        ?
+        `SELECT * FROM ${GText.infoDB.Table.Itens.name} 
+        ORDER BY ${GText.infoDB.Table.Itens.fields.IdMobile} DESC  ;`
+        :
         ////tem que pesquisar com fazer o "TOP 1 no sqlite"
 
         `SELECT * FROM ${GText.infoDB.Table.Itens.name} 
+        WHERE ${field} = ${param}
         ORDER BY ${GText.infoDB.Table.Itens.fields.IdMobile} DESC  ;`,
         [],
         (sqlTxn, res) => {
@@ -510,24 +565,26 @@ const all = () => {
  *  - O resultado da Promise a quantidade de registros removidos (zero indica que nada foi removido);
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL.
  */
-const remove = (id) => {
+const remove = (field, param) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
         `DELETE FROM ${GText.infoDB.Table.Itens.name} 
-        WHERE ${GText.infoDB.Table.Itens.fields.IdMobile}=?;`,
-        [id],
+        WHERE ${field}=?;`,
+        [param],
         (sqlTxn, res) => {
+          let results = []
           let len = res.rows.length;
           if (len > 0) {
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = []
+              
               results.push(item);
-              resolve(results)  //return de object when the Promisse is complete
+             
             }
           }
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message)
@@ -578,6 +635,7 @@ export default {
   findLike,
   findLastItem,
   all,
+  allGrouped,
   remove,
   removeAll
 };

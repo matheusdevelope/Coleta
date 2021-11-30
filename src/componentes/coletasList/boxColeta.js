@@ -1,9 +1,9 @@
 import { useNavigation } from '@react-navigation/core';
-import React, {useState } from 'react';
+import React, { useState } from 'react';
+import { useEffect } from 'react/cjs/react.development';
 import Global from '../../global/global';
 import GText from '../../global/texts';
 import Button from '../button/button';
-import modalConfirmation from '../modalConfirmation/modalConfirmation';
 
 import { Container, Line, Text, ButtonBox } from './style';
 
@@ -22,11 +22,15 @@ const BoxColeta = ({ data, buttonLeft, buttonRight }) => {
         buttonRight(data)
         handleToggle()
     }
-    function handleDetails(params) {
-        navigate.navigate(GText.Details,data)
-        handleToggle()
+    function handleDetails() {
+        navigate.navigate(GText.Details, data)
     }
 
+    useEffect(()=>{
+        return()=>{
+            setToggle(false)
+        }
+    },[])
 
     return (
         <Container>
@@ -36,8 +40,12 @@ const BoxColeta = ({ data, buttonLeft, buttonRight }) => {
                     <Text style={{ fontWeight: 'bold' }}>{data[GText.infoInputs.nNameClient]}</Text>
                 </Line>
                 <Line>
-                    <Text>{GText.infoInputs.pColetaNumber}: {data[GText.infoInputs.nColetaNumber]}</Text>
-                    <Text>{GText.money} {data[GText.nValue]}</Text>
+                    <Text>
+                        {/* {GText.infoInputs.pColetaNumber}:  */}
+                        {data[GText.infoInputs.nColetaNumber]}</Text>
+                    <Text>{GText.infoInputs.pItem}: {data[GText.ItensTotal]}</Text>
+                    <Text>{GText.money} {data[GText.ValueTotal]}</Text>
+
                 </Line>
 
             </ButtonBox>
@@ -59,4 +67,4 @@ const BoxColeta = ({ data, buttonLeft, buttonRight }) => {
     )
 }
 
-export default  BoxColeta;
+export default BoxColeta;

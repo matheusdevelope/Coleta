@@ -8,6 +8,7 @@ import Global from "../../global/global.js";
 import GText from "../../global/texts.js";
 import Itens from "../../services/SQLite/tables/Itens.js";
 import { Container } from './style.js'
+import {GetItensGrouped} from '../../services/routesData/routesData'
 function Home() {
     const navigation = useNavigation()
     const ModalRef = useRef()
@@ -16,7 +17,7 @@ function Home() {
 
     useEffect(()=>{
         async function GetItens(){
-           const ret = await Itens.all() 
+           const ret = await GetItensGrouped()
             setData(ret)
         }
         GetItens()
