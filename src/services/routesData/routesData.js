@@ -44,9 +44,8 @@ export async function GetProfileDB(params) {
 export async function GetLastItemOnDB(field, param) {
   return await Itens.findLastItem(field, param)
 }
-export async function GetItensGrouped(params) {
-  
-  return await Itens.allGrouped()
+export async function GetItensGrouped(where, param) {
+  return await Itens.allGrouped(where, param)
 }
 
 export function GetDataDBFormatInput(table, fieldValue, fieldLabel) {
@@ -66,6 +65,7 @@ export function GetDataDBFormatInput(table, fieldValue, fieldLabel) {
                   }
                 }
               //  results.push({value:null, label:GText.infoInputs.defaultLabel})
+              console.log(results)
                 resolve(results)  //return de object when the Promisse is complete
               },
               error => {

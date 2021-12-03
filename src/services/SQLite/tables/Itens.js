@@ -468,27 +468,32 @@ const all = () => {
 //   order by ${GText.infoDB.Table.Itens.fields.Item} desc 
 //   ) As ${GText.LastItem} ,
 
-const allGrouped = (nameTable, groupField) => {
+const allGrouped = (where, param) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
+      const sql =  `SELECT 
+      (SELECT SUM(Table2.${GText.infoDB.Table.Itens.fields.Value} )
+        FROM ${GText.infoDB.Table.Itens.name} Table2
+        WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} 
+        = Table1.${GText.infoDB.Table.Itens.fields.ColetaNumber}
+        ) As ${GText.ValueTotal} ,
+        (SELECT COUNT(Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} )
+        FROM ${GText.infoDB.Table.Itens.name} Table2
+        WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} 
+        = Table1.${GText.infoDB.Table.Itens.fields.ColetaNumber}
+        ) As ${GText.ItensTotal} ,
+        ${GText.infoDB.Table.Itens.fields.ColetaNumber},
+        ${GText.infoDB.Table.Itens.fields.NameClient} 
+      FROM ${GText.infoDB.Table.Itens.name} Table1
+      ${where !== undefined ? `
+      where ${where} = ${param}
+      ` : ''}
+              Group By ${GText.infoDB.Table.Itens.fields.ColetaNumber}
+      order by ${GText.infoDB.Table.Itens.fields.IdMobile} desc ;`
       //comando SQL modificável
       tx.executeSql(
-        `SELECT 
-        (SELECT SUM(Table2.${GText.infoDB.Table.Itens.fields.Value} )
-          FROM ${GText.infoDB.Table.Itens.name} Table2
-          WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} 
-          = Table1.${GText.infoDB.Table.Itens.fields.ColetaNumber}
-          ) As ${GText.ValueTotal} ,
-          (SELECT COUNT(Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} )
-          FROM ${GText.infoDB.Table.Itens.name} Table2
-          WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} 
-          = Table1.${GText.infoDB.Table.Itens.fields.ColetaNumber}
-          ) As ${GText.ItensTotal} ,
-          ${GText.infoDB.Table.Itens.fields.ColetaNumber},
-          ${GText.infoDB.Table.Itens.fields.NameClient} 
-        FROM ${GText.infoDB.Table.Itens.name} Table1
-                Group By ${GText.infoDB.Table.Itens.fields.ColetaNumber}
-        order by ${GText.infoDB.Table.Itens.fields.IdMobile} desc ;`,
+        sql
+       ,
         [],
         (sqlTxn, res) => {
           let results = []

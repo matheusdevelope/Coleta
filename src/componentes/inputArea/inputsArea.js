@@ -8,7 +8,7 @@ import InputSelect from '../inputSelected/inputSelect.js';
 import Button from '../button/button';
 import { Line } from './style';
 import { GetLastItemOnDB, GetProfileDB } from '../../services/routesData/routesData';
-function InputArea({ InsertNewItemOnList, itens}, ref) {
+function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
   const formRef = useRef(null);
   const DataDB = useRef(null);
   const HigherItem = useRef(0);
@@ -65,26 +65,27 @@ function InputArea({ InsertNewItemOnList, itens}, ref) {
     GT.nBrand,
     GT.nValue,
     GT.nWarranty,
-    GT.nSituation,
+    //GT.nSituation,
+    GT.nBranch
   ]
   function setErrorsFields(data) {
     let ret = false
     formRef.current.setErrors({})
     fieldsNeedsValue.forEach((obj) => {
       let value = data[obj]
-      value !== undefined &    value !== null 
-      ?
-      value = value.length
-      :
-      value = 0
-       if (value === 0 ) {
-         ret = true
-         formRef.current.setFieldError(obj,Global.redInputs)
-       }
+      value !== undefined & value !== null
+        ?
+        value = value.length
+        :
+        value = 0
+      if (value === 0) {
+        ret = true
+        formRef.current.setFieldError(obj, Global.redInputs)
+      }
     })
     /////debuf only
     ret = false
-    ////debu only
+    ////debug only
     return ret
   }
   function ClearFields() {
@@ -93,11 +94,11 @@ function InputArea({ InsertNewItemOnList, itens}, ref) {
     })
   }
   function handleSubmit(data) {
-    if( !setErrorsFields(data) ){
-    ClearFields()
-    InsertNewItemOnList(data)
-    SetCountItem()
-    }    
+    if (!setErrorsFields(data)) {
+      ClearFields()
+      InsertNewItemOnList(data)
+      SetCountItem()
+    }
   }
   /**
    * -Function to set data on the hide fields of the InputArea;
@@ -152,7 +153,7 @@ function InputArea({ InsertNewItemOnList, itens}, ref) {
       const GTF = GT.fiedlsHide
       const InitialData = [
         { name: GTF.CodImport, initialData: null },
-        { name: GTF.Item, initialData: LastItemOnEdit ===undefined ? '1' : LastItemOnEdit.toString() },
+        { name: GTF.Item, initialData: LastItemOnEdit === undefined ? '1' : LastItemOnEdit.toString() },
         { name: GTF.CodCompany, initialData: ret[GText.infoDB.Table.Profile.fields.company].toString() },
         { name: GTF.CodSalesmanI, initialData: ret[GText.infoDB.Table.Profile.fields.id].toString() },
         { name: GTF.CodPriority, initialData: null },
@@ -207,38 +208,51 @@ function InputArea({ InsertNewItemOnList, itens}, ref) {
       numberColeta
     }
     SetDataHideFields(itens[GT.nNameClient], GT.nNameClient)
-    
+
     DataDB.current = obj
     InitialValueFields(LastItem)
+  }
+  function handleResetForm() {
+    formRef.current.setErrors({})
+    formRef.current.reset()
+    HigherItem.current = 0
+    InitialValueFields()
   }
   useImperativeHandle(ref, () => ({
     SetDataFielsOnEdit: (data) => {
       let teste1 = data
-      fieldsToString.forEach(obj=>{
-      let temp = teste1[obj]
-      if(temp !== undefined & temp !== null){
-        temp = temp.toString()
-      }else{
-        temp = ''
-      }
-      teste1[obj] = temp
+      fieldsToString.forEach(obj => {
+        let temp = teste1[obj]
+        if (temp !== undefined & temp !== null) {
+          temp = temp.toString()
+        } else {
+          temp = ''
+        }
+        teste1[obj] = temp
       })
       formRef.current.setData(data)
     },
     resetForm: () => {
-      formRef.current.setErrors({})
-      formRef.current.reset()
-      HigherItem.current = 0
-      InitialValueFields()
-    }
+      handleResetForm()
+    },
+    getData:()=>{
+      return formRef.current.getData()
+  }
   }));
+
   useEffect(() => {
-if(itens !== undefined){
-  GetDataOnEdit(itens)
-}else{
-  GetDataDBNewColeta()
-}
-  }, [])
+    if (isFocused) {
+      if (itens !== undefined) {
+        GetDataOnEdit(itens)
+      } else {
+        GetDataDBNewColeta()
+      }
+    }
+    return () => {
+      handleResetForm()
+    }
+  }, [isFocused])
+
 
   return (
     <Form ref={formRef} onSubmit={handleSubmit} >
@@ -262,10 +276,10 @@ if(itens !== undefined){
       </Line>
       <Input name={GT.nObservation} placeholder={GT.pObservation} style={styles.input} />
       <Line>
-        <InputSelect name={GT.nWarranty} options={options.warranty}
-          placeholder={GT.pWarranty} SetDataHideFields={SetDataHideFields} />
         <InputSelect name={GT.nBranch} options={options.branch}
           placeholder={GT.pBranch} SetDataHideFields={SetDataHideFields} />
+        <InputSelect name={GT.nWarranty} options={options.warranty}
+          placeholder={GT.pWarranty} SetDataHideFields={SetDataHideFields} />
         <InputSelect name={GT.nSituation} options={options.situation}
           placeholder={GT.pSituation} SetDataHideFields={SetDataHideFields} />
       </Line>

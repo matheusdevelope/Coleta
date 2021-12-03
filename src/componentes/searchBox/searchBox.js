@@ -7,7 +7,7 @@ function SearchBox({placeholder, name, size, color, input, setInput}) {
     return(
         <Container>
             <Input placeholder={placeholder} text={input} changeText={setInput}/>
-            <Button name={name} size={size} color={color}/>
+            <Button name={name} size={size} color={color} onClick={()=>{null}}/>
         </Container>
     )
 }

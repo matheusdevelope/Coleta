@@ -13,11 +13,19 @@ const GText = {
     Details: 'Detalhes Coleta',
 
     money: 'R$',
-    TitleDeleteItem: 'Deletar Coleta',
-    DeleteItem: 'Deletar',
-    CancelDelete: 'Voltar',
-    MessageDelete: 'Essa coleta ainda não foi enviada, tem certeza que deseja excluir?',
-
+    labelModalBackHome:{
+        title:'Deletar Coleta',
+        message:'Essa coleta ainda não foi enviada, tem certeza que deseja excluir?',
+        buttonLeft:'Voltar',
+        buttonRight:'Deletar'
+    },
+    labelModalBackNewColeta:{
+        title:'Descartar Coleta',
+        message:'Os dados inseridos não foram salvos, ao sair serão descartados!',
+        buttonLeft:'Continuar',
+        buttonRight:'Descartar',
+        invertButtons:true
+    },
     ValueTotal: 'ValorTotal',
     ItensTotal: 'TotalItens',
     LastItem: 'UltimoItem',
