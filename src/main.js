@@ -51,6 +51,8 @@ export default ({ navigation }) => {
                         animationEnabled: true,
                         drawerIcon: Icon2,
                     }}
+                    ///The initialParams is needed to reset params to NewColeta
+                    initialParams={{ data:  undefined }}
                 />
 
                 <Drawer.Screen name={GText.MyColetas} component={Home}
@@ -60,7 +62,8 @@ export default ({ navigation }) => {
                     }}
                 />
 
-                <Drawer.Screen name={GText.SendedColetas} component={SendedItens}
+                <Drawer.Screen  name={GText.SendedColetas} component={Home}
+              //  name={GText.SendedColetas} component={SendedItens}
                     options={{
                         animationEnabled: false,
                         drawerIcon: Icon3,

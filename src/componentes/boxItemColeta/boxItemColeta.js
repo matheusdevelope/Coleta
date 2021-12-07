@@ -21,8 +21,9 @@ return 'provisorio'
 
     return (
         <Container>
-            <Line>
-                <ButtonBox onPress={handleEditItem} onLongPress={() => { setToggle(!toggle) }}>
+            <Line >
+                <ButtonBox onPress={handleEditItem} onLongPress={() => { setToggle(!toggle) }}  
+                style={{backgroundColor: data[GText.infoInputs.nStatus] == GText.infoInputs.CancelStatusItem ? Global.redCanceled : Global.white}}>
                     <Text style={{ margin: 'auto', fontSize: Global.fontSize_n }}>
                         Item: {data[GText.infoInputs.nItem]}
                     </Text>

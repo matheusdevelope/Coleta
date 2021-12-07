@@ -1,12 +1,13 @@
 import React, { useImperativeHandle, forwardRef, useState, useRef } from 'react';
 import { useEffect } from 'react/cjs/react.development';
 import GText from '../../global/texts';
-import { CreateItensDB, DeleteItensDB, GetItensDB } from '../../services/routesData/routesData';
+import { CancelItensAPI } from '../../services/Api/routesApi';
+import { CreateItensDB, DeleteItensDB, GetItensDB, UpdateStatusItensOnDB } from '../../services/routesData/routesData';
 import BoxItemColeta from '../boxItemColeta/boxItemColeta';
 import { FlatList } from './style';
 
 
-const ItensList = ({ EditItem, itens, isFocused, details, refresh }, ref) => {
+const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName }, ref) => {
     const [List, setList] = useState([])
     const ControlEditing = useRef(false)
     const field = GText.infoDB.Table.Itens.fields.Item
@@ -37,14 +38,33 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh }, ref) => {
         }
     }
     async function DeleteItem(data) {
-        if (itens !== undefined & details) {
-            await DeleteItensDB(GText.infoDB.Table.Itens.fields.IdMobile, data[GText.infoDB.Table.Itens.fields.IdMobile])
-            await refresh()
+        if (RouteName === GText.SendedColetas) {
+            CancelItem(data)
+        } 
+        else {
+            if (itens !== undefined & details) {
+                await DeleteItensDB(GText.infoDB.Table.Itens.fields.IdMobile, data[GText.infoDB.Table.Itens.fields.IdMobile])
+                await refresh()
+            }
+            let copy = List
+            const index = copy.findIndex(obj => obj[field] === data[field])
+            copy.splice(index, 1)
+            setList([...copy])
         }
-        let copy = List
-        const index = copy.findIndex(obj => obj[field] === data[field])
-        copy.splice(index, 1)
-        setList([...copy])
+
+
+    }
+    async function CancelItem(data) {
+        const GT = GText.infoDB.Table.Itens.fields
+        const Itens = await GetItensDB(GT.IdMobile, data[GT.IdMobile])
+        const ret = await CancelItensAPI(Itens)
+        if (ret) {
+            await UpdateStatusItensOnDB(GT.IdMobile, data[GT.IdMobile], GText.infoInputs.CancelStatusItem)
+            GetData()
+        }
+        else {
+            alert(GText.failedOnCancelItens)
+        }
     }
     function VerifyAndChangeClient(list, newItem) {
         if (list[0][GText.infoInputs.nCodClient] !== newItem[GText.infoInputs.nCodClient]) {
@@ -56,7 +76,7 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh }, ref) => {
         } else {
             return list
         }
-    } 
+    }
     function CreateList(data) {
         //this enable the next item edit
         ControlEditing.current = false
@@ -84,7 +104,7 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh }, ref) => {
         resetList: () => {
             setList([])
         },
-        getData:()=>{
+        getData: () => {
             return List
         }
     }));
@@ -93,12 +113,12 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh }, ref) => {
             itens !== undefined &&
                 GetData()
         }
-        return()=>{
+        return () => {
             ControlEditing.current = false
             setList([])
         }
     }, [isFocused])
-    
+
     return (
         <FlatList
             ref={ref}

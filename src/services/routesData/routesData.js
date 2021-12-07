@@ -15,25 +15,25 @@ import Situation from "../SQLite/tables/situation";
  * Don't need any parameters
  */
 export async function GetClientsDB(params) {
-    return await Clients.all()
+  return await Clients.all()
 }
 export async function GetBrandsDB(params) {
-    return await Brands.all()
+  return await Brands.all()
 }
 export async function GetBranchsDB(params) {
-    return await Branch.all()
+  return await Branch.all()
 }
 export async function GetItensDB(field, param) {
-  if (field !== undefined){
-    return await Itens.findLike(field,param)
-  }else{
+  if (field !== undefined) {
+    return await Itens.findLike(field, param)
+  } else {
     return await Itens.all()
   }
-    
+
 
 }
 export async function DeleteItensDB(field, param) {
-    return await Itens.remove(field,param)
+  return await Itens.remove(field, param)
 }
 export async function CreateItensDB(data) {
   return await Itens.create(data)
@@ -44,35 +44,38 @@ export async function GetProfileDB(params) {
 export async function GetLastItemOnDB(field, param) {
   return await Itens.findLastItem(field, param)
 }
-export async function GetItensGrouped(where, param) {
-  return await Itens.allGrouped(where, param)
+export async function GetItensGrouped(where, param, param2) {
+  return await Itens.allGrouped(where, param, param2)
+}
+export async function UpdateStatusItensOnDB(where, param, newStatus) {
+  return await Itens.updateStatus(where, param, newStatus)
 }
 
 export function GetDataDBFormatInput(table, fieldValue, fieldLabel) {
-        return new Promise((resolve, reject) => {
-          db.transaction((tx) => {
-            //comando SQL modificávels
-            tx.executeSql(
-              `SELECT ${fieldValue} as value, ${fieldLabel} as label FROM ${table};`,
-              [],
-              (sqlTxn, res) => {
-                let len = res.rows.length;
-                let results = []
-                if (len > 0) {
-                  for (let i = 0; i < len; i++) {
-                    let item = res.rows.item(i);
-                    results.push(item);              
-                  }
-                }
-              //  results.push({value:null, label:GText.infoInputs.defaultLabel})
-              console.log(results)
-                resolve(results)  //return de object when the Promisse is complete
-              },
-              error => {
-                reject(error.message)
-                console.log(`error on findAll ${GText.infoDB.Table.Branch.name} ` + error.message);
-              }
-            );
-          });
-        });
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      //comando SQL modificávels
+      tx.executeSql(
+        `SELECT ${fieldValue} as value, ${fieldLabel} as label FROM ${table};`,
+        [],
+        (sqlTxn, res) => {
+          let len = res.rows.length;
+          let results = []
+          if (len > 0) {
+            for (let i = 0; i < len; i++) {
+              let item = res.rows.item(i);
+              results.push(item);
+            }
+          }
+          //  results.push({value:null, label:GText.infoInputs.defaultLabel})
+          console.log(results)
+          resolve(results)  //return de object when the Promisse is complete
+        },
+        error => {
+          reject(error.message)
+          console.log(`error on findAll ${GText.infoDB.Table.Branch.name} ` + error.message);
+        }
+      );
+    });
+  });
 }

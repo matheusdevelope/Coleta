@@ -141,6 +141,7 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
     }
   }
   async function InitialValueFields(LastItemOnEdit) {
+    
     const DataNow = new Date()
     const GetDate = ('0' + DataNow.getDate()).substr(-2) + "/" + ("0" + (DataNow.getMonth() + 1)).substr(-2) + "/" + DataNow.getFullYear()
     const Hour = (DataNow.getHours().toString() + ":" + DataNow.getMinutes().toString()).toString()
@@ -165,7 +166,7 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
         { name: GTF.CodType, initialData: null },
         { name: GTF.CodCancel, initialData: null },
         { name: GTF.ColetaNumber, initialData: DataDB.current.numberColeta },
-        { name: GTF.Status, initialData: ret[GT.InitialStatusItem] },
+        { name: GTF.Status, initialData: GT.InitialStatusItem },
         { name: GTF.InclusionDate, initialData: GetDate },
         { name: GTF.InclusionHour, initialData: Hour },
         { name: GTF.InclusionUser, initialData: ret[GText.infoDB.Table.Profile.fields.name].toString() },
@@ -220,15 +221,15 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
   }
   useImperativeHandle(ref, () => ({
     SetDataFielsOnEdit: (data) => {
-      let teste1 = data
+      let ret = data
       fieldsToString.forEach(obj => {
-        let temp = teste1[obj]
+        let temp = ret[obj]
         if (temp !== undefined & temp !== null) {
           temp = temp.toString()
         } else {
           temp = ''
         }
-        teste1[obj] = temp
+        ret[obj] = temp
       })
       formRef.current.setData(data)
     },

@@ -13,11 +13,11 @@ const Details = ({ route }) => {
     const navigate = useNavigation()
 
     function handleEdit() {
-        navigate.navigate(GText.NewColeta, { data: data })
+        navigate.navigate(GText.NewColeta, { data: data,  routeOrigin:route.params.routeOrigin })
     }
     function handleBack() {
         route.params.FromEditColeta ?
-            navigate.navigate(GText.MyColetas)
+            navigate.navigate(route.params.routeOrigin)
             :
             navigate.goBack()
     }
@@ -45,7 +45,7 @@ const Details = ({ route }) => {
                     <Text>{GText.money} {data.ValorTotal}</Text>
                 </Line>
             </SubHeader>
-            <ItensList itens={data} isFocused={isFocused} details refresh={handleRefresh} />
+            <ItensList itens={data} isFocused={isFocused} details refresh={handleRefresh} RouteName={route.params.routeOrigin} />
         </Container>
     )
 }

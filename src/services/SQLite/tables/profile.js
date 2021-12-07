@@ -227,7 +227,7 @@ const all = () => {
               results.push(item);
             }
           }
-        //  console.log(results)
+        // console.log(results)
           resolve(results)  //return de object when the Promisse is complete
         },
         error => {

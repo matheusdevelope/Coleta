@@ -7,7 +7,7 @@ import Button from '../button/button';
 
 import { Container, Line, Text, ButtonBox } from './style';
 
-const BoxColeta = ({ data, buttonLeft, buttonRight }) => {
+const BoxColeta = ({ data, buttonLeft, buttonRight, isFocused, RouteName}) => {
     const navigate = useNavigation()
     const [toggle, setToggle] = useState(false)
 
@@ -16,52 +16,45 @@ const BoxColeta = ({ data, buttonLeft, buttonRight }) => {
     }
     function handleLeft(data) {
         buttonLeft(data)
-        handleToggle()
     }
     function handleRight(data) {
         buttonRight(data)
-        handleToggle()
     }
     function handleDetails() {
-        navigate.navigate(GText.Details, data)
+        navigate.navigate(GText.Details, { data: data,  routeOrigin:RouteName })
     }
 
-    useEffect(()=>{
-        return()=>{
+    useEffect(() => {
+        return () => {
             setToggle(false)
         }
-    },[])
+    }, [isFocused])
 
     return (
         <Container>
-            <ButtonBox onLongPress={handleToggle}
-                onPress={handleDetails}>
+            <ButtonBox onLongPress={handleToggle} onPress={handleDetails} 
+            style={{backgroundColor:data[GText.ItensCanceledTotal] == data[GText.ItensTotal] ? Global.redCanceled : Global.white}}>
                 <Line>
                     <Text style={{ fontWeight: 'bold' }}>{data[GText.infoInputs.nNameClient]}</Text>
                 </Line>
                 <Line>
-                    <Text>
-                        {/* {GText.infoInputs.pColetaNumber}:  */}
-                        {data[GText.infoInputs.nColetaNumber]}</Text>
+                    <Text>{data[GText.infoInputs.nColetaNumber]}</Text>
                     <Text>{GText.infoInputs.pItem}: {data[GText.ItensTotal]}</Text>
+                    {
+                        RouteName == GText.SendedColetas  &&
+                        data[GText.ItensCanceledTotal] > 0 &&
+                        <Text>{GText.infoInputs.CancelStatusItem}: {data[GText.ItensCanceledTotal]}</Text>
+                    }
                     <Text>{GText.money} {data[GText.ValueTotal]}</Text>
-
                 </Line>
-
             </ButtonBox>
             <Line>
                 <Button name={Global.IconTrash} size={40} color={Global.colorButtonDelete}
                     onClick={() => { handleLeft(data) }}
-                    style={{
-                        flex: 1,
-                        display: toggle ? 'flex' : 'none'
-                    }} />
+                    style={{flex: 1, display: toggle ? 'flex' : 'none'}} />
                 <Button name={Global.IconEdit} size={40} color={Global.colorButtonDelete}
                     onClick={() => { handleRight(data) }}
-                    style={{
-                        flex: 1,
-                        display: toggle ? 'flex' : 'none'
-                    }} />
+                    style={{flex: 1, display: toggle ? 'flex' : 'none'}} />
             </Line>
         </Container>
     )

@@ -12,12 +12,21 @@ const GText = {
     Include: 'Incluir',
     Details: 'Detalhes Coleta',
 
+    failedOnSendItens:'Falha ao enviar coleta para o retaguarda!',
+    failedOnCancelItens:'Falha ao cancelar coleta no retaguarda!',
+
     money: 'R$',
-    labelModalBackHome:{
+    labelModalDeleteColetaHome:{
         title:'Deletar Coleta',
         message:'Essa coleta ainda não foi enviada, tem certeza que deseja excluir?',
         buttonLeft:'Voltar',
         buttonRight:'Deletar'
+    },
+    labelModalCancelSendedItens:{
+        title:'Cancelar Coleta',
+        message:'Essa coleta ficará indisponível para uso no retaguarda, tem certeza que deseja cancelar?',
+        buttonLeft:'Voltar',
+        buttonRight:'Cancelar'
     },
     labelModalBackNewColeta:{
         title:'Descartar Coleta',
@@ -28,7 +37,9 @@ const GText = {
     },
     ValueTotal: 'ValorTotal',
     ItensTotal: 'TotalItens',
+    ItensCanceledTotal:'TotalItensCancelados',
     LastItem: 'UltimoItem',
+
     infoInputs: {
         nIdMobile: 'IdMobile',
         nCodImport: 'Cod_Importacao',
@@ -173,7 +184,9 @@ const GText = {
             CancelUser: 'UsuarioCancelamento',
             CancelStation: 'EstacaoCancelamento',
         },
-        InitialStatusItem: 'Recebido',
+        InitialStatusItem: 'AguardandoEnvio',
+        SendedStatusItem: 'Recebido',
+        CancelStatusItem:'Cancelado',
         InitialPlatform: 'Coleta Mobile',   ///pegar o nome do dispositivo
         InitialImportValue: 'Sim',
     },

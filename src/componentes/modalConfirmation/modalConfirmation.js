@@ -1,11 +1,10 @@
 import React, {useImperativeHandle, forwardRef, useState} from 'react';
 import Global from '../../global/global';
-import GText from '../../global/texts';
 import Button from '../button/button';
 
 import { Container, Line, Modal, Text, View } from './styles';
 
-function ConfirmationModal({button, label,invert }, ref) {
+function ConfirmationModal({button, label }, ref) {
     const [visible, setVisible] = useState(false)
     const [data, setData] = useState('')
     useImperativeHandle(ref, () => ({
@@ -19,7 +18,6 @@ function ConfirmationModal({button, label,invert }, ref) {
     function toggle() {
         setVisible(!visible)
     }
-   // console.log('exec')
     return (
         <Modal visible={visible} onRequestClose={toggle} transparent={true} ref={ref}  >
             <Container activeOpacity={1} onPress={toggle} >

@@ -234,7 +234,7 @@ const create = (obj) => {
  *  - O resultado da Promise é a quantidade de registros atualizados;
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL.
  */
-const update = (id, obj) => {
+const update = (where, param, obj) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //comando SQL modificável
@@ -286,7 +286,7 @@ const update = (id, obj) => {
         ${GText.infoDB.Table.Itens.fields.CancelHour}=?,
         ${GText.infoDB.Table.Itens.fields.CancelUser}=?,
         ${GText.infoDB.Table.Itens.fields.CancelStation}=?
-        WHERE ${GText.infoDB.Table.Itens.fields.IdMobile}=?;`,
+        WHERE ${where}=?;`,
         [
           obj[`${GText.infoDB.Table.Itens.fields.CodImport}`],
           obj[`${GText.infoDB.Table.Itens.fields.CodCompany}`],
@@ -333,7 +333,7 @@ const update = (id, obj) => {
           obj[`${GText.infoDB.Table.Itens.fields.CancelHour}`],
           obj[`${GText.infoDB.Table.Itens.fields.CancelUser}`],
           obj[`${GText.infoDB.Table.Itens.fields.CancelStation}`],
-          id],
+          param],
         //generate a object with the result of SQL
         (sqlTxn, res) => {
           let len = res.rows.length;
@@ -449,7 +449,6 @@ const all = () => {
               results.push(item);
             }
           }
-         // console.log(results)
           resolve(results)  //return de object when the Promisse is complete
         },
         error => {
@@ -468,7 +467,7 @@ const all = () => {
 //   order by ${GText.infoDB.Table.Itens.fields.Item} desc 
 //   ) As ${GText.LastItem} ,
 
-const allGrouped = (where, param) => {
+const allGrouped = (where, param, param2) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       const sql =  `SELECT 
@@ -482,15 +481,27 @@ const allGrouped = (where, param) => {
         WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} 
         = Table1.${GText.infoDB.Table.Itens.fields.ColetaNumber}
         ) As ${GText.ItensTotal} ,
+        (SELECT COUNT(Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} )
+        FROM ${GText.infoDB.Table.Itens.name} Table2
+        WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} 
+        = Table1.${GText.infoDB.Table.Itens.fields.ColetaNumber}
+        AND Table2.${GText.infoDB.Table.Itens.fields.Status} 
+        =  '${GText.infoInputs.CancelStatusItem}'
+        ) As ${GText.ItensCanceledTotal} ,
         ${GText.infoDB.Table.Itens.fields.ColetaNumber},
         ${GText.infoDB.Table.Itens.fields.NameClient} 
       FROM ${GText.infoDB.Table.Itens.name} Table1
+
       ${where !== undefined ? `
-      where ${where} = ${param}
+      where ${where} = '${param}'
       ` : ''}
-              Group By ${GText.infoDB.Table.Itens.fields.ColetaNumber}
+      ${param2 !== undefined ? `
+      or ${where} = '${param2}'
+      ` : ''}
+      Group By ${GText.infoDB.Table.Itens.fields.ColetaNumber}
       order by ${GText.infoDB.Table.Itens.fields.IdMobile} desc ;`
       //comando SQL modificável
+    // console.log(sql)
       tx.executeSql(
         sql
        ,
@@ -504,7 +515,6 @@ const allGrouped = (where, param) => {
               results.push(item);
             }
           }
-         // console.log(results)
           resolve(results)  //return de object when the Promisse is complete
         },
         error => {
@@ -633,9 +643,39 @@ const removeAll = () => {
   });
 };
 
+const updateStatus = (where, param, newStatus)=>{
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `UPDATE ${GText.infoDB.Table.Itens.name} SET 
+        ${GText.infoDB.Table.Itens.fields.Status} = ?
+        WHERE ${where} = ?;`,
+        [newStatus, param],
+        (sqlTxn, res) => {
+          let len = res.rows.length;
+          let results = []
+          if (len > 0) {
+            for (let i = 0; i < len; i++) {
+              let item = res.rows.item(i);
+              results.push(item);
+            }
+          }
+          
+          resolve(results)  //return de object when the Promisse is complete
+        },
+        error => {
+          reject(error.message)
+          console.log(`error on update ${GText.infoDB.Table.Itens.name} ` + error.message);
+        },
+      );
+    });
+  });
+}
+
 export default {
   create,
   update,
+  updateStatus,
   find,
   findLike,
   findLastItem,
