@@ -23,7 +23,16 @@ const BoxColeta = ({ data, buttonLeft, buttonRight, isFocused, RouteName}) => {
     function handleDetails() {
         navigate.navigate(GText.Details, { data: data,  routeOrigin:RouteName })
     }
-
+    function Icon() {
+        if(RouteName == GText.MyColetas){
+         return Global.IconTrash
+        }else if(RouteName == GText.SendedColetas){
+         return Global.IconCancel
+        }
+        else{
+            return Global.IconDefault
+        }
+     }
     useEffect(() => {
         return () => {
             setToggle(false)
@@ -49,7 +58,7 @@ const BoxColeta = ({ data, buttonLeft, buttonRight, isFocused, RouteName}) => {
                 </Line>
             </ButtonBox>
             <Line>
-                <Button name={Global.IconTrash} size={40} color={Global.colorButtonDelete}
+                <Button name={Icon()} size={40} color={Global.colorButtonDelete}
                     onClick={() => { handleLeft(data) }}
                     style={{flex: 1, display: toggle ? 'flex' : 'none'}} />
                 <Button name={Global.IconEdit} size={40} color={Global.colorButtonDelete}

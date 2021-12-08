@@ -54,6 +54,7 @@ function Input({ name, label, onChangeText, expansive,UpperCase, style ,...rest 
         defaultValue={defaultValue}
         placeholderTextColor={Global.colorPlaceholder}
         autoCorrect={false}
+        autoCapitalize={'characters'}
         {...rest}
         style={[style,{backgroundColor:error?error:Global.backgroundInputs}]}
       />

@@ -7,7 +7,7 @@ import BoxItemColeta from '../boxItemColeta/boxItemColeta';
 import { FlatList } from './style';
 
 
-const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName }, ref) => {
+const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, HideCanceled }, ref) => {
     const [List, setList] = useState([])
     const ControlEditing = useRef(false)
     const field = GText.infoDB.Table.Itens.fields.Item
@@ -40,7 +40,7 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName }, 
     async function DeleteItem(data) {
         if (RouteName === GText.SendedColetas) {
             CancelItem(data)
-        } 
+        }
         else {
             if (itens !== undefined & details) {
                 await DeleteItensDB(GText.infoDB.Table.Itens.fields.IdMobile, data[GText.infoDB.Table.Itens.fields.IdMobile])
@@ -90,7 +90,14 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName }, 
         setList([...copyList])
     }
     async function GetData() {
-        const ret = await GetItensDB(GText.infoDB.Table.Itens.fields.ColetaNumber, itens[GText.infoDB.Table.Itens.fields.ColetaNumber])
+        let ret = []
+        if (HideCanceled) {
+            ret = await GetItensDB(GText.infoDB.Table.Itens.fields.ColetaNumber, itens[GText.infoDB.Table.Itens.fields.ColetaNumber],
+                GText.infoDB.Table.Itens.fields.Status, '<>', GText.infoInputs.CancelStatusItem)
+        }
+        else {
+            ret = await GetItensDB(GText.infoDB.Table.Itens.fields.ColetaNumber, itens[GText.infoDB.Table.Itens.fields.ColetaNumber])
+        }
         setList(ret)
     }
 
@@ -123,7 +130,7 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName }, 
         <FlatList
             ref={ref}
             data={List}
-            renderItem={({ item }) => (<BoxItemColeta data={item} DeleteItem={DeleteItem} EditItem={handleEditItem} />)}
+            renderItem={({ item }) => (<BoxItemColeta data={item} DeleteItem={DeleteItem} EditItem={handleEditItem} RouteName={RouteName}/>)}
             keyExtractor={item => item[field]}
         />
     )

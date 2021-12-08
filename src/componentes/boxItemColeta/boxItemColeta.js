@@ -5,20 +5,25 @@ import Button from '../button/button';
 
 import { Container, Line, Text, ButtonBox } from './style';
 
-const BoxItemColeta = ({ data, DeleteItem, EditItem}) => {
+const BoxItemColeta = ({ data, DeleteItem, EditItem, RouteName}) => {
     const [toggle, setToggle] = useState(false)
-    function getName(data, field) {
-        // const ret = []// Profile.company.branch.find(ob => ob.id = data)
-        // return ret[field]
-return 'provisorio'
-    }
     function handleDelete() {
         DeleteItem(data)
+        setToggle(false)
     }
     function handleEditItem() {
         EditItem(data)
     }
-
+    function Icon() {
+        if(RouteName == GText.MyColetas){
+         return Global.IconTrash
+        }else if(RouteName == GText.SendedColetas){
+         return Global.IconCancel
+        }
+        else{
+            return Global.IconDefault
+        }
+     }
     return (
         <Container>
             <Line >
@@ -34,7 +39,7 @@ return 'provisorio'
                         <Text>{data[GText.infoInputs.nBrand]}</Text>
                     </Line>
                     <Line>
-                        <Text>{GText.infoInputs.nBranch}</Text>
+                        <Text>{data[GText.infoInputs.nBranch]}</Text>
                         <Text>{data[GText.infoInputs.nBoard]}</Text>
                         <Text>{GText.money} {data[GText.infoInputs.nValue]}</Text>
                     </Line>
@@ -46,7 +51,7 @@ return 'provisorio'
                     }
 
                 </ButtonBox>
-                <Button name={'trash'} size={40} color={Global.colorButtonDelete}
+                <Button name={Icon()} size={40} color={Global.colorButtonDelete}
                     onClick={handleDelete}
                     style={{
                         margin: 8,

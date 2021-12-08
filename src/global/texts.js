@@ -96,7 +96,7 @@ const GText = {
         pCodImport: 'Cod_Importacao',
         pCodCompany: 'CodEmpresa',
         pCodBranch: 'CodFilial',
-        pBranch: 'Filial',
+        pBranch: 'Tipo Pneu',
         pCodSalesman: 'CodVendedorIndex',
         pCodPriority: 'CodPrioridade',
         pColetaDate: 'DataColeta',

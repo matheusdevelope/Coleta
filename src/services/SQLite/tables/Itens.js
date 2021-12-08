@@ -398,12 +398,15 @@ const find = (id) => {
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL;
  *  - Pode retornar um array vazio caso nenhum objeto seja encontrado.
  */
-const findLike = (field, param) => {
+const findLike = (field, param, field2, condition ,  param2) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
+      const sql = `SELECT * FROM ${GText.infoDB.Table.Itens.name} WHERE ${field} LIKE ? 
+      ${field2 !== undefined ? `AND ${field2} ${condition} '${param2}'` : ''}
+      ;`
       //comando SQL modificável
       tx.executeSql(
-        `SELECT * FROM ${GText.infoDB.Table.Itens.name} WHERE ${field} LIKE ?;`,
+        sql,
         [param],
         (sqlTxn, res) => {
           let results = []

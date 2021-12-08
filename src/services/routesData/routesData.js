@@ -23,9 +23,14 @@ export async function GetBrandsDB(params) {
 export async function GetBranchsDB(params) {
   return await Branch.all()
 }
-export async function GetItensDB(field, param) {
+/**
+* - IF use FIELD2, need to send the condition (format sql) and PARAM2
+* - returns a object with data
+*
+*/
+export async function GetItensDB(field, param, field2, condition, param2) {
   if (field !== undefined) {
-    return await Itens.findLike(field, param)
+    return await Itens.findLike(field, param, field2, condition, param2)
   } else {
     return await Itens.all()
   }

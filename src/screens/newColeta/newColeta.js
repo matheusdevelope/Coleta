@@ -117,7 +117,7 @@ function NewColeta({ route }) {
                 size={Global.sizeIconHeader} color={Global.colorIconHeader} style={{ marginLeft: 8 }}
                 onClickLeft={() => { ButtonHeaderLeft() }} onClickRight={() => { ButtonHeaderRight() }} />
             <InputArea ref={InputRef} itens={data} isFocused={isFocused} InsertNewItemOnList={InsertNewItemOnList} />
-            <ItensList ref={ListRef} itens={data} isFocused={isFocused} EditItem={EditItem} />
+            <ItensList ref={ListRef} itens={data} isFocused={isFocused} EditItem={EditItem} HideCanceled />
             <ConfirmationModal ref={ModalRef} button={Navigate} label={GText.labelModalBackNewColeta} invert />
         </Container>
     )
