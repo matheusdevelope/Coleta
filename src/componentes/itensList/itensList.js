@@ -11,7 +11,6 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
     const [List, setList] = useState([])
     const ControlEditing = useRef(false)
     const field = GText.infoDB.Table.Itens.fields.Item
-
     async function InsertItensOnDB() {
         async function insert() {
             const lenght = List.length
@@ -33,7 +32,7 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
                 DeleteItem(data)
                 ControlEditing.current = true
             } else {
-                alert('Termine de editar o item anterior!')
+                alert(GText.MessageAlertEditingItemNewColeta)
             }
         }
     }
@@ -91,13 +90,7 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
     }
     async function GetData() {
         let ret = []
-        if (HideCanceled) {
-            ret = await GetItensDB(GText.infoDB.Table.Itens.fields.ColetaNumber, itens[GText.infoDB.Table.Itens.fields.ColetaNumber],
-                GText.infoDB.Table.Itens.fields.Status, '<>', GText.infoInputs.CancelStatusItem)
-        }
-        else {
             ret = await GetItensDB(GText.infoDB.Table.Itens.fields.ColetaNumber, itens[GText.infoDB.Table.Itens.fields.ColetaNumber])
-        }
         setList(ret)
     }
 
@@ -130,7 +123,8 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
         <FlatList
             ref={ref}
             data={List}
-            renderItem={({ item }) => (<BoxItemColeta data={item} DeleteItem={DeleteItem} EditItem={handleEditItem} RouteName={RouteName}/>)}
+            renderItem={({ item }) => (<BoxItemColeta data={item} DeleteItem={DeleteItem} EditItem={handleEditItem} 
+                RouteName={RouteName} HideCanceled={HideCanceled} details={details}/>)}
             keyExtractor={item => item[field]}
         />
     )

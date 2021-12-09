@@ -5,7 +5,7 @@ import Button from '../button/button';
 
 import { Container, Line, Text, ButtonBox } from './style';
 
-const BoxItemColeta = ({ data, DeleteItem, EditItem, RouteName}) => {
+const BoxItemColeta = ({ data, DeleteItem, EditItem, RouteName, HideCanceled, details}) => {
     const [toggle, setToggle] = useState(false)
     function handleDelete() {
         DeleteItem(data)
@@ -25,7 +25,7 @@ const BoxItemColeta = ({ data, DeleteItem, EditItem, RouteName}) => {
         }
      }
     return (
-        <Container>
+        <Container style={{display:HideCanceled & details === undefined  & data[GText.infoInputs.nStatus] == GText.infoInputs.CancelStatusItem? 'none' : 'flex'}}>
             <Line >
                 <ButtonBox onPress={handleEditItem} onLongPress={() => { setToggle(!toggle) }}  
                 style={{backgroundColor: data[GText.infoInputs.nStatus] == GText.infoInputs.CancelStatusItem ? Global.redCanceled : Global.white}}>

@@ -35,6 +35,7 @@ const GText = {
         buttonRight:'Descartar',
         invertButtons:true
     },
+    MessageAlertEditingItemNewColeta:'Termine de editar o item anterior!',
     ValueTotal: 'ValorTotal',
     ItensTotal: 'TotalItens',
     ItensCanceledTotal:'TotalItensCancelados',
