@@ -15,3 +15,15 @@ font-size: ${Global.fontSizeTitle};
 color: ${Global.white};
 font-weight:bold;
 `
+export const Box1 = styled.View`
+flex-direction: row;
+max-width: ${Global.MaxWidth};
+flex:1;
+justify-content: space-between;
+`
+export const Box2 = styled.View`
+flex-direction: row-reverse;
+max-width: ${Global.MaxWidth};
+flex:1;
+justify-content: space-between;
+`

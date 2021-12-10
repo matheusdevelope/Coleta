@@ -660,13 +660,14 @@ const removeAll = () => {
   });
 };
 
-const updateStatus = (where, param, newStatus)=>{
+const updateStatus = (where, param,param2, newStatus)=>{
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
         `UPDATE ${GText.infoDB.Table.Itens.name} SET 
         ${GText.infoDB.Table.Itens.fields.Status} = ?
-        WHERE ${where} = ? and ${GText.infoDB.Table.Itens.fields.Status} = '${GText.infoInputs.InitialStatusItem}';`,
+        WHERE ${where} = ? 
+        and ${GText.infoDB.Table.Itens.fields.Status} = '${param2}';`,
         [newStatus, param],
         (sqlTxn, res) => {
           let len = res.rows.length;

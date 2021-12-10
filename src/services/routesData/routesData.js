@@ -52,8 +52,8 @@ export async function GetLastItemOnDB(field, param) {
 export async function GetItensGrouped(where, param, param2) {
   return await Itens.allGrouped(where, param, param2)
 }
-export async function UpdateStatusItensOnDB(where, param, newStatus) {
-  return await Itens.updateStatus(where, param, newStatus)
+export async function UpdateStatusItensOnDB(where, param, param2,newStatus) {
+  return await Itens.updateStatus(where, param,param2, newStatus)
 }
 
 export function GetDataDBFormatInput(table, fieldValue, fieldLabel) {

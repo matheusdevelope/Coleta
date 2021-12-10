@@ -62,7 +62,7 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
         const Itens = await GetItensDB(GT.IdMobile, data[GT.IdMobile])
         const ret = await CancelItensAPI(Itens)
         if (ret) {
-            await UpdateStatusItensOnDB(GT.IdMobile, data[GT.IdMobile], GText.infoInputs.CancelStatusItem)
+            await UpdateStatusItensOnDB(GT.IdMobile, data[GT.IdMobile],GText.infoInputs.SendedStatusItem, GText.infoInputs.CancelStatusItem)
             GetData()
         }
         else {

@@ -86,7 +86,7 @@ function Home({ route }) {
         const Itens = await GetItensDB(GT.ColetaNumber, data[GT.ColetaNumber])
         const ret = await CancelItensAPI(Itens)
         if (ret) {
-            await UpdateStatusItensOnDB(GT.ColetaNumber, data[GT.ColetaNumber], GText.infoInputs.CancelStatusItem)
+            await UpdateStatusItensOnDB(GT.ColetaNumber, data[GT.ColetaNumber],GText.infoInputs.SendedStatusItem, GText.infoInputs.CancelStatusItem)
             await GetItens()
             ModalRef.current.toggle()
         }
@@ -112,7 +112,7 @@ function Home({ route }) {
         const Itens = await GetItensDB(GT.ColetaNumber, data[GT.ColetaNumber])
         const ret = await SendItensAPI(Itens)
         if (ret) {
-            await UpdateStatusItensOnDB(GT.ColetaNumber, data[GT.ColetaNumber], GText.infoInputs.SendedStatusItem)
+            await UpdateStatusItensOnDB(GT.ColetaNumber, data[GT.ColetaNumber],GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
             await GetItens()
         }
         else {
@@ -122,8 +122,8 @@ function Home({ route }) {
     function RenderScreen() {
         if (RouteName == GText.MyColetas) {
             return (
-                <Header title={GText.title} name={Global.IconMenu} name2={Global.IconNew}
-                    size={Global.sizeIconHeader} color={Global.colorIconHeader}
+                <Header title={GText.title} name={Global.IconMenu} name2={Global.IconNew} nameExtra={Global.IconSend}
+                    size={Global.sizeIconHeader} color={Global.colorIconHeader} onClickRightExtra={()=>{}}
                     onClickLeft={() => { ButtonHeaderLeft() }} onClickRight={() => { ButtonHeaderRight() }} />
             )
         }

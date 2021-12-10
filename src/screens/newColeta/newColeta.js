@@ -112,7 +112,7 @@ function NewColeta({ route }) {
         // }
         
     }
-     CreateDataOffline()
+    // CreateDataOffline()
 
     return (
         <Container>
