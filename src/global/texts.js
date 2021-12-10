@@ -38,6 +38,7 @@ const GText = {
     MessageAlertEditingItemNewColeta:'Termine de editar o item anterior!',
     ValueTotal: 'ValorTotal',
     ItensTotal: 'TotalItens',
+    ItensNotSended: 'TotalItensNaoEnviados',
     ItensCanceledTotal:'TotalItensCancelados',
     LastItem: 'UltimoItem',
 

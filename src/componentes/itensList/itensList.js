@@ -15,7 +15,11 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
         async function insert() {
             const lenght = List.length
             for (let i = 0; i < lenght; i++) {
-                await CreateItensDB(List[i])
+                let copy = List[i]
+                if (copy[GText.infoDB.Table.Itens.fields.Status] === GText.infoInputs.SendedStatusItem) {
+                    copy[GText.infoDB.Table.Itens.fields.Status] = GText.infoInputs.InitialStatusItem
+                }
+                await CreateItensDB(copy)
             }
         }
         if (itens !== undefined) {
@@ -90,7 +94,7 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
     }
     async function GetData() {
         let ret = []
-            ret = await GetItensDB(GText.infoDB.Table.Itens.fields.ColetaNumber, itens[GText.infoDB.Table.Itens.fields.ColetaNumber])
+        ret = await GetItensDB(GText.infoDB.Table.Itens.fields.ColetaNumber, itens[GText.infoDB.Table.Itens.fields.ColetaNumber])
         setList(ret)
     }
 
@@ -123,8 +127,8 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
         <FlatList
             ref={ref}
             data={List}
-            renderItem={({ item }) => (<BoxItemColeta data={item} DeleteItem={DeleteItem} EditItem={handleEditItem} 
-                RouteName={RouteName} HideCanceled={HideCanceled} details={details}/>)}
+            renderItem={({ item }) => (<BoxItemColeta data={item} DeleteItem={DeleteItem} EditItem={handleEditItem}
+                RouteName={RouteName} HideCanceled={HideCanceled} details={details} />)}
             keyExtractor={item => item[field]}
         />
     )

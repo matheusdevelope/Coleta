@@ -473,7 +473,9 @@ const all = () => {
 const allGrouped = (where, param, param2) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
-      const sql =  `SELECT 
+      const sql =  `
+      SELECT * FROM(
+      SELECT 
       (SELECT SUM(Table2.${GText.infoDB.Table.Itens.fields.Value} )
         FROM ${GText.infoDB.Table.Itens.name} Table2
         WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} 
@@ -491,6 +493,13 @@ const allGrouped = (where, param, param2) => {
         AND Table2.${GText.infoDB.Table.Itens.fields.Status} 
         =  '${GText.infoInputs.CancelStatusItem}'
         ) As ${GText.ItensCanceledTotal} ,
+        (SELECT COUNT(Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} )
+        FROM ${GText.infoDB.Table.Itens.name} Table2
+        WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} 
+        = Table1.${GText.infoDB.Table.Itens.fields.ColetaNumber}
+        AND Table2.${GText.infoDB.Table.Itens.fields.Status} 
+        =  '${GText.infoInputs.InitialStatusItem}'
+        ) As ${GText.ItensNotSended} ,
         ${GText.infoDB.Table.Itens.fields.ColetaNumber},
         ${GText.infoDB.Table.Itens.fields.NameClient} 
       FROM ${GText.infoDB.Table.Itens.name} Table1
@@ -502,7 +511,11 @@ const allGrouped = (where, param, param2) => {
       or ${where} = '${param2}'
       ` : ''}
       Group By ${GText.infoDB.Table.Itens.fields.ColetaNumber}
-      order by ${GText.infoDB.Table.Itens.fields.IdMobile} desc ;`
+      order by ${GText.infoDB.Table.Itens.fields.IdMobile} desc )
+      ${param2 !== undefined ? `
+      where ${GText.ItensNotSended} = 0
+      ` : ''}
+      `
       //comando SQL modificável
     // console.log(sql)
       tx.executeSql(
@@ -518,6 +531,7 @@ const allGrouped = (where, param, param2) => {
               results.push(item);
             }
           }
+          // console.log(results)
           resolve(results)  //return de object when the Promisse is complete
         },
         error => {
@@ -652,7 +666,7 @@ const updateStatus = (where, param, newStatus)=>{
       tx.executeSql(
         `UPDATE ${GText.infoDB.Table.Itens.name} SET 
         ${GText.infoDB.Table.Itens.fields.Status} = ?
-        WHERE ${where} = ?;`,
+        WHERE ${where} = ? and ${GText.infoDB.Table.Itens.fields.Status} = '${GText.infoInputs.InitialStatusItem}';`,
         [newStatus, param],
         (sqlTxn, res) => {
           let len = res.rows.length;

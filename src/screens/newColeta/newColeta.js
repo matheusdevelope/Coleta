@@ -6,15 +6,15 @@ import Global from "../../global/global.js";
 import GText from "../../global/texts.js";
 import InputArea from "../../componentes/inputArea/inputsArea.js";
 import { Container } from './style.js'
-// import { Clientes, Marcas, Profile, Situation, Warranty, Company, Branch, Coletas } from "../../../DadosOffline/Coletas Lista.js";
-// import warranty from "../../services/SQLite/tables/warranty";
-// import situation from "../../services/SQLite/tables/situation";
-// import brands from "../../services/SQLite/tables/brands.js";
-// import branch from "../../services/SQLite/tables/branch.js";
-// import clients from "../../services/SQLite/tables/clients.js";
-// import profile from "../../services/SQLite/tables/profile.js";
- //import Itens from "../../services/SQLite/tables/Itens";
-// import company from "../../services/SQLite/tables/company";
+ import { Clientes, Marcas, Profile, Situation, Warranty, Company, Branch, Coletas } from "../../../DadosOffline/Coletas Lista.js";
+ import warranty from "../../services/SQLite/tables/warranty";
+ import situation from "../../services/SQLite/tables/situation";
+ import brands from "../../services/SQLite/tables/brands.js";
+ import branch from "../../services/SQLite/tables/branch.js";
+ import clients from "../../services/SQLite/tables/clients.js";
+ import profile from "../../services/SQLite/tables/profile.js";
+ import Itens from "../../services/SQLite/tables/Itens";
+ import company from "../../services/SQLite/tables/company";
 import { GetItensGrouped } from "../../services/routesData/routesData.js";
 import ConfirmationModal from "../../componentes/modalConfirmation/modalConfirmation.js";
 function NewColeta({ route }) {
@@ -67,49 +67,52 @@ function NewColeta({ route }) {
     function EditItem(data) {
         InputRef.current.SetDataFielsOnEdit(data)
     }
-    function CreateDataOffline(params) {
+   
+    async function CreateDataOffline(params) {
         //   const a = Object.keys(Coletas).length
         //      for (let index = 0; index < a; index++) {
         //       Itens.create(Coletas[index])
         //       }
         //     Itens.all()
 
-        // profile.create(Profile)
-        // profile.all()
+        // await profile.create(Profile)
+        //  profile.all()
 
-        // company.create(Company)
-        // company.all()
+        // await company.create(Company)
+        //  company.all()
 
-        const d = Object.keys(Branch).length
-        for (let index = 0; index < d; index++) {
-            branch.create(Branch[index])
-        }
+        //  const d = Object.keys(Branch).length
+        //  for (let index = 0; index < d; index++) {
+        //      branch.create(Branch[index])
+        //  }
 
-        branch.all()
+        // branch.removeAll()
 
-        // const e = Object.keys(Clientes).length
-        // for (let index = 0; index < e; index++) {
-        //     clients.create(Clientes[index])
+        //  const e = Object.keys(Clientes).length
+        //  for (let index = 0; index < e; index++) {
+        //    await  clients.create(Clientes[index])
+        //  }
+        //  clients.all()
+        // warranty.removeAll()
+        // const f = Object.keys(Warranty).length
+        // for (let index = 0; index < f; index++) {
+        //      warranty.create(Warranty[index])
         // }
-        // clients.all()
-        const f = Object.keys(Warranty).length
-        for (let index = 0; index < f; index++) {
-            warranty.create(Warranty[index])
-        }
-        warranty.all()
-        const g = Object.keys(Situation).length
-        for (let index = 0; index < g; index++) {
-            situation.create(Situation[index])
-        }
-        situation.all()
-
-        const h = Object.keys(Marcas).length
-        for (let index = 0; index < h; index++) {
-            brands.create(Marcas[index])
-        }
-        brands.all()
+       
+        // situation.removeAll()
+        // const g = Object.keys(Situation).length
+        // for (let index = 0; index < g; index++) {
+        //     situation.create(Situation[index])
+        // }
+        
+        // brands.removeAll()
+        // const h = Object.keys(Marcas).length
+        // for (let index = 0; index < h; index++) {
+        //     brands.create(Marcas[index])
+        // }
+        
     }
-    // CreateDataOffline()
+     CreateDataOffline()
 
     return (
         <Container>
