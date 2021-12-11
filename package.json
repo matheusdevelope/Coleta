@@ -12,6 +12,7 @@
     "go": "yarn android --deviceId=localhost:5555 --no-jetifier"
   },
   "dependencies": {
+    "@react-native-community/checkbox": "^0.5.9",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/drawer": "^5.12.5",
     "@react-navigation/native": "^5.9.4",

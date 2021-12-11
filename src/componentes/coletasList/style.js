@@ -10,8 +10,8 @@ padding: 10px;
 flex: 1;
 `
 export const Container = styled.View`
-min-height: ${((Global.MaxHeigtBoxItemColeta) + 'px')};
-width: ${(Global.width +'px')};
+flex-direction: row;
+align-items: center;
 `
 export const ButtonBox = styled.TouchableOpacity`
 padding: ${Global.paddingHeightInputs};
@@ -29,4 +29,9 @@ flex-direction: row;
 justify-content: space-between;
 margin:${Global.marginInputs};
 
+`
+export const LineBox = styled.View`
+flex: 1;
+min-height: ${((Global.MaxHeigtBoxItemColeta) + 'px')};
+margin-bottom: ${Global.margin};
 `

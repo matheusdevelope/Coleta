@@ -15,9 +15,24 @@ function Home({ route }) {
     const isFocused = useIsFocused()
     const navigation = useNavigation()
     const ModalRef = useRef()
-    const [search, setSearch] = useState('')
-    const [data, setData] = useState([])
     const dataRef = useRef([])
+    const CheckBoxRef = useRef(false)
+    const [search, setSearch] = useState('')
+    const [showCheckBox, setShowCheckBox] = useState(false)
+    const [data, setData] = useState([])
+    const [checkedState, setCheckedState] = useState([]);
+    const handleOnChange = (position) => {
+    
+        const updatedCheckedState = checkedState.map((item, index) =>
+          index === position ? !item : item
+        );
+        setCheckedState(updatedCheckedState)
+    }
+    function handleOpenCheckBox(params) {
+        console.log('e')
+        handleOnChange()
+        setShowCheckBox(!showCheckBox)
+    }
     const field = GText.infoDB.Table.Itens.fields.ColetaNumber
 
     function getLabelModal() {
@@ -37,6 +52,7 @@ function Home({ route }) {
             ret = await GetItensGrouped(GText.infoDB.Table.Itens.fields.Status, GText.infoInputs.SendedStatusItem, GText.infoInputs.CancelStatusItem)
         }
         dataRef.current = OrderList(ret, field, true)
+        setCheckedState(new Array(data.length).fill(false))
         setData(OrderList(ret, field, true))
     }
     /**
@@ -119,12 +135,17 @@ function Home({ route }) {
             alert(GText.failedOnSendItens)
         }
     }
+    function OpenSelectItens(){
+        CheckBoxRef.current.value() ?
+        CheckBoxRef.current.unselectAll() :
+        CheckBoxRef.current.selectAll()
+    }
     function RenderScreen() {
         if (RouteName == GText.MyColetas) {
             return (
                 <Header title={GText.title} name={Global.IconMenu} name2={Global.IconNew} nameExtra={Global.IconSend}
-                    size={Global.sizeIconHeader} color={Global.colorIconHeader} onClickRightExtra={()=>{}}
-                    onClickLeft={() => { ButtonHeaderLeft() }} onClickRight={() => { ButtonHeaderRight() }} />
+                    size={Global.sizeIconHeader} color={Global.colorIconHeader} onClickLeft={() => { ButtonHeaderLeft() }} 
+                    onClickRight={() => { ButtonHeaderRight() }} onClickRightExtra={()=>{OpenSelectItens()}} />
             )
         }
         else if (RouteName == GText.SendedColetas) {
@@ -150,7 +171,10 @@ function Home({ route }) {
             <RenderScreen />
             <SearchBox placeholder={GText.SearchBox} name={Global.iconSearchBox}
                 size={Global.sizeIconSearch} color={Global.colorIconSearch} input={search} setInput={setSearch} />
-            <ColetasList data={data} buttonLeft={OpenConfirmation} buttonRight={handleEdit} isFocused={isFocused} RouteName={RouteName} />
+            <ColetasList data={data} buttonLeft={OpenConfirmation} buttonRight={handleEdit} isFocused={isFocused} 
+            RouteName={RouteName} ref={CheckBoxRef} showCheckBox={showCheckBox} setShowCheckBox={handleOpenCheckBox}
+            checkedState={checkedState} handleOnChange={handleOnChange}
+            />
             <ConfirmationModal ref={ModalRef} button={ButtonModal} label={getLabelModal()} />
         </Container>
     )

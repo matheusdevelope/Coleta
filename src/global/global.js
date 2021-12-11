@@ -44,7 +44,7 @@ const Global = {
     IconSelectInputOpen: 'angle-up',
     IconAdd: 'plus',
     IconNew: 'plus-square',
-    IconSend:'send',
+    IconSend:'list-ul',
     IconTrash: 'trash',
     IconCancel: 'ban',
     IconEdit: 'edit',
