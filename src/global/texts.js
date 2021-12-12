@@ -11,9 +11,11 @@ const GText = {
     SearchBox: 'Nome Cliente',
     Include: 'Incluir',
     Details: 'Detalhes Coleta',
+    Selection:'Selecionar Itens',
 
     failedOnSendItens:'Falha ao enviar coleta para o retaguarda!',
     failedOnCancelItens:'Falha ao cancelar coleta no retaguarda!',
+    messageNoItensSelected:'Selecione pelo menos um item!',
 
     money: 'R$',
     labelModalDeleteColetaHome:{

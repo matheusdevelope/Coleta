@@ -6,9 +6,10 @@ import ConfirmationModal from "../../componentes/modalConfirmation/modalConfirma
 import SearchBox from "../../componentes/searchBox/searchBox.js";
 import Global from "../../global/global.js";
 import GText from "../../global/texts.js";
-import { Container } from './style.js'
+import { Container, Line } from './style.js'
 import { DeleteItensDB, GetItensDB, GetItensGrouped, UpdateStatusItensOnDB } from '../../services/routesData/routesData'
 import { CancelItensAPI, SendItensAPI } from "../../services/Api/routesApi.js";
+import Button from "../../componentes/button/button.js";
 
 function Home({ route }) {
     const RouteName = route.name
@@ -16,23 +17,11 @@ function Home({ route }) {
     const navigation = useNavigation()
     const ModalRef = useRef()
     const dataRef = useRef([])
-    const CheckBoxRef = useRef(false)
+    const CheckedAll = useRef(false)
     const [search, setSearch] = useState('')
     const [showCheckBox, setShowCheckBox] = useState(false)
     const [data, setData] = useState([])
-    const [checkedState, setCheckedState] = useState([]);
-    const handleOnChange = (position) => {
-    
-        const updatedCheckedState = checkedState.map((item, index) =>
-          index === position ? !item : item
-        );
-        setCheckedState(updatedCheckedState)
-    }
-    function handleOpenCheckBox(params) {
-        console.log('e')
-        handleOnChange()
-        setShowCheckBox(!showCheckBox)
-    }
+    const ItensChecked = useRef(0)
     const field = GText.infoDB.Table.Itens.fields.ColetaNumber
 
     function getLabelModal() {
@@ -52,7 +41,6 @@ function Home({ route }) {
             ret = await GetItensGrouped(GText.infoDB.Table.Itens.fields.Status, GText.infoInputs.SendedStatusItem, GText.infoInputs.CancelStatusItem)
         }
         dataRef.current = OrderList(ret, field, true)
-        setCheckedState(new Array(data.length).fill(false))
         setData(OrderList(ret, field, true))
     }
     /**
@@ -76,7 +64,7 @@ function Home({ route }) {
     }
     function ButtonHeaderRight() {
         if (RouteName == GText.MyColetas) {
-            navigation.navigate(GText.NewColeta, { data: undefined, routeOrigin:RouteName})
+            navigation.navigate(GText.NewColeta, { data: undefined, routeOrigin: RouteName })
         }
         else if (RouteName == GText.SendedColetas) {
             alert('SYNC ITENS')
@@ -86,80 +74,156 @@ function Home({ route }) {
         navigation.openDrawer()
     }
     function OpenConfirmation(data) {
-        ModalRef.current.toggle()
-        ModalRef.current.sendvalue(data)
+        if (ItensChecked.current > 0) {
+            ModalRef.current.toggle()
+            ModalRef.current.sendvalue(data)
+        }
+        else {
+            alert(GText.messageNoItensSelected)
+        }
     }
-    function ButtonModal(data) {
-        if (RouteName == GText.MyColetas) {
-            handleDelete(data)
+    async function ButtonModal(origin) {
+        let arrayItens = []
+        dataRef.current.forEach((obj) => {
+            if (obj.checked === true) {
+                arrayItens.push(obj[GText.infoInputs.nColetaNumber])
+            }
+        })
+        if (origin === 'left') {
+            if (RouteName == GText.MyColetas) {
+                for (let i = 0; i < arrayItens.length; i++) {
+                    await handleDelete(arrayItens[i])
+                }
+            }
+            else if (RouteName == GText.SendedColetas) {
+                for (let i = 0; i < arrayItens.length; i++) {
+                    await handleCancelColeta(arrayItens[i])
+                }
+            }
         }
-        else if (RouteName == GText.SendedColetas) {
-            handleCancelColeta(data)
+        else if(origin == 'right'){
+            for (let i = 0; i < arrayItens.length; i++) {
+                await SendItem(arrayItens[i])
+            }
         }
+        await GetItens()
+        ModalRef.current.toggle()
     }
     async function handleCancelColeta(data) {
         const GT = GText.infoDB.Table.Itens.fields
-        const Itens = await GetItensDB(GT.ColetaNumber, data[GT.ColetaNumber])
+        const Itens = await GetItensDB(GT.ColetaNumber, data)
         const ret = await CancelItensAPI(Itens)
         if (ret) {
-            await UpdateStatusItensOnDB(GT.ColetaNumber, data[GT.ColetaNumber],GText.infoInputs.SendedStatusItem, GText.infoInputs.CancelStatusItem)
-            await GetItens()
-            ModalRef.current.toggle()
+            await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.SendedStatusItem, GText.infoInputs.CancelStatusItem)
         }
         else {
             alert(GText.failedOnCancelItens)
         }
     }
     async function handleDelete(data) {
-        await DeleteItensDB(GText.infoDB.Table.Itens.fields.ColetaNumber, data[GText.infoDB.Table.Itens.fields.ColetaNumber])
-        await GetItens()
-        ModalRef.current.toggle()
+        await DeleteItensDB(GText.infoDB.Table.Itens.fields.ColetaNumber, data)
     }
     function handleEdit(data) {
         if (RouteName === GText.MyColetas) {
             SendItem(data)
         }
         else if (RouteName === GText.SendedColetas) {
-            navigation.navigate(GText.NewColeta, { data: data, routeOrigin:RouteName })
+            navigation.navigate(GText.NewColeta, { data: data, routeOrigin: RouteName })
         }
     }
     async function SendItem(data) {
         const GT = GText.infoDB.Table.Itens.fields
-        const Itens = await GetItensDB(GT.ColetaNumber, data[GT.ColetaNumber])
+        const Itens = await GetItensDB(GT.ColetaNumber, data)
         const ret = await SendItensAPI(Itens)
         if (ret) {
-            await UpdateStatusItensOnDB(GT.ColetaNumber, data[GT.ColetaNumber],GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
-            await GetItens()
+            await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
         }
         else {
             alert(GText.failedOnSendItens)
         }
     }
-    function OpenSelectItens(){
-        CheckBoxRef.current.value() ?
-        CheckBoxRef.current.unselectAll() :
-        CheckBoxRef.current.selectAll()
-    }
     function RenderScreen() {
-        if (RouteName == GText.MyColetas) {
-            return (
-                <Header title={GText.title} name={Global.IconMenu} name2={Global.IconNew} nameExtra={Global.IconSend}
-                    size={Global.sizeIconHeader} color={Global.colorIconHeader} onClickLeft={() => { ButtonHeaderLeft() }} 
-                    onClickRight={() => { ButtonHeaderRight() }} onClickRightExtra={()=>{OpenSelectItens()}} />
-            )
+        if (showCheckBox) {
+            // if (RouteName == GText.MyColetas) {
+                return (
+                    <Header title={GText.Selection} name={Global.IconMenu} name2={CheckedAll.current ? Global.IconCloseList : Global.IconList}
+                        size={Global.sizeIconHeader} color={Global.colorIconHeader} onClickLeft={() => { ButtonHeaderLeft() }}
+                        onClickRight={() => { toggleChecedkAll() }} />
+                )
+            // }
+            // else if (RouteName == GText.SendedColetas) {
+            //     return (
+            //         <Header title={GText.Selection} name={Global.IconMenu} name2={Global.IconSync}
+            //             size={Global.sizeIconHeader} color={Global.colorIconHeader}
+            //             onClickLeft={() => { ButtonHeaderLeft() }} onClickRight={() => { ButtonHeaderRight() }} />
+            //     )
+            // }
         }
-        else if (RouteName == GText.SendedColetas) {
-            return (
-                <Header title={GText.SendedColetas} name={Global.IconMenu} name2={Global.IconSync}
-                    size={Global.sizeIconHeader} color={Global.colorIconHeader}
-                    onClickLeft={() => { ButtonHeaderLeft() }} onClickRight={() => { ButtonHeaderRight() }} />
-            )
+        else {
+            if (RouteName == GText.MyColetas) {
+                return (
+                    <Header title={GText.title} name={Global.IconMenu} name2={Global.IconNew}
+                        size={Global.sizeIconHeader} color={Global.colorIconHeader} onClickLeft={() => { ButtonHeaderLeft() }}
+                        onClickRight={() => { ButtonHeaderRight() }} />
+                )
+            }
+            else if (RouteName == GText.SendedColetas) {
+                return (
+                    <Header title={GText.SendedColetas} name={Global.IconMenu} name2={Global.IconSync}
+                        size={Global.sizeIconHeader} color={Global.colorIconHeader}
+                        onClickLeft={() => { ButtonHeaderLeft() }} onClickRight={() => { ButtonHeaderRight() }} />
+                )
+            }
         }
 
+
+    }
+    function toggleChecedkAll() {
+        CheckedAll.current = !CheckedAll.current
+        handleOnChange(CheckedAll.current, null, true)
+        !CheckedAll.current && setShowCheckBox(false)
+
+    }
+
+    const handleOnChange = (checked, param, all) => {
+        let copyRef = dataRef.current
+        const newDataRef = copyRef.map((obj, index) => {
+            if (all) {
+                copyRef[index].checked = checked
+            }
+            else {
+                if (obj[GText.infoInputs.nColetaNumber] === param) {
+                    copyRef[index].checked = checked
+                }
+            }
+            return obj
+        })
+
+        ItensChecked.current = all ? checked ? 1 : 0 : checked ? ItensChecked.current + 1 : ItensChecked.current - 1;
+        dataRef.current = newDataRef
+        setData(FilterList(dataRef.current, GText.infoInputs.nNameClient, search))
+    }
+    function handleOpenCheckBox() {
+        setShowCheckBox(!showCheckBox)
+    }
+    function Icon() {
+        if (RouteName == GText.MyColetas) {
+            return Global.IconTrash
+        } else if (RouteName == GText.SendedColetas) {
+            return Global.IconCancel
+        }
+        else {
+            return Global.IconDefault
+        }
     }
     useEffect(() => {
         isFocused &&
             GetItens()
+
+        return () => {
+            ItensChecked.current = 0
+            setShowCheckBox(false)
+        }
     }, [isFocused])
 
     useEffect(() => {
@@ -171,10 +235,18 @@ function Home({ route }) {
             <RenderScreen />
             <SearchBox placeholder={GText.SearchBox} name={Global.iconSearchBox}
                 size={Global.sizeIconSearch} color={Global.colorIconSearch} input={search} setInput={setSearch} />
-            <ColetasList data={data} buttonLeft={OpenConfirmation} buttonRight={handleEdit} isFocused={isFocused} 
-            RouteName={RouteName} ref={CheckBoxRef} showCheckBox={showCheckBox} setShowCheckBox={handleOpenCheckBox}
-            checkedState={checkedState} handleOnChange={handleOnChange}
+            <ColetasList data={data} buttonLeft={OpenConfirmation} buttonRight={handleEdit} isFocused={isFocused}
+                RouteName={RouteName} showCheckBox={showCheckBox} setShowCheckBox={handleOpenCheckBox}
+                handleOnChange={handleOnChange}
             />
+            <Line style={{ display: ItensChecked.current > 0 ? 'flex' : 'none' }}>
+                <Button name={Icon()} size={40} color={Global.colorButtonDelete}
+                    onClick={() => { OpenConfirmation('left') }}
+                    style={{ flex: 1 }} />
+                <Button name={RouteName === GText.SendedColetas ? Global.IconSync : Global.IconSend} size={35} color={Global.colorButtonDelete}
+                    onClick={() => { OpenConfirmation('right') }}
+                    style={{ flex: 1 }} />
+            </Line>
             <ConfirmationModal ref={ModalRef} button={ButtonModal} label={getLabelModal()} />
         </Container>
     )

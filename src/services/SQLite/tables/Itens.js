@@ -501,7 +501,8 @@ const allGrouped = (where, param, param2) => {
         =  '${GText.infoInputs.InitialStatusItem}'
         ) As ${GText.ItensNotSended} ,
         ${GText.infoDB.Table.Itens.fields.ColetaNumber},
-        ${GText.infoDB.Table.Itens.fields.NameClient} 
+        ${GText.infoDB.Table.Itens.fields.NameClient} ,
+        ('false') as checked
       FROM ${GText.infoDB.Table.Itens.name} Table1
 
       ${where !== undefined ? `
