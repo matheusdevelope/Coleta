@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, CommonActions } from '@react-navigation/native'
 import styled from 'styled-components/native'
 import ImgLogin from '../../assets/login.svg'
 import Global from '../../global/global'
@@ -11,9 +11,18 @@ export default () => {
   const navigation = useNavigation()
   const [emailField, setEmailField] = useState('')
   const [passField, setPassField] = useState('')
+  const [signInLoading, setSignInLoading] = useState(false)
 
+  function navigate() {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0, routes: [{ name: 'Preload', params: { origin: 'login' } }]
+      })
+    );
+  }
 
   async function SignInClick() {
+    setSignInLoading(true)
     const dataLogin = {
       user: emailField,
       password: passField,
@@ -28,34 +37,45 @@ export default () => {
         await profile.removeAll()
         await profile.create(retAPI)
         const retDB = await profile.all()
-        if (retDB[0][GText.infoDB.Table.Profile.fields.email] === emailField) {
-          navigation.reset({ routes: [{ name: 'HomeDrawer' }] })
-          ///init sync data
+        if (retDB) {
+          if (retDB[0][GText.infoDB.Table.Profile.fields.email] === emailField) {
+            navigate()
+            return
+            ///init sync data
+          }
+          else {
+            alert('Conflito de dados interno, redefina o app para as configurações padrão!')
+          }
         }
-        else{
-         alert('Conflito de dados interno, redefina o app para as configurações padrão!')
+        else {
+          alert('Conflito de dados interno, redefina o app para as configurações padrão!')
         }
-      } 
+
+      }
       else {
         alert('Email ou senha incorretos, tente novamente!')
       }
     }
+    setSignInLoading(false)
   }
 
 
   return (
     <Container>
-      <ImgLogin width={120} />
+      <ImgLogin width={'50%'} />
       <Text>{GText.LoginMessage}</Text>
       <AreaInputs>
-        <Input placeholder={GText.placeholderEmailLogin} keyboardType='email-address' autoCapitalize='none' autoCorrect={false}
-          value={emailField} onChangeText={t => setEmailField(t)} />
-        <Input placeholder={GText.placeholderPasswordLogin}
-          value={passField} onChangeText={t => setPassField(t)}
-          secureTextEntry={true} />
+        <Input placeholder={GText.placeholderEmailLogin} keyboardType='email-address' autoCapitalize='none'
+          autoCorrect={false} value={emailField} onChangeText={t => setEmailField(t)}
+          editable={!signInLoading} />
+        <Input placeholder={GText.placeholderPasswordLogin} value={passField} onChangeText={t => setPassField(t)}
+          secureTextEntry={true} editable={!signInLoading} />
       </AreaInputs>
+      {signInLoading &&
+        <LoadingIcon size='large' color='#0C0A0A' />
+      }
       <SingInButton onPress={SignInClick} >
-        <CustonButtonText>Entrar</CustonButtonText>
+        <CustonButtonText>{GText.ButtonSignIn}</CustonButtonText>
       </SingInButton>
     </Container>
   )
@@ -71,6 +91,8 @@ border-radius: 8px;
 margin: 5px 0;
 padding-left: 16px;
 
+`
+export const LoadingIcon = styled.ActivityIndicator`
 `
 const AreaInputs = styled.View`
 width: 90%;

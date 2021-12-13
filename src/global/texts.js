@@ -5,81 +5,82 @@ const GText = {
     MyColetas: 'Minhas Coletas',
     SendedColetas: 'Coletas Enviadas',
     NewColeta: 'Nova Coleta',
-    EditColeta:'Editar Coleta',
+    EditColeta: 'Editar Coleta',
     Config: 'Configurações',
     Send: 'Enviar',
     Cancel: 'Cancelar',
     SearchBox: 'Nome Cliente',
     Include: 'Incluir',
     Details: 'Detalhes Coleta',
-    Selection:'Selecionar Itens',
-LoginMessage:'Faça seu login!',
-    failedOnSendItens:'Falha ao enviar coleta para o retaguarda!',
-    failedOnCancelItens:'Falha ao cancelar coleta no retaguarda!',
-    messageNoItensSelected:'Selecione pelo menos um item!',
-    placeholderPasswordLogin:'Insira sua senha',
-    placeholderEmailLogin:'Insira seu email',
+    Selection: 'Selecionar Itens',
+    LoginMessage: 'Faça seu login!',
+    ButtonSignIn: 'Entrar',
+    failedOnSendItens: 'Falha ao enviar coleta para o retaguarda!',
+    failedOnCancelItens: 'Falha ao cancelar coleta no retaguarda!',
+    messageNoItensSelected: 'Selecione pelo menos um item!',
+    placeholderPasswordLogin: 'Insira sua senha',
+    placeholderEmailLogin: 'Insira seu email',
     money: 'R$',
-    labelModalSendColetaHome:{
-        title:'Enviar Coleta',
-        message:'Essa coleta será enviada para o retaguarda, deseja continuar?',
-        buttonLeft:'Voltar',
-        buttonRight:'Enviar'
+    labelModalSendColetaHome: {
+        title: 'Enviar Coleta',
+        message: 'Essa coleta será enviada para o retaguarda, deseja continuar?',
+        buttonLeft: 'Voltar',
+        buttonRight: 'Enviar'
     },
-    labelModalSendColetasHome:{
-        title:'Enviar Coletas',
-        message:'As coletas serão enviadas para o retaguarda, deseja continuar?',
-        buttonLeft:'Voltar',
-        buttonRight:'Enviar'
+    labelModalSendColetasHome: {
+        title: 'Enviar Coletas',
+        message: 'As coletas serão enviadas para o retaguarda, deseja continuar?',
+        buttonLeft: 'Voltar',
+        buttonRight: 'Enviar'
     },
-    labelModalSyncSendedItem:{
-        title:'Sincronizar Dados',
-        message:'Deseja sincronizar dados da coleta?',
-        buttonLeft:'Voltar',
-        buttonRight:'Sincronizar'
+    labelModalSyncSendedItem: {
+        title: 'Sincronizar Dados',
+        message: 'Deseja sincronizar dados da coleta?',
+        buttonLeft: 'Voltar',
+        buttonRight: 'Sincronizar'
     },
-    labelModalSyncSendedItens:{
-        title:'Sincronizar Dados',
-        message:'Deseja sincronizar dados das coletas?',
-        buttonLeft:'Voltar',
-        buttonRight:'Sincronizar'
+    labelModalSyncSendedItens: {
+        title: 'Sincronizar Dados',
+        message: 'Deseja sincronizar dados das coletas?',
+        buttonLeft: 'Voltar',
+        buttonRight: 'Sincronizar'
     },
-    labelModalDeleteColetaHome:{
-        title:'Deletar Coleta',
-        message:'Essa coleta ainda não foi enviada, tem certeza que deseja excluir?',
-        buttonLeft:'Voltar',
-        buttonRight:'Deletar'
+    labelModalDeleteColetaHome: {
+        title: 'Deletar Coleta',
+        message: 'Essa coleta ainda não foi enviada, tem certeza que deseja excluir?',
+        buttonLeft: 'Voltar',
+        buttonRight: 'Deletar'
     },
-    labelModalDeleteColetasHome:{
-        title:'Deletar Coletas',
-        message:'Essas coletas ainda não foram enviadas, tem certeza que deseja excluir?',
-        buttonLeft:'Voltar',
-        buttonRight:'Deletar'
+    labelModalDeleteColetasHome: {
+        title: 'Deletar Coletas',
+        message: 'Essas coletas ainda não foram enviadas, tem certeza que deseja excluir?',
+        buttonLeft: 'Voltar',
+        buttonRight: 'Deletar'
     },
-    labelModalCancelSendedItem:{
-        title:'Cancelar Coleta',
-        message:'Essa coleta ficará indisponível para uso no retaguarda, tem certeza que deseja cancelar?',
-        buttonLeft:'Voltar',
-        buttonRight:'Cancelar'
+    labelModalCancelSendedItem: {
+        title: 'Cancelar Coleta',
+        message: 'Essa coleta ficará indisponível para uso no retaguarda, tem certeza que deseja cancelar?',
+        buttonLeft: 'Voltar',
+        buttonRight: 'Cancelar'
     },
-    labelModalCancelSendedItens:{
-        title:'Cancelar Coleta',
-        message:'As coletas ficarão indisponíveis para uso no retaguarda, tem certeza que deseja cancelar?',
-        buttonLeft:'Voltar',
-        buttonRight:'Cancelar'
+    labelModalCancelSendedItens: {
+        title: 'Cancelar Coleta',
+        message: 'As coletas ficarão indisponíveis para uso no retaguarda, tem certeza que deseja cancelar?',
+        buttonLeft: 'Voltar',
+        buttonRight: 'Cancelar'
     },
-    labelModalBackNewColeta:{
-        title:'Descartar Coleta',
-        message:'Os dados inseridos não foram salvos, ao sair serão descartados!',
-        buttonLeft:'Continuar',
-        buttonRight:'Descartar',
-        invertButtons:true
+    labelModalBackNewColeta: {
+        title: 'Descartar Coleta',
+        message: 'Os dados inseridos não foram salvos, ao sair serão descartados!',
+        buttonLeft: 'Continuar',
+        buttonRight: 'Descartar',
+        invertButtons: true
     },
-    MessageAlertEditingItemNewColeta:'Termine de editar o item anterior!',
+    MessageAlertEditingItemNewColeta: 'Termine de editar o item anterior!',
     ValueTotal: 'ValorTotal',
     ItensTotal: 'TotalItens',
     ItensNotSended: 'TotalItensNaoEnviados',
-    ItensCanceledTotal:'TotalItensCancelados',
+    ItensCanceledTotal: 'TotalItensCancelados',
     LastItem: 'UltimoItem',
 
     infoInputs: {
@@ -228,7 +229,7 @@ LoginMessage:'Faça seu login!',
         },
         InitialStatusItem: 'AguardandoEnvio',
         SendedStatusItem: 'Recebido',
-        CancelStatusItem:'Cancelado',
+        CancelStatusItem: 'Cancelado',
         InitialPlatform: 'Coleta Mobile',   ///pegar o nome do dispositivo
         InitialImportValue: 'Sim',
     },

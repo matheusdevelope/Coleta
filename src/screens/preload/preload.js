@@ -1,64 +1,35 @@
 
-import React, { useEffect } from "react";
-import{useNavigation} from '@react-navigation/native'
-import styled from 'styled-components/native'
+import React, { useEffect, useState} from "react";
+import { useNavigation } from '@react-navigation/native'
 import Fundo from '../../assets/fundo.svg'
-import GText from "../../global/texts";
 import { GetProfileDB } from "../../services/routesData/routesData";
-import profile from "../../services/SQLite/tables/profile";
+import { Container, Modal, ViewModal, LoadingIcon } from './style.js'
 
-export default () => {
+export default ({ route }) => {
     const navigation = useNavigation()
+    const [show, setShow] = useState(false)
 
- 
-    // async function CheckAsync() {
-    //     try {
-    //         const PrimeiroUso = await GetAsync('PrimeiroUso')
-    //         if (PrimeiroUso == undefined) {
-    //             CreateLogError()
-    //             ListaAsync.map(async (data)=>{
-    //               await SetAsync(data, [])
-    //             })
-    //             await SetAsync("Cod_Importacao",'1')
-    //             await SetAsync("PrimeiroUso","Nao")
-    //             //OpenApp()
-    //             console.log('Primeiro Uso')
-    //         }
-    //     }
-    //     catch (e) { console.log('Preload', e) 
-    //     SetLogError("Preload", e)
-    // }
-    // }
-    // async function OpenApp(){
-    //         try {
-    //           const data = await GetAsync('DadosPerfil')
-    //           if(data !== null) {
-    //             if (data.token !=""){  
-    //                 ListaAsync.map(async (data)=>{
-    //                     await Refresh(data)
-    //                   })
-    //                 navigation.reset({ routes:[{name: 'HomeDrawer'}] })  
-    //             }
 
-    //           }
-    //           else{   navigation.reset({ routes:[{name: 'Login'}] }) 
-    //         CheckAsync()
-    //         }
-    //         } catch(e) {
-    //             console.log('Erro no Verificados de Login',e)
-    //   }}
-     useEffect(() => {
+    function handleInitialSyncData() {
+        console.log('handleInitialSyncData')
+        setShow(true)
+    }
+
+    useEffect(() => {
+        console.log('useEffect preload')
         async function navigate() {
             const profile = await GetProfileDB()
-            if(!profile){
-                navigation.reset({ routes:[{name: 'Login'}] })
+            if (!profile) {
+                navigation.reset({ routes: [{ name: 'Login' }] })
             }
-            else{
-              navigation.reset({ routes:[{name: 'HomeDrawer'}] })  
+            else {
+                navigation.reset({ routes: [{ name: 'HomeDrawer' }] })
             }
         }
-        navigate()      
-     }, [])
+        route.params.origin !== 'preload' ?
+            navigate() :
+            handleInitialSyncData()
+    }, [])
     return (
 
         <Container>
@@ -71,21 +42,3 @@ export default () => {
         </Container>
     )
 }
-
-
-const Container = styled.SafeAreaView`
-background-color: #fff;
-flex: 1;
-justify-content: center;
-align-items: center;
-`
-const LoadingIcon = styled.ActivityIndicator`
-`
-const Modal = styled.Modal`
-`
-const ViewModal = styled.View`
-height:100%;
-margin-bottom: 35%;
-justify-content:flex-end;
-flex:1;
-`

@@ -214,6 +214,7 @@ const findLike = (field, param) => {
  *  - Pode retornar um array vazio caso não existam registros.
  */
 const all = () => {
+  let results = false
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //comando SQL modificável
@@ -221,7 +222,7 @@ const all = () => {
         `SELECT * FROM ${GText.infoDB.Table.Profile.name};`,
         [],
         (sqlTxn, res) => {
-          let results = false
+         
           let len = res.rows.length;
           if (len > 0) {
             results =[]
@@ -234,7 +235,7 @@ const all = () => {
           resolve(results)  //return de object when the Promisse is complete
         },
         error => {
-          reject([])
+          reject(results)
           console.log(`error on findAll ${GText.infoDB.Table.Profile.name} ` + error.message);
         }
       );

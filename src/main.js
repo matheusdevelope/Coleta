@@ -59,7 +59,6 @@ export default ({ navigation }) => {
                 />
 
                 <Drawer.Screen  name={GText.SendedColetas} component={Home}
-              //  name={GText.SendedColetas} component={SendedItens}
                     options={{
                         animationEnabled: false,
                         drawerIcon: Icon3,
@@ -79,11 +78,14 @@ export default ({ navigation }) => {
 
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }} >
-             <Stack.Screen name='Preload' component={Preload} options={{
+             <Stack.Screen 
+            // name='Login' component={login}
+             name='Preload' component={Preload} 
+             initialParams={{origin:'preload'}}
+             options={{
                 animationEnabled: false,
             }}
             />
-
              <Stack.Screen name='Login' component={login} options={{
                 animationEnabled: false,
             }}
