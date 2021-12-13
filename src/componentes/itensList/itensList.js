@@ -11,6 +11,7 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
     const [List, setList] = useState([])
     const ControlEditing = useRef(false)
     const field = GText.infoDB.Table.Itens.fields.Item
+
     async function InsertItensOnDB() {
         async function insert() {
             const lenght = List.length
@@ -54,8 +55,6 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
             copy.splice(index, 1)
             setList([...copy])
         }
-
-
     }
     async function CancelItem(data) {
         const GT = GText.infoDB.Table.Itens.fields
@@ -110,6 +109,9 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
         },
         getData: () => {
             return List
+        },
+        GetItemOnEdit:()=>{
+            return ControlEditing.current
         }
     }));
     useEffect(() => {

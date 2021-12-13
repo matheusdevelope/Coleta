@@ -18,6 +18,7 @@ padding: ${Global.paddingHeightInputs};
 border-radius: ${Global.borderRadius};
 background-color: ${Global.white};
 margin:0 ${Global.marginInputs};
+height: 85px;
 `
 export const Text = styled.Text`
 font-size: ${Global.fontSize};

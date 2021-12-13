@@ -1,3 +1,4 @@
+import CheckBox from '@react-native-community/checkbox';
 import { useNavigation } from '@react-navigation/core';
 import React from 'react';
 import Global from '../../global/global';
@@ -26,14 +27,14 @@ const BoxColeta = ({ data, RouteName, showCheckBox, setShowCheckBox, handleOnCha
    
     return (
         <Container >
-            {/* {showCheckBox &&
+             {showCheckBox &&
                 <CheckBox
                     value={data.checked ===true ? true : false}
                     onValueChange={(newValue) => handleSelectCheckBox(newValue)}
-                />} */}
+                />}
             <LineBox >
                 <ButtonBox onLongPress={handleToggle} onPress={handleDetails}
-                    style={{ backgroundColor: showCheckBox ? data.checked === true ? Global.bluelight2 :Global.white  : data[GText.ItensCanceledTotal] == data[GText.ItensTotal] ? 
+                    style={{ backgroundColor: data.checked === true ? Global.bluelight2 : data[GText.ItensCanceledTotal] == data[GText.ItensTotal] ? 
                     Global.redCanceled : Global.white }}>
                     <Line>
                         <Text style={{ fontWeight: 'bold' }}>{data[GText.infoInputs.nNameClient]}</Text>

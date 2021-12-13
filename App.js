@@ -6,7 +6,6 @@ import * as React from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 import Main from './src/main'
-import Home from './src/screens/home/home';
 
 
 export default function App() {

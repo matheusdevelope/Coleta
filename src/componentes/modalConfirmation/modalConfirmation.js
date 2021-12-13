@@ -1,10 +1,12 @@
-import React, {useImperativeHandle, forwardRef, useState} from 'react';
+import React, {useImperativeHandle, forwardRef, useState, useRef} from 'react';
 import Global from '../../global/global';
 import Button from '../button/button';
 
 import { Container, Line, Modal, Text, View } from './styles';
 
 function ConfirmationModal({button, label }, ref) {
+    const labelRef = useRef(false)
+    let dataLabel = !labelRef.current ? label : labelRef.current
     const [visible, setVisible] = useState(false)
     const [data, setData] = useState('')
     useImperativeHandle(ref, () => ({
@@ -13,6 +15,9 @@ function ConfirmationModal({button, label }, ref) {
         },
         sendvalue:(data)=>{
             setData(data)
+        },
+        setLabel:(data)=>{
+            labelRef.current = data
         }
     }));
     function toggle() {
@@ -22,24 +27,24 @@ function ConfirmationModal({button, label }, ref) {
         <Modal visible={visible} onRequestClose={toggle} transparent={true} ref={ref}  >
             <Container activeOpacity={1} onPress={toggle} >
                 <View activeOpacity={1}>
-                    <Text style={{ fontSize: Global.fontSizeTitle_n, fontWeight: 'bold' }}>{label.title}</Text>
-                    <Text>{label.message}</Text>
+                    <Text style={{ fontSize: Global.fontSizeTitle_n, fontWeight: 'bold' }}>{dataLabel.title}</Text>
+                    <Text>{dataLabel.message}</Text>
                     {
-                        label.invertButtons ?
+                        dataLabel.invertButtons ?
                             <Line>
-                                <Button label={label.buttonRight} styleLabel={{ color: Global.black, fontWeight: 'bold' }}
+                                <Button label={dataLabel.buttonRight} styleLabel={{ color: Global.black, fontWeight: 'bold' }}
                                     style={[style, { backgroundColor: Global.red }]}
                                     onClick={() => { button(data) }} />
-                                <Button label={label.buttonLeft} styleLabel={{ color: Global.black, fontWeight: 'bold' }}
+                                <Button label={dataLabel.buttonLeft} styleLabel={{ color: Global.black, fontWeight: 'bold' }}
                                     style={[style, { backgroundColor: Global.bluelight3 }]}
                                     onClick={toggle} />
                             </Line>
                             :
                             <Line>
-                                <Button label={label.buttonLeft} styleLabel={{ color: Global.black, fontWeight: 'bold' }}
+                                <Button label={dataLabel.buttonLeft} styleLabel={{ color: Global.black, fontWeight: 'bold' }}
                                     style={[style, { backgroundColor: Global.bluelight3 }]}
                                     onClick={toggle} />
-                                <Button label={label.buttonRight} styleLabel={{ color: Global.black, fontWeight: 'bold' }}
+                                <Button label={dataLabel.buttonRight} styleLabel={{ color: Global.black, fontWeight: 'bold' }}
                                     style={[style, { backgroundColor: Global.red }]}
                                     onClick={() => { button(data) }} />
                             </Line>

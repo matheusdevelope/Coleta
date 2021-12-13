@@ -5,6 +5,7 @@ const GText = {
     MyColetas: 'Minhas Coletas',
     SendedColetas: 'Coletas Enviadas',
     NewColeta: 'Nova Coleta',
+    EditColeta:'Editar Coleta',
     Config: 'Configurações',
     Send: 'Enviar',
     Cancel: 'Cancelar',
@@ -18,15 +19,51 @@ const GText = {
     messageNoItensSelected:'Selecione pelo menos um item!',
 
     money: 'R$',
+    labelModalSendColetaHome:{
+        title:'Enviar Coleta',
+        message:'Essa coleta será enviada para o retaguarda, deseja continuar?',
+        buttonLeft:'Voltar',
+        buttonRight:'Enviar'
+    },
+    labelModalSendColetasHome:{
+        title:'Enviar Coletas',
+        message:'As coletas serão enviadas para o retaguarda, deseja continuar?',
+        buttonLeft:'Voltar',
+        buttonRight:'Enviar'
+    },
+    labelModalSyncSendedItem:{
+        title:'Sincronizar Dados',
+        message:'Deseja sincronizar dados da coleta?',
+        buttonLeft:'Voltar',
+        buttonRight:'Sincronizar'
+    },
+    labelModalSyncSendedItens:{
+        title:'Sincronizar Dados',
+        message:'Deseja sincronizar dados das coletas?',
+        buttonLeft:'Voltar',
+        buttonRight:'Sincronizar'
+    },
     labelModalDeleteColetaHome:{
         title:'Deletar Coleta',
         message:'Essa coleta ainda não foi enviada, tem certeza que deseja excluir?',
         buttonLeft:'Voltar',
         buttonRight:'Deletar'
     },
-    labelModalCancelSendedItens:{
+    labelModalDeleteColetasHome:{
+        title:'Deletar Coletas',
+        message:'Essas coletas ainda não foram enviadas, tem certeza que deseja excluir?',
+        buttonLeft:'Voltar',
+        buttonRight:'Deletar'
+    },
+    labelModalCancelSendedItem:{
         title:'Cancelar Coleta',
         message:'Essa coleta ficará indisponível para uso no retaguarda, tem certeza que deseja cancelar?',
+        buttonLeft:'Voltar',
+        buttonRight:'Cancelar'
+    },
+    labelModalCancelSendedItens:{
+        title:'Cancelar Coleta',
+        message:'As coletas ficarão indisponíveis para uso no retaguarda, tem certeza que deseja cancelar?',
         buttonLeft:'Voltar',
         buttonRight:'Cancelar'
     },

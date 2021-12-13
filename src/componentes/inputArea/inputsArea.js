@@ -250,6 +250,7 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
       }
     }
     return () => {
+      isFocused &&
       handleResetForm()
     }
   }, [isFocused])

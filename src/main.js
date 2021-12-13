@@ -5,8 +5,8 @@ import Home from './screens/home/home'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import GText from './global/texts';
 import Details from './screens/details/details';
-import SendedItens from './screens/sendedItens/sendedItens';
 import NewColeta from './screens/newColeta/newColeta';
+import { EventEmitter } from 'react-native';
 
 
 export default ({ navigation }) => {
@@ -18,10 +18,6 @@ export default ({ navigation }) => {
     const Icon2 = () => { return (<Icon name="plus-square" size={25} color="#7159c1" />) }
     const Icon3 = () => { return (<Icon name="list" size={25} color="#7159c1" />) }
     const Icon4 = () => { return (<Icon name="cog" size={25} color="#7159c1" />) }
-
-
-
-
 
     const ConfigurationScreen = () => {
         return (
@@ -39,7 +35,6 @@ export default ({ navigation }) => {
     }
     const HomeDrawer = () => {
         return (
-
             <Drawer.Navigator initialRouteName={GText.MyColetas}
                 drawerContentOptions={{
                     // activeTintColor: '#e91e63',
@@ -80,6 +75,7 @@ export default ({ navigation }) => {
             </Drawer.Navigator>
         )
     }
+   
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }} >
             {/* <Stack.Screen name='Preload' component={Preload} options={{

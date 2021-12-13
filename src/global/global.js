@@ -51,7 +51,7 @@ const Global = {
     IconSync: 'refresh',
     IconMenu: 'navicon',
     IconDefault:'trash',
-    IconCloseList:'window-close',
+    IconCloseList:'close',
     IconList:'list-ul',
     sizeiconAdd: 40,
     colorPlaceholder: 'rgba(34, 34, 34, 1)',

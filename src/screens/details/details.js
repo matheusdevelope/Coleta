@@ -13,7 +13,7 @@ const Details = ({ route }) => {
     const navigate = useNavigation()
 
     function handleEdit() {
-        navigate.navigate(GText.NewColeta, { data: data,  routeOrigin:route.params.routeOrigin })
+        navigate.navigate(GText.NewColeta, { data: data,  routeOrigin:route.params.routeOrigin, titleScreen:GText.EditColeta})
     }
     function handleBack() {
         route.params.FromEditColeta ?
