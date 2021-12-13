@@ -65,14 +65,16 @@ import db from "../SQLiteDatabase";
         //generate a object with the result of SQL
         (sqlTxn, res) => {
           let len = res.rows.length;
+          let results = false
+          
           if (len > 0) {
+            results = []
            for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = []
               results.push(item);
-              resolve(results)  //return de object when the Promisse is complete
             }
           }
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message)
@@ -219,9 +221,10 @@ const all = () => {
         `SELECT * FROM ${GText.infoDB.Table.Profile.name};`,
         [],
         (sqlTxn, res) => {
-          let results = []
+          let results = false
           let len = res.rows.length;
           if (len > 0) {
+            results =[]
            for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
               results.push(item);
@@ -289,14 +292,14 @@ const removeAll = () => {
         [],
         (sqlTxn, res) => {
           let len = res.rows.length;
+          let results = []
           if (len > 0) {
            for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = []
               results.push(item);
-              resolve(results)  //return de object when the Promisse is complete
             }
           }
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message)

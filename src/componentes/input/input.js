@@ -1,13 +1,13 @@
 import React from "react";
-import {Container, Input} from './style'
+import {Container, InputArea} from './style'
 
-function InputApp({placeholder, text, changeText, ...rest}) {
+function Input({placeholder, text, changeText, ...rest}) {
     
     return(
         <Container>
-            <Input placeholder={placeholder} value={text} onChangeText={(e)=>{changeText(e) }} {...rest}/>
+            <InputArea placeholder={placeholder} value={text} onChangeText={(e)=>{changeText(e) }} {...rest}/>
         </Container>
     )
 }
 
-export default InputApp
+export default Input

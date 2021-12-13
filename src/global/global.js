@@ -9,6 +9,7 @@ const Global = {
     bluelight2: '#cfe4fa',
     bluelight3: '#d9eafc',
     backgroundModal: 'rgba(34, 34, 34, 0.3)',
+    blackTransparent:'rgba(34, 34, 34, 0.1)',
     textColor: 'rgba(34, 34, 34, 1)',
     red: 'rgba(255, 0, 0, 0.5)',
     redInputs: 'rgba(255, 1, 0, 0.04)',

@@ -8,7 +8,7 @@ background-color: ${Global.white};
 flex: 1;
 border-radius: ${Global.borderRadius};
 `
-export const Input = styled.TextInput`
+export const InputArea = styled.TextInput`
 font-size: ${Global.fontSize};
 color: ${Global.black};
 padding:${Global.paddingHeightInputs} ${Global.padding};

@@ -1,3 +1,22 @@
+import { Profile } from "../../../DadosOffline/Coletas Lista"
+
+export async function SignInAPI(data) {
+    let ret = true
+    //conect and veryfy login profile to DB online
+    //returns the data Profile user
+
+    //after send with sucess
+//provisorio
+    if('erro' !== 'err'){
+        return await Profile
+    }
+    else{
+        return false
+    }
+    
+}
+ 
+ 
  /**
   * 
   * - Needs a array with Coletas object to send to DB online

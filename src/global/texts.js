@@ -13,11 +13,12 @@ const GText = {
     Include: 'Incluir',
     Details: 'Detalhes Coleta',
     Selection:'Selecionar Itens',
-
+LoginMessage:'Faça seu login!',
     failedOnSendItens:'Falha ao enviar coleta para o retaguarda!',
     failedOnCancelItens:'Falha ao cancelar coleta no retaguarda!',
     messageNoItensSelected:'Selecione pelo menos um item!',
-
+    placeholderPasswordLogin:'Insira sua senha',
+    placeholderEmailLogin:'Insira seu email',
     money: 'R$',
     labelModalSendColetaHome:{
         title:'Enviar Coleta',

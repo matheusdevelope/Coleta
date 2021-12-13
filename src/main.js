@@ -6,7 +6,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import GText from './global/texts';
 import Details from './screens/details/details';
 import NewColeta from './screens/newColeta/newColeta';
-import { EventEmitter } from 'react-native';
+import Preload from './screens/preload/preload';
+import login from './screens/login/login';
 
 
 export default ({ navigation }) => {
@@ -75,17 +76,18 @@ export default ({ navigation }) => {
             </Drawer.Navigator>
         )
     }
-   
+
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }} >
-            {/* <Stack.Screen name='Preload' component={Preload} options={{
+             <Stack.Screen name='Preload' component={Preload} options={{
                 animationEnabled: false,
             }}
             />
-            <Stack.Screen name='Login' component={Login} options={{
+
+             <Stack.Screen name='Login' component={login} options={{
                 animationEnabled: false,
             }}
-            /> */}
+            /> 
             <Stack.Screen name='HomeDrawer' component={HomeDrawer} options={{
                 animationEnabled: true,
             }} />
