@@ -53,8 +53,8 @@ export async function GetLastItemOnDB(field, param) {
 export async function GetItensGrouped(where, param, param2) {
   return await Itens.allGrouped(where, param, param2)
 }
-export async function UpdateStatusItensOnDB(where, param, param2,newStatus) {
-  return await Itens.updateStatus(where, param,param2, newStatus)
+export async function UpdateStatusItensOnDB(where, param, param2, newStatus) {
+  return await Itens.updateStatus(where, param, param2, newStatus)
 }
 export async function GetServerDefaultOnDB() {
   return await Server.findDefault()
@@ -62,6 +62,94 @@ export async function GetServerDefaultOnDB() {
 export async function CreateServerOnDB(data) {
   return await Server.create(data)
 }
+export async function CreateOnDB(TableName, data) {
+  let ret = false
+  switch (TableName) {
+    case GText.Routes.branch:
+      ret = await Branch.create(data);
+      break;
+
+    case GText.Routes.brand:
+      ret = await Brands.create(data);
+      break;
+
+    case GText.Routes.client:
+      ret = await Clients.create(data);
+      break;
+
+    case GText.Routes.company:
+      ret = await Company.create(data);
+      break;
+
+    case GText.Routes.itens:
+      ret = await Itens.create(data);
+      break;
+
+    case GText.Routes.profile:
+      ret = await Profile.create(data);
+      break;
+
+    case GText.Routes.server:
+      ret = await Server.create(data);
+      break;
+    case GText.Routes.situation:
+      ret = await Situation.create(data);
+      break;
+    case GText.Routes.warranty:
+      ret = await Warranty.create(data);
+      break;
+    default:
+      alert("Failed on routesData createDB function!");
+  }
+  return await ret
+}
+
+
+export async function DeleteOnDB(TableName ) {
+  console.log(TableName)
+  let ret = false
+  switch (TableName) {
+    case GText.Routes.branch:
+      ret = await Branch.removeAll();
+      break;
+
+    case GText.Routes.brand:
+      ret = await Brands.removeAll();
+      break;
+
+    case GText.Routes.client:
+      ret = await Clients.removeAll();
+      break;
+
+    case GText.Routes.company:
+      ret = await Company.removeAll();
+      break;
+
+    case GText.Routes.itens:
+      ret = await Itens.removeAll();
+      break;
+
+    case GText.Routes.profile:
+      ret = await Profile.removeAll();
+      break;
+
+    case GText.Routes.server:
+      ret = await Server.removeAll();
+      break;
+    case GText.Routes.situation:
+      ret = await Situation.removeAll();
+      break;
+    case GText.Routes.warranty:
+      ret = await Warranty.removeAll();
+      break;
+    default:
+      alert("Failed on routesData DeleteONDB function! ROUTEDATA");
+  }
+  console.log('fim delete', ret)
+  return await ret
+}
+
+
 
 export function GetDataDBFormatInput(table, fieldValue, fieldLabel) {
   return new Promise((resolve, reject) => {

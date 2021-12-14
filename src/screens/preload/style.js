@@ -17,3 +17,9 @@ margin-bottom: 35%;
 justify-content:flex-end;
 flex:1;
 `
+
+export const Text = styled.Text`
+font-size:30px
+margin: 0 auto;
+height:40px
+`

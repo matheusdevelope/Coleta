@@ -34,7 +34,7 @@ const GText = {
         Extra:''
     },
     Routes:{
-        branch:'Marcas',
+        branch:'Filial',
         brand:'Marcas',
         itens:'Coletas',
         client:'Clientes',
