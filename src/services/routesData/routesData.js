@@ -9,6 +9,7 @@ import GText from "../../global/texts";
 import Profile from "../SQLite/tables/profile";
 import Warranty from "../SQLite/tables/warranty";
 import Situation from "../SQLite/tables/situation";
+import Server from "../SQLite/tables/server";
 
 /**
  * - This Function returns a Promise Object with data of local DB.
@@ -54,6 +55,12 @@ export async function GetItensGrouped(where, param, param2) {
 }
 export async function UpdateStatusItensOnDB(where, param, param2,newStatus) {
   return await Itens.updateStatus(where, param,param2, newStatus)
+}
+export async function GetServerDefaultOnDB() {
+  return await Server.findDefault()
+}
+export async function CreateServerOnDB(data) {
+  return await Server.create(data)
 }
 
 export function GetDataDBFormatInput(table, fieldValue, fieldLabel) {

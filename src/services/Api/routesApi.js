@@ -1,4 +1,5 @@
 import { Profile } from "../../../DadosOffline/Coletas Lista"
+import api from "./api"
 
 export async function SignInAPI(data) {
     let ret = true
@@ -13,7 +14,25 @@ export async function SignInAPI(data) {
     else{
         return false
     }
-    
+}
+
+export async function GetAPI(route, params) {
+
+        try {
+            const resp = await api.get(route);
+            return await resp.data
+        } catch (err) {
+            // Handle Error Here
+            console.error(err);
+            return false
+        }
+
+    //conect and veryfy login profile to DB online
+    //returns the data Profile user
+
+    //after send with sucess
+//provisorio
+   
 }
  
  
@@ -37,3 +56,21 @@ export async function CancelItensAPI(data) {
     //after send with sucess
     return await ret
 }
+
+
+
+
+// routes.post('/Coletas', Coletas.store )
+// routes.get('/Coletas', Coletas.index)
+// routes.get('/Coletas/:Cod_Importacao', Coletas.indexByCod_Importacao)
+// routes.put('/Coletas', Coletas.CancelColetas)
+
+
+// routes.get('/Clientes', Cliente.index)
+// routes.post('Clientes', Cliente.store)
+// routes.get('/Marcas', Marca.index)
+// routes.post('Marcas', Marca.store)
+
+// routes.get('/', (req, res) => {
+//     res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' }); 
+//   }); 

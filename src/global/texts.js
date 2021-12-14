@@ -21,6 +21,31 @@ const GText = {
     placeholderPasswordLogin: 'Insira sua senha',
     placeholderEmailLogin: 'Insira seu email',
     money: 'R$',
+    //ServerDefault needs be = the model of InfoDB.Table.Server.Fields
+    ServerDefault:{
+        Nome:'Server Padrão',
+        Descricao:'Server AWS',
+        Protocolo:'http',
+        Ip:'54.233.252.63',
+        Porta:'3200',
+        BaseURL:'http://54.233.252.63:3200/',
+        Prioridade:1,
+        Padrao:'S',
+        Extra:''
+    },
+    Routes:{
+        branch:'Marcas',
+        brand:'Marcas',
+        itens:'Coletas',
+        client:'Clientes',
+        company:'Empresas',
+        profile:'Perfil',
+        server:'Server',
+        situation:'Situacao',
+        warranty:'Garantia'
+    },
+    ValueDefaultServer:'S',
+
     labelModalSendColetaHome: {
         title: 'Enviar Coleta',
         message: 'Essa coleta será enviada para o retaguarda, deseja continuar?',
@@ -355,7 +380,22 @@ const GText = {
                     name: 'Descricao'
                 }
 
-            }
+            },
+            Server: {
+                name: 'Server',
+                fields: {
+                    id: 'CodServer',
+                    name: 'Nome',
+                    description: 'Descricao',
+                    protocol: 'Protocolo',
+                    ip: 'Ip',
+                    port: 'Porta',
+                    baseURL:'BaseURL',
+                    priority: 'Prioridade',
+                    default: 'Padrao',
+                    extra:'Extra'
+                }
+            },
         }
     },
 }
