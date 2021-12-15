@@ -7,42 +7,37 @@ export async function SignInAPI(data) {
     //returns the data Profile user
 
     //after send with sucess
-//provisorio
-    if('erro' !== 'err'){
+    //provisorio
+    if ('erro' !== 'err') {
         return await Profile
     }
-    else{
+    else {
         return false
     }
 }
 
 export async function GetAPI(route, params) {
-
-        try {
-            const resp = await api.get(route);
-            return await resp.data
-        } catch (err) {
-            // Handle Error Here
-            console.error(err);
-            return false
-        }
-
-    //conect and veryfy login profile to DB online
-    //returns the data Profile user
-
-    //after send with sucess
-//provisorio
+    try {
+        const resp = await api.get(route);
+        return await resp.data
+    } catch (err) {
+        // Handle Error Here
+        // console.log('erro getapi',err);
    
+        return Promise.reject(new Error(err));
+        // return false
+    }
+
 }
- 
- 
- /**
-  * 
-  * - Needs a array with Coletas object to send to DB online
-  * 
-  * - Retuns a bolean, true(sucess), false(failed)
-  */
- export async function SendItensAPI(data) {
+
+
+/**
+ * 
+ * - Needs a array with Coletas object to send to DB online
+ * 
+ * - Retuns a bolean, true(sucess), false(failed)
+ */
+export async function SendItensAPI(data) {
     let ret = true
     //conect and send itens to DB online
 
@@ -72,5 +67,5 @@ export async function CancelItensAPI(data) {
 // routes.post('Marcas', Marca.store)
 
 // routes.get('/', (req, res) => {
-//     res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' }); 
+//     res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' });
 //   }); 

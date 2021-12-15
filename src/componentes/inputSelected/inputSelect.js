@@ -6,7 +6,7 @@ import Button from '../button/button';
 import { ButtonOptions, Container, LineButton, Text, ViewSelectOptions } from './style';
 import { GetValuesInputSelect } from '../../services/routesdb';
 
-function InputSelect({ name, onChangeText, options, placeholder, editable, SetDataHideFields, ...rest }) {
+function InputSelect({ name, onChangeText, options, placeholder, editable, SetDataHideFields,isFocused, ...rest }) {
     const inputRef = useRef(null);
     const List = useRef([]);
     const ListFiltered = useRef([])
@@ -53,8 +53,15 @@ function InputSelect({ name, onChangeText, options, placeholder, editable, SetDa
     );
 
     useEffect(() => {
-        GetData()
-    }, [])
+        if(isFocused){
+          GetData()  
+        }
+        
+        return()=>{
+            isFocused &&
+            setActive(false)
+        }
+    }, [isFocused])
     useEffect(() => {
         inputRef.current.value = defaultValue;
     }, [defaultValue]);

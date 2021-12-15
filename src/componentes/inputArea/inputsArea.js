@@ -259,7 +259,7 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
   return (
     <Form ref={formRef} onSubmit={handleSubmit} >
       <Line>
-        <InputSelect options={options.clients} name={GT.nNameClient}
+        <InputSelect options={options.clients} name={GT.nNameClient} isFocused={isFocused}
           placeholder={GT.pNameClient} editable SetDataHideFields={SetDataHideFields} />
       </Line>
       <Line>
@@ -271,18 +271,18 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
         <Input name={GT.nDesign} UpperCase placeholder={GT.pDesign} style={styles.inputDivided} />
       </Line>
       <Line>
-        <InputSelect options={options.brands} name={GT.nBrand}
+        <InputSelect options={options.brands} name={GT.nBrand} isFocused={isFocused}
           placeholder={GT.pBrand} editable SetDataHideFields={SetDataHideFields} />
         <Input name={GT.nBoard} UpperCase placeholder={GT.pBoard} style={styles.inputDivided} />
         <Input name={GT.nValue} placeholder={GT.pValue} style={styles.inputDivided} keyboardType="numeric" />
       </Line>
       <Input name={GT.nObservation} placeholder={GT.pObservation} style={styles.input} />
       <Line>
-        <InputSelect name={GT.nBranch} options={options.branch}
+        <InputSelect name={GT.nBranch} options={options.branch} isFocused={isFocused}
           placeholder={GT.pBranch} SetDataHideFields={SetDataHideFields} />
-        <InputSelect name={GT.nWarranty} options={options.warranty}
+        <InputSelect name={GT.nWarranty} options={options.warranty} isFocused={isFocused}
           placeholder={GT.pWarranty} SetDataHideFields={SetDataHideFields} />
-        <InputSelect name={GT.nSituation} options={options.situation}
+        <InputSelect name={GT.nSituation} options={options.situation} isFocused={isFocused}
           placeholder={GT.pSituation} SetDataHideFields={SetDataHideFields} />
       </Line>
       {

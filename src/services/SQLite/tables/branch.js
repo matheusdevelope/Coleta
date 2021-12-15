@@ -37,7 +37,6 @@ import db from "../SQLiteDatabase";
  *  - Pode retornar erro (reject) caso exista erro no SQL ou nos parâmetros.
  */
  const create = (obj) => {
-  console.log(obj)
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //SQL Comand
@@ -55,17 +54,15 @@ import db from "../SQLiteDatabase";
         ],
         //generate a object with the result of SQL
         (sqlTxn, res) => {
-          console.log(res)
           let len = res.rows.length;
+          let results = []
           if (len > 0) {
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = []
               results.push(item);
-              console.log(results)
-              resolve(results)  //return de object when the Promisse is complete
             }
           }
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message)
@@ -203,16 +200,14 @@ const all = () => {
         (sqlTxn, res) => {
           
           let len = res.rows.length;
-          console.log(res)
+          let results = []
           if (len > 0) {
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = []
               results.push(item);
-              console.log(results)
-              resolve(results)  //return de object when the Promisse is complete
             }
           }
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message)

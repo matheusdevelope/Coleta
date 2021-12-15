@@ -62,6 +62,49 @@ export async function GetServerDefaultOnDB() {
 export async function CreateServerOnDB(data) {
   return await Server.create(data)
 }
+
+export async function GetOnDB(TableName ) {
+  let ret = false
+  switch (TableName) {
+    case GText.Routes.branch:
+      ret = await Branch.all();
+      break;
+
+    case GText.Routes.brand:
+      ret = await Brands.all();
+      break;
+
+    case GText.Routes.client:
+      ret = await Clients.all();
+      break;
+
+    case GText.Routes.company:
+      ret = await Company.all();
+      break;
+
+    case GText.Routes.itens:
+      ret = await Itens.all();
+      break;
+
+    case GText.Routes.profile:
+      ret = await Profile.all();
+      break;
+
+    case GText.Routes.server:
+      ret = await Server.all();
+      break;
+    case GText.Routes.situation:
+      ret = await Situation.all();
+      break;
+    case GText.Routes.warranty:
+      ret = await Warranty.all();
+      break;
+    default:
+      alert("Failed on routesData DeleteONDB function! ROUTEDATA");
+  }
+  return await ret
+}
+
 export async function CreateOnDB(TableName, data) {
   let ret = false
   switch (TableName) {
@@ -101,12 +144,11 @@ export async function CreateOnDB(TableName, data) {
     default:
       alert("Failed on routesData createDB function!");
   }
-  return await ret
+  return ret
 }
 
 
 export async function DeleteOnDB(TableName ) {
-  console.log(TableName)
   let ret = false
   switch (TableName) {
     case GText.Routes.branch:
@@ -145,7 +187,6 @@ export async function DeleteOnDB(TableName ) {
     default:
       alert("Failed on routesData DeleteONDB function! ROUTEDATA");
   }
-  console.log('fim delete', ret)
   return await ret
 }
 

@@ -201,7 +201,6 @@ const all = () => {
               let item = res.rows.item(i);
            
               results.push(item);
-              console.log(results)
              
             }
           }

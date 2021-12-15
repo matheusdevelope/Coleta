@@ -285,15 +285,15 @@ const removeAll = () => {
         `DELETE From ${GText.infoDB.Table.Clients.name} ;`,
         [],
         (sqlTxn, res) => {
+          let results = []
           let len = res.rows.length;
           if (len > 0) {
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = []
               results.push(item);
-              resolve(results)  //return de object when the Promisse is complete
             }
           }
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message)
