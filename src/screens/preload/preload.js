@@ -24,17 +24,14 @@ export default ({ route }) => {
         let ret = true
         let count = 0
         for (let i = 0; data.length > i; i++) {
-            //   StatusRef.current.ItemOnInsert = i + 1
             ret = await CreateOnDB(TableName, data[i])
-            if((data[i] - 9) === count){
-                count = data[i]
+            if((i - 20) === count){
+                count = i
+                StatusRef.current.ItemOnInsert = i 
                 setShow(i)
-
             }
-            // setShow(i + 1)
-            //StatusRef.current.Error.push(ret)
-            //console.log(ret)
         }
+        setShow(data.length)
         return ret
     }
 
