@@ -6,21 +6,20 @@ import db from "../SQLiteDatabase";
  * - Executa sempre, mas só cria a tabela caso não exista (primeira execução)
  */
 
-  function Server() {
+  function Log() {
     db.transaction((tx) => {
       tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS ${GText.infoDB.Table.Server.name} 
+        `CREATE TABLE IF NOT EXISTS ${GText.infoDB.Table.Log.name} 
       (
-        ${GText.infoDB.Table.Server.fields.id} INTEGER PRIMARY KEY AUTOINCREMENT,
-        ${GText.infoDB.Table.Server.fields.name}  TEXT,
-        ${GText.infoDB.Table.Server.fields.description}  TEXT,
-        ${GText.infoDB.Table.Server.fields.protocol}  INT,
-        ${GText.infoDB.Table.Server.fields.ip}  TEXT,
-        ${GText.infoDB.Table.Server.fields.port}  TEXT,
-        ${GText.infoDB.Table.Server.fields.baseURL}  TEXT,
-        ${GText.infoDB.Table.Server.fields.priority}  INTEGER,
-        ${GText.infoDB.Table.Server.fields.default}  TEXT,
-        ${GText.infoDB.Table.Server.fields.extra}  TEXT
+        ${GText.infoDB.Table.Log.fields.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${GText.infoDB.Table.Log.fields.action}  TEXT,
+        ${GText.infoDB.Table.Log.fields.description}  TEXT,
+        ${GText.infoDB.Table.Log.fields.error}  TEXT,
+        ${GText.infoDB.Table.Log.fields.type}  TEXT,
+        ${GText.infoDB.Table.Log.fields.user}  TEXT,
+        ${GText.infoDB.Table.Log.fields.station}  TEXT,
+        ${GText.infoDB.Table.Log.fields.date}  TEXT,
+        ${GText.infoDB.Table.Log.fields.extra}  TEXT
     );
       `,
         [],
@@ -28,12 +27,12 @@ import db from "../SQLiteDatabase";
           // console.log("table created successfully");
         },
         error => {
-          console.log("error on creating table server " + error.message);
+          console.log("error on creating table Log " + error.message);
         },
       );
     });
   }
-  Server()
+  Log()
 /**
  * CRIAÇÃO DE UM NOVO REGISTRO
  * - Recebe um objeto;
@@ -42,41 +41,39 @@ import db from "../SQLiteDatabase";
  *  - Pode retornar erro (reject) caso exista erro no SQL ou nos parâmetros.
  */
  const create = (obj) => {
+   console.log(obj)
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //SQL Comand
       tx.executeSql(
-        `INSERT INTO ${GText.infoDB.Table.Server.name} (
-          ${GText.infoDB.Table.Server.fields.name},
-          ${GText.infoDB.Table.Server.fields.description},
-          ${GText.infoDB.Table.Server.fields.protocol},
-          ${GText.infoDB.Table.Server.fields.ip},
-          ${GText.infoDB.Table.Server.fields.port},
-          ${GText.infoDB.Table.Server.fields.baseURL},
-          ${GText.infoDB.Table.Server.fields.priority},
-          ${GText.infoDB.Table.Server.fields.default},
-          ${GText.infoDB.Table.Server.fields.extra}
+        `INSERT INTO ${GText.infoDB.Table.Log.name} (
+          ${GText.infoDB.Table.Log.fields.action},
+          ${GText.infoDB.Table.Log.fields.error},
+          ${GText.infoDB.Table.Log.fields.type},
+          ${GText.infoDB.Table.Log.fields.user},
+          ${GText.infoDB.Table.Log.fields.station},
+          ${GText.infoDB.Table.Log.fields.description},
+          ${GText.infoDB.Table.Log.fields.date},
+          ${GText.infoDB.Table.Log.fields.extra}
         ) 
         values ( ?, ?, ?, ?, ?, ?, ?, ?);`,
         [
-          obj[`${GText.infoDB.Table.Server.fields.name}`],
-          obj[`${GText.infoDB.Table.Server.fields.description}`],
-          obj[`${GText.infoDB.Table.Server.fields.protocol}`],
-          obj[`${GText.infoDB.Table.Server.fields.ip}`],
-          obj[`${GText.infoDB.Table.Server.fields.port}`],
-          obj[`${GText.infoDB.Table.Server.fields.baseURL}`],
-          obj[`${GText.infoDB.Table.Server.fields.priority}`],
-          obj[`${GText.infoDB.Table.Server.fields.default}`],
-          obj[`${GText.infoDB.Table.Server.fields.extra}`]
+          obj[`${GText.infoDB.Table.Log.fields.action}`],
+          obj[`${GText.infoDB.Table.Log.fields.error}`],
+          obj[`${GText.infoDB.Table.Log.fields.type}`],
+          obj[`${GText.infoDB.Table.Log.fields.user}`],
+          obj[`${GText.infoDB.Table.Log.fields.station}`],
+          obj[`${GText.infoDB.Table.Log.fields.description}`],
+          obj[`${GText.infoDB.Table.Log.fields.date}`],
+          obj[`${GText.infoDB.Table.Log.fields.extra}`]
         ],
         //generate a object with the result of SQL
         (sqlTxn, res) => {
-          let len = res.rows.length;
           let results = false
-          
+          let len = res.rows.length;
           if (len > 0) {
             results = []
-           for (let i = 0; i < len; i++) {
+            for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
               results.push(item);
             }
@@ -85,7 +82,7 @@ import db from "../SQLiteDatabase";
         },
         error => {
           reject(error.message)
-          console.log(`error on create ${GText.infoDB.Table.Server.name} ` + error.message);
+          console.log(`error on create ${GText.infoDB.Table.Log.name} ` + error.message);
         },
       );
     });
@@ -104,27 +101,25 @@ const update = (id, obj) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        `UPDATE ${GText.infoDB.Table.Server.name} SET 
-        ${GText.infoDB.Table.Server.fields.name}=?,
-        ${GText.infoDB.Table.Server.fields.description}=?,
-        ${GText.infoDB.Table.Server.fields.protocol}=?,
-        ${GText.infoDB.Table.Server.fields.ip}=?,
-        ${GText.infoDB.Table.Server.fields.port}=?,
-        ${GText.infoDB.Table.Server.fields.baseURL}=?,
-        ${GText.infoDB.Table.Server.fields.priority}=?,
-        ${GText.infoDB.Table.Server.fields.default}=?
-        ${GText.infoDB.Table.Server.fields.extra}=?
-        WHERE ${GText.infoDB.Table.Server.fields.id}=?;`,
+        `UPDATE ${GText.infoDB.Table.Log.name} SET 
+        ${GText.infoDB.Table.Log.fields.action}=?,
+        ${GText.infoDB.Table.Log.fields.error}=?,
+        ${GText.infoDB.Table.Log.fields.type}=?,
+        ${GText.infoDB.Table.Log.fields.user}=?,
+        ${GText.infoDB.Table.Log.fields.station}=?,
+        ${GText.infoDB.Table.Log.fields.description}=?,
+        ${GText.infoDB.Table.Log.fields.date}=?,
+        ${GText.infoDB.Table.Log.fields.extra}=?
+        WHERE ${GText.infoDB.Table.Log.fields.id}=?;`,
         [
-          obj[`${GText.infoDB.Table.Server.fields.name}`],
-          obj[`${GText.infoDB.Table.Server.fields.description}`],
-          obj[`${GText.infoDB.Table.Server.fields.protocol}`],
-          obj[`${GText.infoDB.Table.Server.fields.ip}`],
-          obj[`${GText.infoDB.Table.Server.fields.port}`],
-          obj[`${GText.infoDB.Table.Server.fields.baseURL}`],
-          obj[`${GText.infoDB.Table.Server.fields.priority}`],
-          obj[`${GText.infoDB.Table.Server.fields.default}`],
-          obj[`${GText.infoDB.Table.Server.fields.extra}`],
+          obj[`${GText.infoDB.Table.Log.fields.action}`],
+          obj[`${GText.infoDB.Table.Log.fields.error}`],
+          obj[`${GText.infoDB.Table.Log.fields.type}`],
+          obj[`${GText.infoDB.Table.Log.fields.user}`],
+          obj[`${GText.infoDB.Table.Log.fields.station}`],
+          obj[`${GText.infoDB.Table.Log.fields.description}`],
+          obj[`${GText.infoDB.Table.Log.fields.date}`],
+          obj[`${GText.infoDB.Table.Log.fields.extra}`],
           id],
         //generate a object with the result of SQL
         (sqlTxn, res) => {
@@ -141,7 +136,7 @@ const update = (id, obj) => {
         },
         error => {
           reject(error.message)
-          console.log(`error on update ${GText.infoDB.Table.Server.name} ` + error.message);
+          console.log(`error on update ${GText.infoDB.Table.Log.name} ` + error.message);
         },
       );
     });
@@ -160,8 +155,8 @@ const find = (id) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        `SELECT * FROM ${GText.infoDB.Table.Server.name} 
-        WHERE ${GText.infoDB.Table.Server.fields.id}=?;`,
+        `SELECT * FROM ${GText.infoDB.Table.Log.name} 
+        WHERE ${GText.infoDB.Table.Log.fields.id}=?;`,
         [id],
         (sqlTxn, res) => {
           let results = false
@@ -177,7 +172,7 @@ const find = (id) => {
         },
         error => {
           reject(error.message)
-          console.log(`error on find ${GText.infoDB.Table.Server.name} ` + error.message);
+          console.log(`error on find ${GText.infoDB.Table.Log.name} ` + error.message);
         }
       );
     });
@@ -197,7 +192,7 @@ const findLike = (field, param) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        `SELECT * FROM ${GText.infoDB.Table.Server.name} WHERE ${field} LIKE ?;`,
+        `SELECT * FROM ${GText.infoDB.Table.Log.name} WHERE ${field} LIKE ?;`,
         [param],
         (sqlTxn, res) => {
           let results = false
@@ -213,7 +208,7 @@ const findLike = (field, param) => {
         },
         error => {
           reject(error.message)
-          console.log(`error on FindLike ${GText.infoDB.Table.Server.name} ` + error.message);
+          console.log(`error on FindLike ${GText.infoDB.Table.Log.name} ` + error.message);
         }
       );
     });
@@ -226,24 +221,23 @@ const findDefault = (field, param) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        `SELECT ${GText.infoDB.Table.Server.fields.baseURL} FROM ${GText.infoDB.Table.Server.name} 
-        WHERE ${GText.infoDB.Table.Server.fields.default} = ${GText.ValueDefaultServer};`,
+        `SELECT ${GText.infoDB.Table.Log.fields.baseURL} FROM ${GText.infoDB.Table.Log.name} 
+        WHERE ${GText.infoDB.Table.Log.fields.default} = ${GText.ValueDefaultLog};`,
         [],
         (sqlTxn, res) => {
           let results = false
           let len = res.rows.length;
           if (len > 0) {
-            results = []
-            for (let i = 0; i < len; i++) {
+           for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              results.push(item);
+              results = item
             }
           }
           resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message)
-          console.log(`error on FindLike ${GText.infoDB.Table.Server.name} ` + error.message);
+          console.log(`error on FindLike ${GText.infoDB.Table.Log.name} ` + error.message);
         }
       );
     });
@@ -264,23 +258,24 @@ const all = () => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        `SELECT * FROM ${GText.infoDB.Table.Server.name};`,
+        `SELECT * FROM ${GText.infoDB.Table.Log.name};`,
         [],
         (sqlTxn, res) => {
-          let results = false
+         
           let len = res.rows.length;
           if (len > 0) {
-            results = []
-            for (let i = 0; i < len; i++) {
+            results =[]
+           for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
               results.push(item);
             }
           }
+        // console.log(results)
           resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(results)
-          console.log(`error on findAll ${GText.infoDB.Table.Server.name} ` + error.message);
+          console.log(`error on findAll ${GText.infoDB.Table.Log.name} ` + error.message);
         }
       );
     });
@@ -299,8 +294,8 @@ const remove = (id) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        `DELETE FROM ${GText.infoDB.Table.Server.name} 
-        WHERE ${GText.infoDB.Table.Server.fields.id}=?;`,
+        `DELETE FROM ${GText.infoDB.Table.Log.name} 
+        WHERE ${GText.infoDB.Table.Log.fields.id}=?;`,
         [id],
         (sqlTxn, res) => {
           let results = false
@@ -316,7 +311,7 @@ const remove = (id) => {
         },
         error => {
           reject(error.message)
-          console.log(`error on removeById ${GText.infoDB.Table.Server.name} ` + error.message);
+          console.log(`error on removeById ${GText.infoDB.Table.Log.name} ` + error.message);
         }
       );
     });
@@ -334,7 +329,7 @@ const removeAll = () => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        `DELETE From ${GText.infoDB.Table.Server.name} ;`,
+        `DELETE From ${GText.infoDB.Table.Log.name} ;`,
         [],
         (sqlTxn, res) => {
           let results = false
@@ -350,7 +345,7 @@ const removeAll = () => {
         },
         error => {
           reject(error.message)
-          console.log(`error on find ${GText.infoDB.Table.Server.name} ` + error.message);
+          console.log(`error on find ${GText.infoDB.Table.Log.name} ` + error.message);
         }
       );
     });

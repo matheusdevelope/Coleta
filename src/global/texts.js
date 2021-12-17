@@ -42,7 +42,11 @@ const GText = {
         profile:'Perfil',
         server:'Server',
         situation:'Situacao',
-        warranty:'Garantia'
+        warranty:'Garantia',
+        log:'Log'
+    },
+    Errors:{
+        erro1:''
     },
     ValueDefaultServer:'S',
 
@@ -393,6 +397,20 @@ const GText = {
                     baseURL:'BaseURL',
                     priority: 'Prioridade',
                     default: 'Padrao',
+                    extra:'Extra'
+                }
+            },
+            Log: {
+                name: 'Log',
+                fields: {
+                    id: 'ID',
+                    action:'Acao',
+                    error:'Erro',
+                    type:'Tipo',
+                    user: 'User',
+                    station: 'Estacao',
+                    description: 'Descricao',
+                    date: 'Data',
                     extra:'Extra'
                 }
             },

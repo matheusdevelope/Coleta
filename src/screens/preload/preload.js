@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigation } from '@react-navigation/native'
 import Fundo from '../../assets/fundo.svg'
-import { CreateOnDB, DeleteOnDB, GetOnDB, GetProfileDB } from "../../services/routesData/routesData";
+import { CreateOnDB, DeleteOnDB, GetLogDB, GetOnDB, GetProfileDB } from "../../services/routesData/routesData";
 import { Container, Modal, ViewModal, LoadingIcon, Text } from './style.js'
 import { GetAPI } from "../../services/Api/routesApi";
 import GText from "../../global/texts";
@@ -25,9 +25,9 @@ export default ({ route }) => {
         let count = 0
         for (let i = 0; data.length > i; i++) {
             ret = await CreateOnDB(TableName, data[i])
-            if((i - 20) === count){
+            if ((i - 20) === count) {
                 count = i
-                StatusRef.current.ItemOnInsert = i 
+                StatusRef.current.ItemOnInsert = i
                 setShow(i)
             }
         }
@@ -37,44 +37,58 @@ export default ({ route }) => {
 
     async function handleInitialSyncData() {
         const RoutesGet = [
-            //GText.Routes.warranty,
-            // GText.Routes.situation,
-            //GText.Routes.branch,
+            GText.Routes.warranty,
+            GText.Routes.situation,
+            GText.Routes.branch,
             GText.Routes.brand,
-            //GText.Routes.client,
+            GText.Routes.client,
             GText.Routes.company,
             //GText.Routes.itens
             GText.Routes.branch,
         ]
+      //  await DeleteOnDB(GText.Routes.log)
+        const retLog = await GetLogDB()
+       //   console.log(retLog)
 
-        for (let i = 0; RoutesGet.length > i; i++) {
-            StatusRef.current.NameRoute = RoutesGet[i]
-            setShow(i)
-            await DeleteOnDB(RoutesGet[i])
-            try {
-                const ret = await GetAPI(RoutesGet[i])
-                StatusRef.current.amountRegister = ret.length
+        if (!retLog) {
+            for (let i = 0; RoutesGet.length > i; i++) {
+                StatusRef.current.NameRoute = RoutesGet[i]
                 setShow(i)
+                await DeleteOnDB(RoutesGet[i])
+                try {
+                    const ret = await GetAPI(RoutesGet[i])
+                    StatusRef.current.amountRegister = ret.length
+                    setShow(i)
 
-                const ret1 = await GetOnDB(RoutesGet[i])
-                if (ret1.length !== ret.length) {
-                    await DeleteOnDB(RoutesGet[i])
-                    await InsertOnDb(RoutesGet[i], ret)
-                    StatusRef.current.ItemOnInsert = ret.length
-                    setShow(i)
+                    const ret1 = await GetOnDB(RoutesGet[i])
+                    if (ret1.length !== ret.length) {
+
+                        await DeleteOnDB(RoutesGet[i])
+                        await InsertOnDb(RoutesGet[i], ret)
+                        StatusRef.current.ItemOnInsert = ret.length
+                        setShow(i)
+                    }
+                    else {
+                        StatusRef.current.ItemOnInsert = ret.length
+                        setShow(i)
+                    }
                 }
-                else {
-                    StatusRef.current.ItemOnInsert = ret.length
+                catch (e) {
+                    StatusRef.current.Error.push(e)
+                    await CreateOnDB(GText.Routes.log,
+                        { Acao: 'GetApi on preload', Data: `'${new Date()}'`, Erro: e.toString() })
                     setShow(i)
-                    console.log('Item já sincronizado!')
+                    // alert('handleInitialSyncData GetAPI, preload', e)
                 }
             }
-            catch (e) {
-                 StatusRef.current.Error.push(e)
-                 setShow(i)
-                 alert('handleInitialSyncData GetAPI, preload', e)
-            }
+          //  console.log('antes')
+            await CreateOnDB(GText.Routes.log, { Acao: 'firstAcess', Data: new Date() })
         }
+      //  await CreateOnDB(GText.Routes.log, { Acao: 'firstAcess', Data: new Date() })
+        console.log('passou a criacao ')
+
+        navigate()
+
     }
 
     async function navigate() {
@@ -89,7 +103,7 @@ export default ({ route }) => {
 
     useEffect(() => {
 
-        route.params.origin !== 'preload' ?
+        route.params.origin === 'preload' ?
             navigate() :
             handleInitialSyncData()
     }, [])

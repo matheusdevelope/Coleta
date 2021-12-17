@@ -10,6 +10,7 @@ import Profile from "../SQLite/tables/profile";
 import Warranty from "../SQLite/tables/warranty";
 import Situation from "../SQLite/tables/situation";
 import Server from "../SQLite/tables/server";
+import log from "../SQLite/tables/log";
 
 /**
  * - This Function returns a Promise Object with data of local DB.
@@ -35,8 +36,13 @@ export async function GetItensDB(field, param, field2, condition, param2) {
   } else {
     return await Itens.all()
   }
-
-
+}
+export async function GetLogDB(field, param) {
+  if (field !== undefined) {
+    return await log.findLike(field, param)
+  } else {
+    return await log.all()
+  }
 }
 export async function DeleteItensDB(field, param) {
   return await Itens.remove(field, param)
@@ -99,6 +105,9 @@ export async function GetOnDB(TableName ) {
     case GText.Routes.warranty:
       ret = await Warranty.all();
       break;
+      case GText.Routes.log:
+      ret = await log.all();
+      break;
     default:
       alert("Failed on routesData DeleteONDB function! ROUTEDATA");
   }
@@ -141,6 +150,9 @@ export async function CreateOnDB(TableName, data) {
     case GText.Routes.warranty:
       ret = await Warranty.create(data);
       break;
+      case GText.Routes.log:
+        ret = await log.create(data);
+        break;
     default:
       alert("Failed on routesData createDB function!");
   }
@@ -184,6 +196,9 @@ export async function DeleteOnDB(TableName ) {
     case GText.Routes.warranty:
       ret = await Warranty.removeAll();
       break;
+      case GText.Routes.log:
+        ret = await log.removeAll();
+        break;
     default:
       alert("Failed on routesData DeleteONDB function! ROUTEDATA");
   }

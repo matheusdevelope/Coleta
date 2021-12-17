@@ -336,15 +336,16 @@ const update = (where, param, obj) => {
           param],
         //generate a object with the result of SQL
         (sqlTxn, res) => {
+          let results = false
           let len = res.rows.length;
           if (len > 0) {
+            results = []
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = []
               results.push(item);
-              resolve(results)  //return de object when the Promisse is complete
             }
           }
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message)
@@ -371,15 +372,16 @@ const find = (id) => {
         WHERE ${GText.infoDB.Table.Itens.fields.IdMobile}=?;`,
         [id],
         (sqlTxn, res) => {
+          let results = false
           let len = res.rows.length;
           if (len > 0) {
+            results = []
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = [];
               results.push(item);
-              resolve(results)  //return de object when the Promisse is complete
             }
           }
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message)
@@ -409,9 +411,10 @@ const findLike = (field, param, field2, condition ,  param2) => {
         sql,
         [param],
         (sqlTxn, res) => {
-          let results = []
+          let results = false
           let len = res.rows.length;
           if (len > 0) {
+            results = []
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
               results.push(item);
@@ -444,9 +447,10 @@ const all = () => {
         `SELECT * FROM ${GText.infoDB.Table.Itens.name};`,
         [],
         (sqlTxn, res) => {
-          let results = []
+          let results = false
           let len = res.rows.length;
           if (len > 0) {
+            results = []
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
               results.push(item);
@@ -524,15 +528,15 @@ const allGrouped = (where, param, param2) => {
        ,
         [],
         (sqlTxn, res) => {
-          let results = []
+          let results = false
           let len = res.rows.length;
           if (len > 0) {
+            results = []
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
               results.push(item);
             }
           }
-          // console.log(results)
           resolve(results)  //return de object when the Promisse is complete
         },
         error => {
@@ -607,14 +611,13 @@ const remove = (field, param) => {
         WHERE ${field}=?;`,
         [param],
         (sqlTxn, res) => {
-          let results = []
+          let results = false
           let len = res.rows.length;
           if (len > 0) {
+            results = []
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              
               results.push(item);
-             
             }
           }
           resolve(results)  //return de object when the Promisse is complete
@@ -642,15 +645,16 @@ const removeAll = () => {
         `DELETE From ${GText.infoDB.Table.Itens.name} ;`,
         [],
         (sqlTxn, res) => {
+          let results = false
           let len = res.rows.length;
           if (len > 0) {
+            results = []
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = []
               results.push(item);
-              resolve(results)  //return de object when the Promisse is complete
             }
           }
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message)
@@ -671,15 +675,15 @@ const updateStatus = (where, param,param2, newStatus)=>{
         and ${GText.infoDB.Table.Itens.fields.Status} = '${param2}';`,
         [newStatus, param],
         (sqlTxn, res) => {
+          let results = false
           let len = res.rows.length;
-          let results = []
           if (len > 0) {
+            results = []
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
               results.push(item);
             }
           }
-          
           resolve(results)  //return de object when the Promisse is complete
         },
         error => {

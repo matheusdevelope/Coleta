@@ -61,12 +61,12 @@ const create = (obj) => {
         ],
         //generate a object with the result of SQL
         (sqlTxn, res) => {
-          let results = []
+          let results = false
           let len = res.rows.length;
           if (len > 0) {
+            results = []
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-             
               results.push(item);
             }
           }
@@ -109,15 +109,16 @@ const update = (id, obj) => {
           id],
         //generate a object with the result of SQL
         (sqlTxn, res) => {
+          let results = false
           let len = res.rows.length;
           if (len > 0) {
+            results = []
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = []
               results.push(item);
-              resolve(results)  //return de object when the Promisse is complete
             }
           }
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message)
@@ -144,15 +145,16 @@ const find = (id) => {
         WHERE ${GText.infoDB.Table.Clients.fields.id}=?;`,
         [id],
         (sqlTxn, res) => {
+          let results = false
           let len = res.rows.length;
           if (len > 0) {
+            results = []
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = [];
               results.push(item);
-              resolve(results)  //return de object when the Promisse is complete
             }
           }
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message)
@@ -179,15 +181,16 @@ const findLike = (field, param) => {
         `SELECT * FROM ${GText.infoDB.Table.Clients.name} WHERE ${field} LIKE ?;`,
         [param],
         (sqlTxn, res) => {
+          let results = false
           let len = res.rows.length;
           if (len > 0) {
+            results = []
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = []
               results.push(item);
-              resolve(results)  //return de object when the Promisse is complete
             }
           }
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message)
@@ -214,15 +217,13 @@ const all = () => {
         `SELECT * FROM ${GText.infoDB.Table.Clients.name};`,
         [],
         (sqlTxn, res) => {
-          let results = []
+          let results = false
           let len = res.rows.length;
           if (len > 0) {
+            results = []
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-             
               results.push(item);
-            //  console.log(results)
-             
             }
           }
           resolve(results)  //return de object when the Promisse is complete
@@ -252,15 +253,16 @@ const remove = (id) => {
         WHERE ${GText.infoDB.Table.Clients.fields.id}=?;`,
         [id],
         (sqlTxn, res) => {
+          let results = false
           let len = res.rows.length;
           if (len > 0) {
+            results = []
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              let results = []
               results.push(item);
-              resolve(results)  //return de object when the Promisse is complete
             }
           }
+          resolve(results)  //return de object when the Promisse is complete
         },
         error => {
           reject(error.message)
@@ -285,9 +287,10 @@ const removeAll = () => {
         `DELETE From ${GText.infoDB.Table.Clients.name} ;`,
         [],
         (sqlTxn, res) => {
-          let results = []
+          let results = false
           let len = res.rows.length;
           if (len > 0) {
+            results = []
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
               results.push(item);
