@@ -1,10 +1,3 @@
-/**
- * Horizontal Progress Bar com Animated API
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
  import React, {useEffect, useState} from 'react';
  import {
    Animated,
@@ -17,18 +10,22 @@
  
  const App = () =>{
    const [offsetX] = useState(new Animated.Value(-400));
+
    const translate = Animated.timing(offsetX, {
      toValue: 0,
      duration: 1000,
      easing: Easing.inOut(Easing.linear),
      useNativeDriver: true,
    });
+
    const reset = Animated.timing(offsetX, {
      toValue: -430,
      duration: 0,
      useNativeDriver: true,
    });
+
    const animation = Animated.sequence([translate, reset]);
+
    useEffect(() => {
      Animated.loop(animation).start();
  
@@ -37,7 +34,9 @@
        console.log('Chamar serviço');
      }, 4000);
    }, [animation]);
+
    const transform = {transform: [{translateX: offsetX}]};
+   
    return (
      <SafeAreaView>
        <View style={styles.headerContentContainer}>

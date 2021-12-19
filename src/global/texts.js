@@ -45,8 +45,13 @@ const GText = {
         warranty:'Garantia',
         log:'Log'
     },
-    Errors:{
-        erro1:''
+   
+    ObjectSyncOnPreload:{
+        nNameRoute: 'Rota',
+        namountRegister: 'Total Itens',
+        nItemOnInsert: 'Item Registrado',
+        nErrors: [],
+        nNameError:'Erros'
     },
     ValueDefaultServer:'S',
 

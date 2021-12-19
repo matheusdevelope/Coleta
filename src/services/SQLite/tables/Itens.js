@@ -528,10 +528,9 @@ const allGrouped = (where, param, param2) => {
        ,
         [],
         (sqlTxn, res) => {
-          let results = false
+          let results = []
           let len = res.rows.length;
           if (len > 0) {
-            results = []
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
               results.push(item);

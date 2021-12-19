@@ -224,7 +224,7 @@ export function GetDataDBFormatInput(table, fieldValue, fieldLabel) {
             }
           }
           //  results.push({value:null, label:GText.infoInputs.defaultLabel})
-          console.log(results)
+        //  console.log(results)
           resolve(results)  //return de object when the Promisse is complete
         },
         error => {

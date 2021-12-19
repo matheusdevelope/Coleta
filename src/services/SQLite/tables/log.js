@@ -24,7 +24,7 @@ import db from "../SQLiteDatabase";
       `,
         [],
         (sqlTxn, res) => {
-          // console.log("table created successfully");
+           console.log("table created successfully LOG");
         },
         error => {
           console.log("error on creating table Log " + error.message);
@@ -41,7 +41,6 @@ import db from "../SQLiteDatabase";
  *  - Pode retornar erro (reject) caso exista erro no SQL ou nos parâmetros.
  */
  const create = (obj) => {
-   console.log(obj)
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //SQL Comand

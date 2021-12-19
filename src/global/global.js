@@ -8,6 +8,8 @@ const Global = {
     bluelight: 'rgba(187, 205, 229, 1)',
     bluelight2: '#cfe4fa',
     bluelight3: '#d9eafc',
+    bluelight3Transparent: 'rgba(217, 234, 252, 0.5)',
+    
     backgroundModal: 'rgba(34, 34, 34, 0.3)',
     blackTransparent:'rgba(34, 34, 34, 0.1)',
     textColor: 'rgba(34, 34, 34, 1)',
