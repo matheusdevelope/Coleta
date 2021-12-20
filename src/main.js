@@ -8,6 +8,9 @@ import Details from './screens/details/details';
 import NewColeta from './screens/newColeta/newColeta';
 import Preload from './screens/preload/preload';
 import login from './screens/login/login';
+import SelectItenstoSync from './screens/sync/selectItenstoSync';
+import Global from './global/global';
+import Syncing from './screens/sync/sync';
 
 
 export default ({ navigation }) => {
@@ -18,7 +21,8 @@ export default ({ navigation }) => {
     const Icon1 = () => { return (<Icon name="list-alt" size={25} color="#7159c1" />) }
     const Icon2 = () => { return (<Icon name="plus-square" size={25} color="#7159c1" />) }
     const Icon3 = () => { return (<Icon name="list" size={25} color="#7159c1" />) }
-    const Icon4 = () => { return (<Icon name="cog" size={25} color="#7159c1" />) }
+    const Icon4 = () => { return (<Icon name={Global.IconSync} size={25} color="#7159c1" />) }
+    const Icon5 = () => { return (<Icon name="cog" size={25} color="#7159c1" />) }
 
     const ConfigurationScreen = () => {
         return (
@@ -64,6 +68,12 @@ export default ({ navigation }) => {
                         drawerIcon: Icon3,
                     }}
                 />
+                <Drawer.Screen  name={GText.Sync} component={SelectItenstoSync}
+                    options={{
+                        animationEnabled: false,
+                        drawerIcon: Icon4,
+                    }}
+                />
 
                 {/* <Drawer.Screen name="Configurações" component={ConfigurationScreen}
             options={{
@@ -94,6 +104,9 @@ export default ({ navigation }) => {
                 animationEnabled: true,
             }} />
             <Stack.Screen name={GText.Details} component={Details} options={{
+                animationEnabled: true,
+            }} />
+            <Stack.Screen name={GText.Syncing} component={Syncing} options={{
                 animationEnabled: true,
             }} />
 

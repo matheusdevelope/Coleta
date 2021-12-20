@@ -7,6 +7,8 @@ const GText = {
     NewColeta: 'Nova Coleta',
     EditColeta: 'Editar Coleta',
     Config: 'Configurações',
+    Sync: 'Sincronizar Dados',
+    Syncing: 'Sincronizando Dados',
     Send: 'Enviar',
     Cancel: 'Cancelar',
     SearchBox: 'Nome Cliente',
@@ -45,11 +47,12 @@ const GText = {
         warranty:'Garantia',
         log:'Log'
     },
+    
    
     ObjectSyncOnPreload:{
         nNameRoute: 'Rota',
-        namountRegister: 'Total Itens',
-        nItemOnInsert: 'Item Registrado',
+        namountRegister: 'Total de Itens',
+        nItemOnInsert: 'Itens Registrados',
         nErrors: [],
         nNameError:'Erros'
     },
@@ -109,6 +112,12 @@ const GText = {
         buttonLeft: 'Continuar',
         buttonRight: 'Descartar',
         invertButtons: true
+    },
+    labelModalSyncItens: {
+        title: 'Sincronizar Dados',
+        message: 'Deseja sincronizar os dados selecionados?',
+        buttonLeft: 'Voltar',
+        buttonRight: 'Sincronizar'
     },
     MessageAlertEditingItemNewColeta: 'Termine de editar o item anterior!',
     ValueTotal: 'ValorTotal',

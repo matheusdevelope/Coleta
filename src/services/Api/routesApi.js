@@ -21,11 +21,7 @@ export async function GetAPI(route, params) {
         const resp = await api.get(route);
         return await resp.data
     } catch (err) {
-        // Handle Error Here
-        // console.log('erro getapi',err);
-   
-        return Promise.reject(new Error(err));
-        // return false
+        return Promise.reject(err);
     }
 
 }
