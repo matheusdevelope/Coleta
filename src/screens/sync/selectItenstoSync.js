@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigation } from "@react-navigation/core";
 import { Container, TextStyled, ViewLine, ScrollView, Line } from './style.js'
 import Header from "../../componentes/header/header.js";
@@ -8,6 +8,7 @@ import Global from "../../global/global.js";
 import CheckBox from "@react-native-community/checkbox";
 import Button from "../../componentes/button/button.js";
 import ConfirmationModal from "../../componentes/modalConfirmation/modalConfirmation.js";
+import { GetLastLogOnDB } from "../../services/routesData/routesData.js";
 
 const RoutesGet1 = [
     { name: GText.Routes.warranty, checked: false },
@@ -26,13 +27,30 @@ export default ({}) => {
     const ItensChecked = useRef(0)
     const [data, setData] = useState(RoutesGet1)
 
+    async function GetLastSyncRoutes() {
+
+        
+        const newRoutes = RoutesGet1.map(async (obj)=>{
+           const ret = await GetLastLogOnDB(GText.infoDB.Table.Log.fields.route, obj.name)
+           console.log(ret)
+           // obj['LastSync'] = ret[GText.infoDB.Table.Log.fields.date]
+        })
+        console.log(newRoutes)
+       // setData(newRoutes)
+    
+    }
+useEffect(()=>{
+    GetLastSyncRoutes()
+},[])
+
     function handleSync() {
         let SelectedData = []
         data.map((obj)=>{
             obj.checked &&
             SelectedData.push(obj.name)
         })
-        navigate.navigate(GText.Syncing, {routes:SelectedData})
+      //  handleOnChangeCheckBox(false,null,true)
+        navigate.navigate(GText.Syncing, {routes:SelectedData, origin:GText.SelectToSync})
     }
 
     function toggleChecedkAll(closelist) {
@@ -72,7 +90,7 @@ export default ({}) => {
 
     return (
         <Container>
-            <Header title={GText.Sync} name={Global.iconBack} name2={Global.IconList}
+            <Header title={GText.SelectToSync} name={Global.iconBack} name2={Global.IconList}
                 size={Global.sizeIconHeader} color={Global.colorIconHeader} onClickLeft={() => { toggleChecedkAll(true) }}
                 onClickRight={() => { toggleChecedkAll() }} />
             <ScrollView>
@@ -81,7 +99,7 @@ export default ({}) => {
                         style={{ backgroundColor: item.checked === true ? Global.bluelight2 : Global.white }}>
                         <CheckBox value={item.checked === true ? true : false}
                             onValueChange={(newValue) => handleOnChangeCheckBox(newValue, item.name)} />
-                        <TextStyled>{item.name} {item.checked}</TextStyled>
+                        <TextStyled>{item.name} </TextStyled>
                     </ViewLine>
                 ))}
             </ScrollView>
