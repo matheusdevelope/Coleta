@@ -23,6 +23,7 @@ const Global = {
     padding: '8px',
     padding_n: 8,
     margin: '5px',
+    margin_n: 5,
     width: '8px',
     MaxWidth:'70px',
     borderRadius: '8px',

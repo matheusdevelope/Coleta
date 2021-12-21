@@ -1,20 +1,23 @@
 
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, Easing, StyleSheet } from 'react-native';
+import { Animated, BackHandler, Easing, StyleSheet } from 'react-native';
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import NetInfo, { useNetInfo } from "@react-native-community/netinfo";
 import { CreateOnDB, DeleteOnDB, GetLogDB, GetOnDB } from "../../services/routesData/routesData";
-import { Container, TextStyled, ViewStyled, ScrollView, Text } from './style.js'
+import { Container, TextStyled, ViewStyled, ScrollView, Text, ViewLineSyncing, TextButton } from './style.js'
 import { GetAPI } from "../../services/Api/routesApi";
 import GText from "../../global/texts";
-import { useNavigation } from "@react-navigation/native";
+import Global from "../../global/global";
 
 
-export default ({route}) => {
+export default ({ route }) => {
+    const netInfo = useNetInfo();
     const navigate = useNavigation()
     const StatusRef = useRef([])
     const [show, setShow] = useState(false)
     const DataNow = new Date()
     const GetDate = ('0' + DataNow.getDate()).substr(-2) + "/" + ("0" + (DataNow.getMonth() + 1)).substr(-2) + "/" + DataNow.getFullYear()
-    const Hour = (DataNow.getHours().toString() + ":" + DataNow.getMinutes().toString()).toString()
+    const Hour = ('0' + DataNow.getHours()).substr(-2) + ":" + ('0' + DataNow.getMinutes()).substr(-2)
 
     ////animation
     const [offsetX] = useState(new Animated.Value(-400));
@@ -32,33 +35,53 @@ export default ({route}) => {
     const animation = Animated.sequence([translate, reset]);
     const transform = { transform: [{ translateX: offsetX }] };
     ////animation
-    
-    async function handleInitialSyncData(routes) {
-        await LoopRoutes(routes)
-        navigate.goBack()
+    async function HaveConnection() {
+        const Net = await NetInfo.fetch()
+        return Net.isConnected
     }
+    function handleBack() {
+        route.params.origin !== GText.Preload ?
+            navigate.navigate(route.params.origin, { origin: GText.Preload })
+            :
+            BackHandler.exitApp()
+    }
+    async function handleInitialSyncData(origin, routes) {
+        await LoopRoutes(routes)
 
-    async function LoopRoutes(RoutesGet) {
-        const retLog = await GetLogDB()
-        if (retLog) {
-            for (let i = 0; RoutesGet.length > i; i++) {
-                let Object = {
-                    NameRoute: '',
-                    amountRegister: '',
-                    ItemOnInsert: '',
-                    Errors: []
-                }
-                Object.NameRoute = RoutesGet[i]
-                StatusRef.current.push({ ...Object })
-                setShow(i)
-                await CallApi(RoutesGet, i)
-            }
-            await CreateOnDB(GText.Routes.log, { Acao: 'firstAcess', Data: `${GetDate + ' ' + Hour}` })
+        if (origin !== GText.Preload) {
+            setShow('Finish')
+        }
+        else {
+            navigate.navigate(route.params.origin, { origin: GText.Preload })
+           // handleBack()
         }
     }
 
+    async function LoopRoutes(RoutesGet) {
+        const retLog = await GetLogDB(GText.infoDB.Table.Log.fields.action, 'firstAcess')
+        for (let i = 0; RoutesGet.length > i; i++) {
+            const DataNow = new Date()
+            const GetDate = ('0' + DataNow.getDate()).substr(-2) + "/" + ("0" + (DataNow.getMonth() + 1)).substr(-2) + "/" + DataNow.getFullYear()
+            const Hour = ('0' + DataNow.getHours()).substr(-2) + ":" + ('0' + DataNow.getMinutes()).substr(-2)
+
+            let Object = {
+                NameRoute: '',
+                amountRegister: '',
+                ItemOnInsert: '',
+                Errors: []
+            }
+            Object.NameRoute = RoutesGet[i]
+            StatusRef.current.push({ ...Object })
+            setShow(i)
+            await CallApi(RoutesGet, i)
+            await CreateOnDB(GText.Routes.log, { Acao: GText.Log.actions.sync, Tipo: GText.Log.types.sync, Rota: RoutesGet[i], Data: `${GetDate + ' ' + Hour}` })
+        }
+        if (!retLog) {
+            await CreateOnDB(GText.Routes.log, { Acao: 'firstAcess', Data: `${GetDate + ' ' + Hour}` })
+       }
+    }
+
     async function CallApi(RoutesGet, i) {
-        console.log(RoutesGet[i])
         try {
             const ret = await GetAPI(RoutesGet[i])
             StatusRef.current[i].amountRegister = ret.length
@@ -97,24 +120,55 @@ export default ({route}) => {
         }
         return ret
     }
-    function handleSync(routes) {
-        handleInitialSyncData(routes)
-    }  
+    async function handleSync() {
+        if (await HaveConnection()) {
+            handleInitialSyncData(route.params.origin, route.params.routes)
+        }
+        else {
+            setShow('NoInternet')
+        }
+    }
 
     useEffect(() => {
         Animated.loop(animation).start();
     }, [animation]);
-    useEffect(()=>{
-        console.log(route.params.routes)
-        handleSync(route.params.routes)
-        return()=>{
-            StatusRef.current = [] 
+
+    useEffect(() => {
+        show === 'Finish' &&
+            Animated.loop(animation).stop()
+    }, [show]);
+
+
+
+
+    useEffect(() => {
+        handleSync()
+        return () => {
+            StatusRef.current = []
         }
-    },[])
+    }, [])
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const onBackPress = () => {
+                //Sem Retorno
+                return true;
+            };
+            BackHandler.addEventListener('hardwareBackPress', onBackPress);
+            return () =>
+                BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+        }, [])
+    );
+    function handleTitleHeader() {
+        let ret = ''
+        ret = show === 'Finish' ? GText.SyncFinish : show === 'NoInternet' ? GText.noInternet : GText.Syncing
+        return ret
+    }
+
 
     return (
         <Container>
-            <Text>{GText.Syncing}</Text>
+            <Text >{handleTitleHeader()}</Text>
             <Animated.View style={styles.syncProgressBarContainer}>
                 <Animated.View style={[transform, styles.syncProgressBar]} />
                 <Animated.View style={[transform, styles.syncProgressBar]} />
@@ -137,9 +191,35 @@ export default ({route}) => {
                     ))
                 }
             </ScrollView>
+            {
+                show === 'Finish' &&
+                <ViewLineSyncing onPress={handleBack}>
+                    <TextButton style={{ color: Global.white }}>
+                        {GText.ButtonFinishSync}
+                    </TextButton>
+                </ViewLineSyncing>
+            }
+            {
+                show === 'NoInternet' &&
+                <>
+                    <ViewLineSyncing onPress={handleSync} >
+                        <TextButton style={{ color: Global.white }}>
+                            {GText.messageTryAgainSync}
+                        </TextButton>
+                    </ViewLineSyncing>
+                    <ViewLineSyncing onPress={handleBack}>
+                        <TextButton style={{ color: Global.white }}>
+                            {route.params.origin !== GText.Preload 
+                            ? GText.ButtonFinishSync 
+                            : GText.messageExitApp}
+                        </TextButton>
+                    </ViewLineSyncing>
+                </>
+            }
         </Container>
     )
 }
+
 
 const styles = StyleSheet.create({
     headerContentContainer: {

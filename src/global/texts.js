@@ -7,8 +7,14 @@ const GText = {
     NewColeta: 'Nova Coleta',
     EditColeta: 'Editar Coleta',
     Config: 'Configurações',
-    Sync: 'Sincronizar Dados',
+    Preload:'Preload',
+    SelectToSync: 'Sincronizar Dados',
     Syncing: 'Sincronizando Dados',
+    SyncFinish: 'Dados Sincronizados!',
+    messageLastSync:'Última Att.',
+    messageTryAgainSync:'Tentar Novamente',
+    messageExitApp:'Sair do aplicativo',
+    noInternet:'Sem Conexão com a Internet!',
     Send: 'Enviar',
     Cancel: 'Cancelar',
     SearchBox: 'Nome Cliente',
@@ -17,6 +23,7 @@ const GText = {
     Selection: 'Selecionar Itens',
     LoginMessage: 'Faça seu login!',
     ButtonSignIn: 'Entrar',
+    ButtonFinishSync: 'Voltar',
     failedOnSendItens: 'Falha ao enviar coleta para o retaguarda!',
     failedOnCancelItens: 'Falha ao cancelar coleta no retaguarda!',
     messageNoItensSelected: 'Selecione pelo menos um item!',
@@ -419,6 +426,7 @@ const GText = {
                 fields: {
                     id: 'ID',
                     action:'Acao',
+                    route:'Rota',
                     error:'Erro',
                     type:'Tipo',
                     user: 'User',
@@ -430,8 +438,29 @@ const GText = {
             },
         }
     },
+    Log:{
+        types:{
+            sync:'Sync',
+            error:'Error',
+            access:'Access'
+        },
+        actions:{
+            sync:'Sync',
+            error:'Error',
+            access:'Access'
+        },
+        
+    }
 }
-
+export const RoutesGet = [
+    { name: GText.Routes.warranty, checked: false },
+    { name: GText.Routes.brand, checked: false },
+    { name: GText.Routes.situation, checked: false },
+    { name: GText.Routes.client, checked: false },
+    { name: GText.Routes.company, checked: false },
+    { name: GText.Routes.itens, checked: false },
+    { name: GText.Routes.branch, checked: false }
+]
 export const fiedlsHide = [
     { name: GText.infoInputs.fiedlsHide.CodImport, initialData: null },
     { name: GText.infoInputs.fiedlsHide.CodCompany },

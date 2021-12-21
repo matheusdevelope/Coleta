@@ -159,6 +159,10 @@ export async function CreateOnDB(TableName, data) {
   return ret
 }
 
+export async function GetLastLogOnDB(field, param) {
+  return await log.findLastLog(field, param)
+}
+
 
 export async function DeleteOnDB(TableName ) {
   let ret = false

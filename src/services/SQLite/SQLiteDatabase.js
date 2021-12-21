@@ -1,7 +1,7 @@
 import {openDatabase} from 'react-native-sqlite-storage'
 
 const db = openDatabase({
-    name: "reactnativebases3",
+    name: "eacnaies5",
   })
  
 export default db

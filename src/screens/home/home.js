@@ -5,7 +5,7 @@ import Header from "../../componentes/header/header.js";
 import ConfirmationModal from "../../componentes/modalConfirmation/modalConfirmation.js";
 import SearchBox from "../../componentes/searchBox/searchBox.js";
 import Global from "../../global/global.js";
-import GText from "../../global/texts.js";
+import GText, { RoutesGet } from "../../global/texts.js";
 import { Container, Line } from './style.js'
 import { DeleteItensDB, GetItensDB, GetItensGrouped, UpdateStatusItensOnDB } from '../../services/routesData/routesData'
 import { CancelItensAPI, SendItensAPI } from "../../services/Api/routesApi.js";
@@ -64,6 +64,9 @@ function Home({ route }) {
             handleSyncColeta()
         }
     }
+    function handleSyncColeta() {
+        navigation.navigate(GText.Syncing, { routes: [GText.Routes.itens], origin: GText.SendedColetas })
+    }  
     function ButtonHeaderLeft() {
         navigation.openDrawer()
     }
@@ -167,9 +170,7 @@ function Home({ route }) {
             alert(GText.failedOnCancelItens)
         }
     }
-    function handleSyncColeta() {
-        console.log('sync')
-    }   
+     
     function getLabelModal(origin) {
         let ret = {}
         function Label(more, one) {
@@ -232,14 +233,7 @@ function Home({ route }) {
             setShowCheckBox(false)
         }
     }, [isFocused])
-//     useEffect(() => {
-//         if(search.current === 'null'){
-//             console.log('set search ', search.current)
-// setData(FilterList(dataRef.current, GText.infoInputs.nNameClient, search.current))
-//         }
-//         console.log('search ')
-        
-//     }, [search.current])
+
     useFocusEffect(
         React.useCallback(() => {
             const onBackPress = () => {

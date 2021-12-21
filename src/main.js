@@ -10,7 +10,7 @@ import Preload from './screens/preload/preload';
 import login from './screens/login/login';
 import SelectItenstoSync from './screens/sync/selectItenstoSync';
 import Global from './global/global';
-import Syncing from './screens/sync/sync';
+import Syncing from './screens/sync/syncing';
 
 
 export default ({ navigation }) => {
@@ -64,13 +64,13 @@ export default ({ navigation }) => {
 
                 <Drawer.Screen  name={GText.SendedColetas} component={Home}
                     options={{
-                        animationEnabled: false,
+                        animationEnabled: true,
                         drawerIcon: Icon3,
                     }}
                 />
-                <Drawer.Screen  name={GText.Sync} component={SelectItenstoSync}
+                <Drawer.Screen  name={GText.SelectToSync} component={SelectItenstoSync}
                     options={{
-                        animationEnabled: false,
+                        animationEnabled: true,
                         drawerIcon: Icon4,
                     }}
                 />
@@ -90,14 +90,14 @@ export default ({ navigation }) => {
         <Stack.Navigator screenOptions={{ headerShown: false }} >
              <Stack.Screen 
             // name='Login' component={login}
-             name='Preload' component={Preload} 
-             initialParams={{origin:'preload'}}
+             name={GText.Preload} component={Preload} 
+             initialParams={{origin:GText.Preload}}
              options={{
-                animationEnabled: false,
+                animationEnabled: true,
             }}
             />
              <Stack.Screen name='Login' component={login} options={{
-                animationEnabled: false,
+                animationEnabled: true,
             }}
             /> 
             <Stack.Screen name='HomeDrawer' component={HomeDrawer} options={{

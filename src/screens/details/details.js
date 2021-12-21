@@ -1,5 +1,7 @@
 import { useIsFocused, useNavigation } from '@react-navigation/core';
+import { useFocusEffect } from "@react-navigation/native";
 import React, { useState } from 'react';
+import { BackHandler } from 'react-native';
 import Header from '../../componentes/header/header';
 import ItensList from '../../componentes/itensList/itensList';
 import Global from '../../global/global';
@@ -29,6 +31,18 @@ const Details = ({ route }) => {
             setData(ret[0])
         }
     }
+    useFocusEffect(
+        React.useCallback(() => {
+            const onBackPress = () => {
+                //Sem Retorno
+                handleBack()
+                return true;
+            };
+            BackHandler.addEventListener('hardwareBackPress', onBackPress);
+            return () =>
+                BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+        }, [])
+    );
     return (
         <Container>
             <Header title={GText.Details} name={Global.iconBack} name2={Global.IconEdit}

@@ -13,6 +13,7 @@ import db from "../SQLiteDatabase";
       (
         ${GText.infoDB.Table.Log.fields.id} INTEGER PRIMARY KEY AUTOINCREMENT,
         ${GText.infoDB.Table.Log.fields.action}  TEXT,
+        ${GText.infoDB.Table.Log.fields.route}  TEXT,
         ${GText.infoDB.Table.Log.fields.description}  TEXT,
         ${GText.infoDB.Table.Log.fields.error}  TEXT,
         ${GText.infoDB.Table.Log.fields.type}  TEXT,
@@ -24,7 +25,6 @@ import db from "../SQLiteDatabase";
       `,
         [],
         (sqlTxn, res) => {
-           console.log("table created successfully LOG");
         },
         error => {
           console.log("error on creating table Log " + error.message);
@@ -47,6 +47,7 @@ import db from "../SQLiteDatabase";
       tx.executeSql(
         `INSERT INTO ${GText.infoDB.Table.Log.name} (
           ${GText.infoDB.Table.Log.fields.action},
+          ${GText.infoDB.Table.Log.fields.route},
           ${GText.infoDB.Table.Log.fields.error},
           ${GText.infoDB.Table.Log.fields.type},
           ${GText.infoDB.Table.Log.fields.user},
@@ -55,9 +56,10 @@ import db from "../SQLiteDatabase";
           ${GText.infoDB.Table.Log.fields.date},
           ${GText.infoDB.Table.Log.fields.extra}
         ) 
-        values ( ?, ?, ?, ?, ?, ?, ?, ?);`,
+        values ( ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
         [
           obj[`${GText.infoDB.Table.Log.fields.action}`],
+          obj[`${GText.infoDB.Table.Log.fields.route}`],
           obj[`${GText.infoDB.Table.Log.fields.error}`],
           obj[`${GText.infoDB.Table.Log.fields.type}`],
           obj[`${GText.infoDB.Table.Log.fields.user}`],
@@ -102,6 +104,7 @@ const update = (id, obj) => {
       tx.executeSql(
         `UPDATE ${GText.infoDB.Table.Log.name} SET 
         ${GText.infoDB.Table.Log.fields.action}=?,
+        ${GText.infoDB.Table.Log.fields.route}=?,
         ${GText.infoDB.Table.Log.fields.error}=?,
         ${GText.infoDB.Table.Log.fields.type}=?,
         ${GText.infoDB.Table.Log.fields.user}=?,
@@ -112,6 +115,7 @@ const update = (id, obj) => {
         WHERE ${GText.infoDB.Table.Log.fields.id}=?;`,
         [
           obj[`${GText.infoDB.Table.Log.fields.action}`],
+          obj[`${GText.infoDB.Table.Log.fields.route}`],
           obj[`${GText.infoDB.Table.Log.fields.error}`],
           obj[`${GText.infoDB.Table.Log.fields.type}`],
           obj[`${GText.infoDB.Table.Log.fields.user}`],
@@ -214,6 +218,44 @@ const findLike = (field, param) => {
   });
 };
 
+const findLastLog = (field, param) => {
+  const sql =  param === undefined
+  ?
+  `SELECT * FROM ${GText.infoDB.Table.Log.name} 
+  ORDER BY ${GText.infoDB.Table.Log.fields.id} DESC  ;`
+  :
+  ////tem que pesquisar com fazer o "TOP 1 no sqlite"
+
+  `SELECT * FROM ${GText.infoDB.Table.Log.name} 
+  WHERE ${field} = '${param}'
+  ORDER BY ${GText.infoDB.Table.Log.fields.id} DESC  ;`
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      //comando SQL modificável
+      tx.executeSql(
+       sql,
+        [],
+        (sqlTxn, res) => {
+          let results = null
+          let len = res.rows.length;
+          if (len > 0) {
+            results = []
+            results.push(res.rows.item(0))
+            // for (let i = 0; i < len; i++) {
+            //   let item = res.rows.item(i);
+            //   results.push(item);
+            // }
+          }
+          resolve(results)  //return de object when the Promisse is complete
+        },
+        error => {
+          reject(error.message)
+          console.log(`error on FindLastItem ${GText.infoDB.Table.Itens.name} ` + error.message);
+        }
+      );
+    });
+  });
+};
 
 const findDefault = (field, param) => {
   return new Promise((resolve, reject) => {
@@ -359,5 +401,6 @@ export default {
   findDefault,
   all,
   remove,
-  removeAll
+  removeAll,
+  findLastLog
 };
