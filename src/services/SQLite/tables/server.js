@@ -57,7 +57,7 @@ import db from "../SQLiteDatabase";
           ${GText.infoDB.Table.Server.fields.default},
           ${GText.infoDB.Table.Server.fields.extra}
         ) 
-        values ( ?, ?, ?, ?, ?, ?, ?, ?);`,
+        values ( ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
         [
           obj[`${GText.infoDB.Table.Server.fields.name}`],
           obj[`${GText.infoDB.Table.Server.fields.description}`],
@@ -227,7 +227,7 @@ const findDefault = (field, param) => {
       //comando SQL modificável
       tx.executeSql(
         `SELECT ${GText.infoDB.Table.Server.fields.baseURL} FROM ${GText.infoDB.Table.Server.name} 
-        WHERE ${GText.infoDB.Table.Server.fields.default} = ${GText.ValueDefaultServer};`,
+        WHERE ${GText.infoDB.Table.Server.fields.default} = '${GText.ValueDefaultServer}';`,
         [],
         (sqlTxn, res) => {
           let results = false

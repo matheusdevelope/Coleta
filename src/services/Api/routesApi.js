@@ -1,5 +1,5 @@
 import { Profile } from "../../../DadosOffline/Coletas Lista"
-import api from "./api"
+import api, { GetAddresServer } from "./api"
 
 export async function SignInAPI(data) {
     let ret = true
@@ -17,8 +17,10 @@ export async function SignInAPI(data) {
 }
 
 export async function GetAPI(route, params) {
+    let url = await GetAddresServer()
+    url = url + route
     try {
-        const resp = await api.get(route);
+        const resp = await api.get(url);
         return await resp.data
     } catch (err) {
         return Promise.reject(err);

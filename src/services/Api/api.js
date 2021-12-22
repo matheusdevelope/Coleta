@@ -3,23 +3,28 @@
 import axios from "axios";
 import GText from "../../global/texts";
 import { CreateServerOnDB, GetServerDefaultOnDB } from "../routesData/routesData";
-async function GetAddresServer() {
+export async function GetAddresServer() {
     const ret = await GetServerDefaultOnDB()
+    // console.log(ret)
     if (ret) {
-        return ret
+        return ret[0][GText.infoDB.Table.Server.fields.baseURL]
     } else {
         const ret1 = await CreateServerOnDB(GText.ServerDefault)
-        if (ret1) {
-            return ret1[0][GText.infoDB.Table.Server.fields.baseURL]
-        }
-        else (
-            alert('Failed on find and define the default server!')
-        )
+        const ret2 = await GetServerDefaultOnDB()
+        // if (ret1) {
+            return ret2[0][GText.infoDB.Table.Server.fields.baseURL]
+        // }
+        // else (
+        //     alert('Failed on find and define the default server!')
+        // )
     }
     return 'http://127.0.0.1:8080/'
 }
 
-const api = axios.create({
-        baseURL: `${GText.ServerDefault.BaseURL}`
-    })
+ const api = axios.create({
+     baseURL: ``,
+     timeout:3000
+ })
+
+
 export default api

@@ -10,7 +10,10 @@ import { Container, Line } from './style.js'
 import { DeleteItensDB, GetItensDB, GetItensGrouped, UpdateStatusItensOnDB } from '../../services/routesData/routesData'
 import { CancelItensAPI, SendItensAPI } from "../../services/Api/routesApi.js";
 import Button from "../../componentes/button/button.js";
-import { BackHandler } from "react-native";
+import { Alert, BackHandler } from "react-native";
+import { GetAddresServer } from "../../services/Api/api.js";
+import Itens from "../../services/SQLite/tables/Itens.js";
+import clients from "../../services/SQLite/tables/clients.js";
 
 function Home({ route }) {
     const RouteName = route.name
@@ -24,8 +27,8 @@ function Home({ route }) {
     const [showCheckBox, setShowCheckBox] = useState(false)
     const [data, setData] = useState([])
     const field = GText.infoDB.Table.Itens.fields.ColetaNumber
-
-   
+ 
+//    clients.remove(60)
     async function GetItens() {
         let ret = []
         if (RouteName === GText.MyColetas) {
@@ -241,7 +244,21 @@ function Home({ route }) {
                     toggleChecedkAll(true);
                     return true;
                 } else {
-                    return false;
+                    Alert.alert('Sair','Deseja sair do aplicativo?',
+                        [
+                            // {
+                            //   text: "Ask me later",
+                            //   onPress: () => console.log("Ask me later pressed")
+                            // },
+                            {
+                              text: "CONTINUAR",
+                              onPress: () => null,
+                              style: "cancel"
+                            },
+                            { text: "SAIR", onPress: () => BackHandler.exitApp() }
+                          ]
+                    )
+                    return true;
                 }
             };
             BackHandler.addEventListener('hardwareBackPress', onBackPress);

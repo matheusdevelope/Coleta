@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, BackHandler, Easing, StyleSheet } from 'react-native';
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import NetInfo, { useNetInfo } from "@react-native-community/netinfo";
+import NetInfo from "@react-native-community/netinfo";
 import { CreateOnDB, DeleteOnDB, GetLogDB, GetOnDB } from "../../services/routesData/routesData";
 import { Container, TextStyled, ViewStyled, ScrollView, Text, ViewLineSyncing, TextButton } from './style.js'
 import { GetAPI } from "../../services/Api/routesApi";
@@ -11,7 +11,6 @@ import Global from "../../global/global";
 
 
 export default ({ route }) => {
-    const netInfo = useNetInfo();
     const navigate = useNavigation()
     const StatusRef = useRef([])
     const [show, setShow] = useState(false)
@@ -47,14 +46,20 @@ export default ({ route }) => {
     }
     async function handleInitialSyncData(origin, routes) {
         await LoopRoutes(routes)
-
-        if (origin !== GText.Preload) {
-            setShow('Finish')
+        if (await HaveConnection()) {
+            if (origin !== GText.Preload) {
+                setShow('Finish')
+            }
+            else {
+                // HaveConnection() &&
+                navigate.navigate(route.params.origin, { origin: GText.Preload })
+                // handleBack()
+            }
         }
         else {
-            navigate.navigate(route.params.origin, { origin: GText.Preload })
-           // handleBack()
+            setShow('NoInternet')
         }
+
     }
 
     async function LoopRoutes(RoutesGet) {
@@ -71,14 +76,19 @@ export default ({ route }) => {
                 Errors: []
             }
             Object.NameRoute = RoutesGet[i]
-            StatusRef.current.push({ ...Object })
-            setShow(i)
-            await CallApi(RoutesGet, i)
-            await CreateOnDB(GText.Routes.log, { Acao: GText.Log.actions.sync, Tipo: GText.Log.types.sync, Rota: RoutesGet[i], Data: `${GetDate + ' ' + Hour}` })
+            if (await HaveConnection()) {
+                StatusRef.current.push({ ...Object })
+                setShow(i)
+                await CallApi(RoutesGet, i)
+                await CreateOnDB(GText.Routes.log, { Acao: GText.Log.actions.sync, Tipo: GText.Log.types.sync, Rota: RoutesGet[i], Data: `${GetDate + ' ' + Hour}` })
+            }
+            else {
+                setShow('NoInternet')
+            }
         }
         if (!retLog) {
             await CreateOnDB(GText.Routes.log, { Acao: 'firstAcess', Data: `${GetDate + ' ' + Hour}` })
-       }
+        }
     }
 
     async function CallApi(RoutesGet, i) {
@@ -120,12 +130,14 @@ export default ({ route }) => {
         }
         return ret
     }
-    async function handleSync() {
-        if (await HaveConnection()) {
+    async function handleSync(clearAll) {
+        if (clearAll) {
+            StatusRef.current = []
+            setShow(1)
             handleInitialSyncData(route.params.origin, route.params.routes)
         }
         else {
-            setShow('NoInternet')
+            handleInitialSyncData(route.params.origin, route.params.routes)
         }
     }
 
@@ -147,18 +159,23 @@ export default ({ route }) => {
             StatusRef.current = []
         }
     }, [])
+    const onBackPress = () => {
+        if (show === 'Finish' | show === 'NoInternet') {
+            return false
+        }
+        else {
+            //Sem Retorno
+            return true;
+        }
 
-    useFocusEffect(
-        React.useCallback(() => {
-            const onBackPress = () => {
-                //Sem Retorno
-                return true;
-            };
-            BackHandler.addEventListener('hardwareBackPress', onBackPress);
-            return () =>
-                BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-        }, [])
-    );
+    };
+    useEffect(() => {
+
+        BackHandler.addEventListener('hardwareBackPress', onBackPress);
+        return () =>
+            BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+
     function handleTitleHeader() {
         let ret = ''
         ret = show === 'Finish' ? GText.SyncFinish : show === 'NoInternet' ? GText.noInternet : GText.Syncing
@@ -177,18 +194,21 @@ export default ({ route }) => {
             </Animated.View>
             <ScrollView>
                 {
-                    StatusRef.current.map((item, key) => (
-                        <ViewStyled key={key}>
-                            <TextStyled style={{ fontWeight: 'bold' }}>{item.NameRoute}</TextStyled>
-                            <TextStyled>{GText.ObjectSyncOnPreload.namountRegister}: {item.amountRegister}</TextStyled>
-                            <TextStyled>{GText.ObjectSyncOnPreload.nItemOnInsert}: {item.ItemOnInsert}</TextStyled>
-                            {
-                                item.Errors.map((item, key) => (
-                                    <TextStyled key={key}>{`${item}`}</TextStyled>
-                                ))
-                            }
-                        </ViewStyled>
-                    ))
+                    StatusRef.current.map((item, key) => {
+                        return (
+                            <ViewStyled key={key}
+                                style={{ backgroundColor: item.Errors.length > 0 ? Global.redInputs : Global.bluelight3 }} >
+                                <TextStyled style={{ fontWeight: 'bold' }}>{item.NameRoute}</TextStyled>
+                                <TextStyled>{GText.ObjectSyncOnPreload.namountRegister}: {item.amountRegister}</TextStyled>
+                                <TextStyled>{GText.ObjectSyncOnPreload.nItemOnInsert}: {item.ItemOnInsert}</TextStyled>
+                                {
+                                    item.Errors.map((item, key) => (
+                                        <TextStyled key={key}>{`${item}`}</TextStyled>
+                                    ))
+                                }
+                            </ViewStyled>
+                        )
+                    })
                 }
             </ScrollView>
             {
@@ -202,16 +222,16 @@ export default ({ route }) => {
             {
                 show === 'NoInternet' &&
                 <>
-                    <ViewLineSyncing onPress={handleSync} >
+                    <ViewLineSyncing onPress={() => { handleSync(true) }} >
                         <TextButton style={{ color: Global.white }}>
                             {GText.messageTryAgainSync}
                         </TextButton>
                     </ViewLineSyncing>
                     <ViewLineSyncing onPress={handleBack}>
                         <TextButton style={{ color: Global.white }}>
-                            {route.params.origin !== GText.Preload 
-                            ? GText.ButtonFinishSync 
-                            : GText.messageExitApp}
+                            {route.params.origin !== GText.Preload
+                                ? GText.ButtonFinishSync
+                                : GText.messageExitApp}
                         </TextButton>
                     </ViewLineSyncing>
                 </>

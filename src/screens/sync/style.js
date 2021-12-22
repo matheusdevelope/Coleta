@@ -26,7 +26,6 @@ flex:1;
 `
 export const ViewStyled = styled.View`
 margin: ${Global.margin} ${Global.margin} 2px ${Global.margin};
-background-color:${Global.bluelight3Transparent};
 border-radius:${Global.borderRadius};
 padding:${Global.padding};
 `
