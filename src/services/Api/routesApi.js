@@ -25,9 +25,16 @@ export async function GetAPI(route, params) {
     } catch (err) {
         return Promise.reject(err);
     }
-
 }
-
+export async function TestServerAPI(route) {
+    try {
+        const resp = await api.get(route);
+        return resp
+    } catch (err) {
+        // return Promise.reject(err.response);
+        return Promise.reject(err);
+    }
+}
 
 /**
  * 

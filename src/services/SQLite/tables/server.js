@@ -20,6 +20,7 @@ import db from "../SQLiteDatabase";
         ${GText.infoDB.Table.Server.fields.baseURL}  TEXT,
         ${GText.infoDB.Table.Server.fields.priority}  INTEGER,
         ${GText.infoDB.Table.Server.fields.default}  TEXT,
+        ${GText.infoDB.Table.Server.fields.testRoute}  TEXT,
         ${GText.infoDB.Table.Server.fields.extra}  TEXT
     );
       `,
@@ -55,9 +56,10 @@ import db from "../SQLiteDatabase";
           ${GText.infoDB.Table.Server.fields.baseURL},
           ${GText.infoDB.Table.Server.fields.priority},
           ${GText.infoDB.Table.Server.fields.default},
+          ${GText.infoDB.Table.Server.fields.testRoute},
           ${GText.infoDB.Table.Server.fields.extra}
         ) 
-        values ( ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+        values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
         [
           obj[`${GText.infoDB.Table.Server.fields.name}`],
           obj[`${GText.infoDB.Table.Server.fields.description}`],
@@ -67,6 +69,7 @@ import db from "../SQLiteDatabase";
           obj[`${GText.infoDB.Table.Server.fields.baseURL}`],
           obj[`${GText.infoDB.Table.Server.fields.priority}`],
           obj[`${GText.infoDB.Table.Server.fields.default}`],
+          obj[`${GText.infoDB.Table.Server.fields.testRoute}`],
           obj[`${GText.infoDB.Table.Server.fields.extra}`]
         ],
         //generate a object with the result of SQL
@@ -112,7 +115,8 @@ const update = (id, obj) => {
         ${GText.infoDB.Table.Server.fields.port}=?,
         ${GText.infoDB.Table.Server.fields.baseURL}=?,
         ${GText.infoDB.Table.Server.fields.priority}=?,
-        ${GText.infoDB.Table.Server.fields.default}=?
+        ${GText.infoDB.Table.Server.fields.default}=?,
+        ${GText.infoDB.Table.Server.fields.testRoute}=?,
         ${GText.infoDB.Table.Server.fields.extra}=?
         WHERE ${GText.infoDB.Table.Server.fields.id}=?;`,
         [
@@ -124,6 +128,7 @@ const update = (id, obj) => {
           obj[`${GText.infoDB.Table.Server.fields.baseURL}`],
           obj[`${GText.infoDB.Table.Server.fields.priority}`],
           obj[`${GText.infoDB.Table.Server.fields.default}`],
+          obj[`${GText.infoDB.Table.Server.fields.testRoute}`],
           obj[`${GText.infoDB.Table.Server.fields.extra}`],
           id],
         //generate a object with the result of SQL
@@ -264,7 +269,7 @@ const all = () => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        `SELECT * FROM ${GText.infoDB.Table.Server.name};`,
+        `SELECT * FROM ${GText.infoDB.Table.Server.name} order by ${GText.infoDB.Table.Server.fields.priority} desc;`,
         [],
         (sqlTxn, res) => {
           let results = false

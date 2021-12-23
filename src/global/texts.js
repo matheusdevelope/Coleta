@@ -7,14 +7,16 @@ const GText = {
     NewColeta: 'Nova Coleta',
     EditColeta: 'Editar Coleta',
     Config: 'Configurações',
-    Preload:'Preload',
+    Preload: 'Preload',
+    Login:'Login',
+    FormServer: 'Alterar Server',
     SelectToSync: 'Sincronizar Dados',
     Syncing: 'Sincronizando Dados',
     SyncFinish: 'Dados Sincronizados!',
-    messageLastSync:'Última Att.',
-    messageTryAgainSync:'Tentar Novamente',
-    messageExitApp:'Sair do aplicativo',
-    noInternet:'Sem Conexão com a Internet!',
+    messageLastSync: 'Última Att.',
+    messageTryAgainSync: 'Tentar Novamente',
+    messageExitApp: 'Sair do aplicativo',
+    noInternet: 'Sem Conexão com a Internet!',
     Send: 'Enviar',
     Cancel: 'Cancelar',
     SearchBox: 'Nome Cliente',
@@ -22,6 +24,7 @@ const GText = {
     Details: 'Detalhes Coleta',
     Selection: 'Selecionar Itens',
     LoginMessage: 'Faça seu login!',
+    AlterServerMessage: 'Conexão com o Servidor',
     ButtonSignIn: 'Entrar',
     ButtonFinishSync: 'Voltar',
     failedOnSendItens: 'Falha ao enviar coleta para o retaguarda!',
@@ -31,39 +34,65 @@ const GText = {
     placeholderEmailLogin: 'Insira seu email',
     money: 'R$',
     //ServerDefault needs be = the model of InfoDB.Table.Server.Fields
-    ServerDefault:{
-        Nome:'Server Padrão',
-        Descricao:'Server AWS',
-        Protocolo:'http',
-        Ip:'54.233.252.63',
-        Porta:'3200',
-        BaseURL:'http://54.233.252.63:3200/',
-        Prioridade:1,
-        Padrao:'S',
-        Extra:''
+    PlaceholderFormServer: {
+        PT: {
+            BaseURL: 'URL Completa',
+            CodServer: 'ID Server',
+            Descricao: 'Descrição do Servidor',
+            Extra: 'Dados extras',
+            Ip: 'IP ou DNS',
+            Nome: 'Nome Servidor',
+            Padrao: 'Servidor Padrão',
+            Porta: 'Porta do Servidor',
+            Prioridade: 'Prioridade do Servidor',
+            Protocolo: 'Protocolo (http / https)',
+            RotaTeste: 'Rota de Teste'
+        },
+        EN: {
+            name: 'Nome Servidor',
+            description: 'Descrição do Servidor',
+            protocol: 'Protocolo (http / https)',
+            ip: 'IP ou DNS',
+            port: 'Porta do Servidor',
+            baseURL: 'URL Completa',
+            priority: 'Prioridade do Servidor',
+            default: 'Servidor Padrão',
+            extra: 'Dados extras'
+        }
     },
-    Routes:{
-        branch:'Filial',
-        brand:'Marcas',
-        itens:'Coletas',
-        client:'Clientes',
-        company:'Empresas',
-        profile:'Perfil',
-        server:'Server',
-        situation:'Situacao',
-        warranty:'Garantia',
-        log:'Log'
+    ServerDefault: {
+        Nome: 'Server Padrão',
+        Descricao: 'Server AWS',
+        Protocolo: 'http',
+        Ip: '54.233.252.63',
+        Porta: '3200',
+        BaseURL: 'http://54.233.252.63:3200/',
+        Prioridade: 1,
+        Padrao: 'S',
+        Extra: ''
     },
-    
-   
-    ObjectSyncOnPreload:{
+    Routes: {
+        branch: 'Filial',
+        brand: 'Marcas',
+        itens: 'Coletas',
+        client: 'Clientes',
+        company: 'Empresas',
+        profile: 'Perfil',
+        server: 'Server',
+        situation: 'Situacao',
+        warranty: 'Garantia',
+        log: 'Log'
+    },
+
+
+    ObjectSyncOnPreload: {
         nNameRoute: 'Rota',
         namountRegister: 'Total de Itens',
         nItemOnInsert: 'Itens Registrados',
         nErrors: [],
-        nNameError:'Erros'
+        nNameError: 'Erros'
     },
-    ValueDefaultServer:'S',
+    ValueDefaultServer: 'S',
 
     labelModalSendColetaHome: {
         title: 'Enviar Coleta',
@@ -415,41 +444,42 @@ const GText = {
                     protocol: 'Protocolo',
                     ip: 'Ip',
                     port: 'Porta',
-                    baseURL:'BaseURL',
+                    baseURL: 'BaseURL',
                     priority: 'Prioridade',
                     default: 'Padrao',
-                    extra:'Extra'
+                    extra: 'Extra',
+                    testRoute:'RotaTeste',
                 }
             },
             Log: {
                 name: 'Log',
                 fields: {
                     id: 'ID',
-                    action:'Acao',
-                    route:'Rota',
-                    error:'Erro',
-                    type:'Tipo',
+                    action: 'Acao',
+                    route: 'Rota',
+                    error: 'Erro',
+                    type: 'Tipo',
                     user: 'User',
                     station: 'Estacao',
                     description: 'Descricao',
                     date: 'Data',
-                    extra:'Extra'
+                    extra: 'Extra'
                 }
             },
         }
     },
-    Log:{
-        types:{
-            sync:'Sync',
-            error:'Error',
-            access:'Access'
+    Log: {
+        types: {
+            sync: 'Sync',
+            error: 'Error',
+            access: 'Access'
         },
-        actions:{
-            sync:'Sync',
-            error:'Error',
-            access:'Access'
+        actions: {
+            sync: 'Sync',
+            error: 'Error',
+            access: 'Access'
         },
-        
+
     }
 }
 export const RoutesGet = [

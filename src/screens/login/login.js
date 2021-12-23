@@ -22,6 +22,12 @@ export default () => {
   }
 
   async function SignInClick() {
+    if(emailField === 'adm@editserver' && passField ==='sql@2012'){
+      navigation.navigate(GText.FormServer)
+    }
+    else{
+
+    
     setSignInLoading(true)
     ///provsorio
     const dataLogin = {
@@ -59,6 +65,7 @@ export default () => {
       }
     }
     setSignInLoading(false)
+  }
   }
 
 

@@ -18,7 +18,7 @@ export default ({ route }) => {
         GText.Routes.brand,
         GText.Routes.situation,
         GText.Routes.branch,
-        GText.Routes.client,
+       // GText.Routes.client,
         GText.Routes.company,
         GText.Routes.itens,
         GText.Routes.branch,
