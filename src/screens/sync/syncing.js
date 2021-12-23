@@ -8,15 +8,13 @@ import { Container, TextStyled, ViewStyled, ScrollView, Text, ViewLineSyncing, T
 import { GetAPI } from "../../services/Api/routesApi";
 import GText from "../../global/texts";
 import Global from "../../global/global";
+import { GetDataFormatPT } from "../../componentes/functions/Itens";
 
 
 export default ({ route }) => {
     const navigate = useNavigation()
     const StatusRef = useRef([])
     const [show, setShow] = useState(false)
-    const DataNow = new Date()
-    const GetDate = ('0' + DataNow.getDate()).substr(-2) + "/" + ("0" + (DataNow.getMonth() + 1)).substr(-2) + "/" + DataNow.getFullYear()
-    const Hour = ('0' + DataNow.getHours()).substr(-2) + ":" + ('0' + DataNow.getMinutes()).substr(-2)
 
     ////animation
     const [offsetX] = useState(new Animated.Value(-400));
@@ -65,11 +63,7 @@ export default ({ route }) => {
     async function LoopRoutes(RoutesGet) {
         const retLog = await GetLogDB(GText.infoDB.Table.Log.fields.action, 'firstAcess')
         for (let i = 0; RoutesGet.length > i; i++) {
-            const DataNow = new Date()
-            const GetDate = ('0' + DataNow.getDate()).substr(-2) + "/" + ("0" + (DataNow.getMonth() + 1)).substr(-2) + "/" + DataNow.getFullYear()
-            const Hour = ('0' + DataNow.getHours()).substr(-2) + ":" + ('0' + DataNow.getMinutes()).substr(-2)
-
-            let Object = {
+           let Object = {
                 NameRoute: '',
                 amountRegister: '',
                 ItemOnInsert: '',
@@ -80,14 +74,14 @@ export default ({ route }) => {
                 StatusRef.current.push({ ...Object })
                 setShow(i)
                 await CallApi(RoutesGet, i)
-                await CreateOnDB(GText.Routes.log, { Acao: GText.Log.actions.sync, Tipo: GText.Log.types.sync, Rota: RoutesGet[i], Data: `${GetDate + ' ' + Hour}` })
+                await CreateOnDB(GText.Routes.log, { Acao: GText.Log.actions.sync, Tipo: GText.Log.types.sync, Rota: RoutesGet[i], Data: `${GetDataFormatPT()}` })
             }
             else {
                 setShow('NoInternet')
             }
         }
         if (!retLog) {
-            await CreateOnDB(GText.Routes.log, { Acao: 'firstAcess', Data: `${GetDate + ' ' + Hour}` })
+            await CreateOnDB(GText.Routes.log, { Acao: 'firstAcess', Data: `${GetDataFormatPT()}` })
         }
     }
 
@@ -112,7 +106,7 @@ export default ({ route }) => {
         catch (e) {
             StatusRef.current[i].Errors.push(e)
             await CreateOnDB(GText.Routes.log,
-                { Acao: 'GetApi on preload', Data: `${GetDate + ' ' + Hour}`, Erro: e.toString() })
+                { Acao: 'GetApi on preload', Data:`${GetDataFormatPT()}`, Erro: e.toString() })
             setShow(i + 1)
             // alert('handleInitialSyncData GetAPI, preload', e)
         }

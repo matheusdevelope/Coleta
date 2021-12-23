@@ -1,4 +1,4 @@
-import React, {useImperativeHandle, forwardRef, useState, useRef} from 'react';
+import React, {useImperativeHandle, forwardRef, useState, useRef, useEffect} from 'react';
 import Global from '../../global/global';
 import Button from '../button/button';
 
@@ -10,6 +10,7 @@ function ConfirmationModal({button, label }, ref) {
     const [visible, setVisible] = useState(false)
     const [data, setData] = useState('')
     useImperativeHandle(ref, () => ({
+        
         toggle: () => {
             toggle();
         },
@@ -23,6 +24,11 @@ function ConfirmationModal({button, label }, ref) {
     function toggle() {
         setVisible(!visible)
     }
+    useEffect(()=>{
+        return()=>{
+            setVisible(false)
+        }
+    },[])
     return (
         <Modal visible={visible} onRequestClose={toggle} transparent={true} ref={ref}  >
             <Container activeOpacity={1} onPress={toggle} >

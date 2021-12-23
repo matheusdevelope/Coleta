@@ -33,20 +33,23 @@ const GText = {
     placeholderPasswordLogin: 'Insira sua senha',
     placeholderEmailLogin: 'Insira seu email',
     money: 'R$',
+    yes:'Sim',
+    no:'Não',
     //ServerDefault needs be = the model of InfoDB.Table.Server.Fields
     PlaceholderFormServer: {
         PT: {
             BaseURL: 'URL Completa',
             CodServer: 'ID Server',
-            Descricao: 'Descrição do Servidor',
+            Descricao: 'Descrição Servidor',
             Extra: 'Dados extras',
             Ip: 'IP ou DNS',
             Nome: 'Nome Servidor',
             Padrao: 'Servidor Padrão',
-            Porta: 'Porta do Servidor',
-            Prioridade: 'Prioridade do Servidor',
-            Protocolo: 'Protocolo (http / https)',
-            RotaTeste: 'Rota de Teste'
+            Porta: 'Porta Servidor',
+            Prioridade: 'Prioridade Servidor',
+            Protocolo: 'Protocolo Conexão',
+            RotaTeste: 'Rota Teste',
+            data:'Data'
         },
         EN: {
             name: 'Nome Servidor',
@@ -449,6 +452,7 @@ const GText = {
                     default: 'Padrao',
                     extra: 'Extra',
                     testRoute:'RotaTeste',
+                    data:'data'
                 }
             },
             Log: {

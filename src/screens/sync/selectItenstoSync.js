@@ -74,7 +74,7 @@ export default ({ route }) => {
             return obj
         })
 
-        ItensChecked.current = all ? checked ? 1 : 0 : checked ? ItensChecked.current + 1 : ItensChecked.current - 1;
+        ItensChecked.current = all ? checked ? copyData.length : 0 : checked ? ItensChecked.current + 1 : ItensChecked.current - 1;
         setData(newData)
     }
 
@@ -91,8 +91,8 @@ export default ({ route }) => {
     useEffect(() => {
         IsFocused &&
             GetLastSyncRoutes()
-
          return ()=>{
+           
              handleOnChangeCheckBox(false,null,true)
          }
     }, [IsFocused])

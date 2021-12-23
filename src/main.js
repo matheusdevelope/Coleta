@@ -106,6 +106,7 @@ export default ({ navigation }) => {
                 animationEnabled: true,
             }}
             />
+            
              <Stack.Screen name='Login' component={login} options={{
                 animationEnabled: true,
             }}

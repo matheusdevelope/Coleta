@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
-import { useNavigation, CommonActions } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import styled from 'styled-components/native'
 import Global from '../../global/global'
 import GText from '../../global/texts'
-import { SignInAPI, TestServerAPI } from '../../services/Api/routesApi'
-import profile from '../../services/SQLite/tables/profile'
+import { TestServerAPI } from '../../services/Api/routesApi'
 import { useEffect } from 'react/cjs/react.development'
 import { CreateOnDB, GetOnDB } from '../../services/routesData/routesData'
+import SelectPicker from '../../componentes/selectPicker/selectPicker'
+import { GetDataFormatPT } from '../../componentes/functions/Itens'
 
 export default function FormAltServer() {
   const BaseForm = GText.infoDB.Table.Server.fields
@@ -14,7 +15,6 @@ export default function FormAltServer() {
   Object.keys(BaseForm).forEach((obj) => {
     ObjForm[BaseForm[obj]] = ''
   })
-  const FormArray = Object.keys(ObjForm)
   const navigation = useNavigation()
   const [form, setForm] = useState(ObjForm)
   const [signInLoading, setSignInLoading] = useState(false)
@@ -30,22 +30,28 @@ export default function FormAltServer() {
     }
   }
 
+  function handleChangeText(field, value) {
+    let copyForm = form
+    copyForm[field] = value
+    let baseURL = copyForm[BaseForm.protocol] + '://' + copyForm[BaseForm.ip] + ':' + copyForm[BaseForm.port] + '/'
+    copyForm[BaseForm.baseURL] = baseURL.length > 5 ? baseURL : ''
+    copyForm[BaseForm.data] = GetDataFormatPT()
+    setForm({ ...copyForm })
+  }
 
   useEffect(() => {
     handleInitialDataOnForm()
   }, [])
-
 
   async function SignInClick() {
     setSignInLoading(true)
     try {
       const ret = await TestServerAPI(form[BaseForm.baseURL] + form[BaseForm.testRoute])
       ret.status >= 200 & ret.status < 300 &&
-      await CreateOnDB(GText.infoDB.Table.Server.name, form)
-     
-     navigation.reset({ routes: [{ name: GText.Login }] })
+        await CreateOnDB(GText.infoDB.Table.Server.name, form)
+      navigation.reset({ routes: [{ name: GText.Login }] })
     }
-    catch(e) {
+    catch (e) {
       alert(`Erro ao validar endereço do Servidor, verifique os paramêtros informados!
       
 ${e}`)
@@ -53,29 +59,70 @@ ${e}`)
     }
     setSignInLoading(false)
     //  await CreateOnDB(GText.infoDB.Table.Server.name, form)
-    
   }
 
-  function handleChangeText(field, value) {
-    let copyForm = form
-    copyForm[field] = value
-    let baseURL = copyForm[BaseForm.protocol] + '://' + copyForm[BaseForm.ip] + ':' + copyForm[BaseForm.port] + '/'
+  const options = {
+    Protocol: [{ label: "HTTP", value: 'http' }, { label: "HTTPS", value: 'https' }],
+    ServerDefault: [{ label: GText.yes, value: GText.ValueDefaultServer }, { label: GText.no, value: 'N' }]
+    ,
 
-    copyForm[BaseForm.baseURL] = baseURL.length > 5 ? baseURL : ''
-    setForm({ ...copyForm })
   }
   return (
     <Container>
       <Text>{GText.AlterServerMessage}</Text>
       <AreaInputs>
-        {
-          FormArray.map((obj, key) => (
-            <Input key={key} placeholder={GText.PlaceholderFormServer.PT[obj]} autoCapitalize='none'
-              autoCorrect={false} value={form[obj]} onChangeText={t => handleChangeText(obj, t)}
-              editable={(obj === BaseForm.id | obj === BaseForm.baseURL) ? false : !signInLoading} />
-          ))
-        }
+        <LineButton>
+          <TextLabel>{GText.PlaceholderFormServer.PT[BaseForm.name] + ':'}</TextLabel>
+          <Input
+            autoCorrect={false} value={form[BaseForm.name]} onChangeText={t => handleChangeText(BaseForm.name, t)}
+            editable={!signInLoading} />
+        </LineButton>
+        <LineButton>
+          <TextLabel>{GText.PlaceholderFormServer.PT[BaseForm.description] + ':'}</TextLabel>
+          <Input 
+            autoCorrect={false} value={form[BaseForm.description]} onChangeText={t => handleChangeText(BaseForm.description, t)}
+            editable={!signInLoading} />
+        </LineButton>
+        <LineButton>
+          <TextLabel>{GText.PlaceholderFormServer.PT[BaseForm.protocol] + ':'}</TextLabel>
+          <SelectPicker name={BaseForm.protocol} options={options.Protocol} onSelect={handleChangeText}
+            style={{ zIndex: 10 }} />
+        </LineButton>
+        <LineButton>
+          <TextLabel>{GText.PlaceholderFormServer.PT[BaseForm.ip] + ':'}</TextLabel>
+          <Input autoCapitalize='none'
+            autoCorrect={false} value={form[BaseForm.ip]} onChangeText={t => handleChangeText(BaseForm.ip, t)}
+            editable={!signInLoading} />
+        </LineButton>
+        <LineButton>
+          <TextLabel>{GText.PlaceholderFormServer.PT[BaseForm.port] + ':'}</TextLabel>
+          <Input
+            autoCorrect={false} value={form[BaseForm.port]} onChangeText={t => handleChangeText(BaseForm.port, t)}
+            editable={!signInLoading} keyboardType="numeric" />
+        </LineButton>
+        <LineButton>
+          <TextLabel>{GText.PlaceholderFormServer.PT[BaseForm.baseURL] + ':'}</TextLabel>
+          <Input
+            autoCorrect={false} value={form[BaseForm.baseURL]} onChangeText={t => handleChangeText(BaseForm.baseURL, t)}
+            editable={false} />
+        </LineButton>
+        <LineButton>
+          <TextLabel>{GText.PlaceholderFormServer.PT[BaseForm.testRoute] + ':'}</TextLabel>
+          <Input autoCapitalize='none'
+            autoCorrect={false} value={form[BaseForm.testRoute]} onChangeText={t => handleChangeText(BaseForm.testRoute, t)}
+            editable={!signInLoading} />
+        </LineButton>
+        <LineButton>
+          <TextLabel>{GText.PlaceholderFormServer.PT[BaseForm.extra] + ':'}</TextLabel>
+          <Input autoCorrect={false} value={form[BaseForm.extra]} editable={!signInLoading}
+            onChangeText={t => handleChangeText(BaseForm.extra, t)} />
+        </LineButton>
+        <LineButton>
+          <TextLabel>{GText.PlaceholderFormServer.PT[BaseForm.default] + ':'}</TextLabel>
+          <SelectPicker name={BaseForm.default} options={options.ServerDefault} onSelect={handleChangeText} />
+        </LineButton>
       </AreaInputs>
+
       {signInLoading &&
         <LoadingIcon size='large' color='#0C0A0A' />
       }
@@ -85,34 +132,47 @@ ${e}`)
     </Container>
   )
 }
+const Container = styled.ScrollView`
+padding: 3%;
+
+`
+const Text = styled.Text`
+font-size: 22px;
+font-weight: bold;
+color:${Global.black};
+`
+const AreaInputs = styled.View`
+width: 100%;
+margin: 20px 0 ;
+`
+export const LineButton = styled.View`
+flex-direction:row;
+background-color: ${Global.white};
+margin: 5px 0;
+padding-left:16px;
+border-radius: 8px;
+min-height: 50px;
+align-items:center;
+justify-content:space-between;
+`
+const TextLabel = styled.Text`
+font-size: 16px;
+font-weight: bold;
+width: 25%;
+`
 const Input = styled.TextInput`
-font-size: 20px;
+font-size: 18px;
 color: #000;
 align-items: center;
-font-size:16px;
 background-color: #fff;
-border: 1px ${Global.blackTransparent} solid;
 border-radius: 8px;
 margin: 5px 0;
 padding-left: 16px;
-
+min-height: 50px;
+flex: 1;
 `
 export const LoadingIcon = styled.ActivityIndicator`
 `
-const AreaInputs = styled.View`
-width: 90%;
-margin: 20px 0 ;
-`
-
-
-const Container = styled.ScrollView`
-/* flex: 1;
-justify-content: center;
-align-items: center; */
-padding: 8%;
-background-color: "#efefef";
-`
-
 const SingInButton = styled.TouchableOpacity`
 height: 40px;
 width: 80%;
@@ -120,14 +180,11 @@ background-color: #1085BE;
 border-radius: 10px;
 justify-content: center;
 align-items: center;
-margin: 20px 0;
+margin: auto ;
 `
 const CustonButtonText = styled.Text`
 font-size: 18px;
 color: #FFF;
 font-weight:bold;
 `
-const Text = styled.Text`
-font-size: 22px;
-font-weight: bold;
-`
+

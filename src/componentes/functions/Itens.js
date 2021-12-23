@@ -13,3 +13,11 @@ export async function SendItem(data) {
     }
 
 }
+
+export function GetDataFormatPT() {
+    const DataNow = new Date()
+    const GetDate = ('0' + DataNow.getDate()).substr(-2) + "/" + ("0" + (DataNow.getMonth() + 1)).substr(-2) + "/" + DataNow.getFullYear()
+    const Hour = ('0' + DataNow.getHours()).substr(-2) + ":" + ('0' + DataNow.getMinutes()).substr(-2)
+    const ret = GetDate + ' ' + Hour
+    return ret
+}
