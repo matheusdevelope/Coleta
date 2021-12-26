@@ -24,7 +24,7 @@ const Global = {
     padding_n: 8,
     margin: '5px',
     margin_n: 5,
-    width: '8px',
+  //  width: '8px',
     MaxWidth:'70px',
     borderRadius: '8px',
     borderRadius_n: 8,
@@ -63,6 +63,7 @@ const Global = {
     MaxHeigtBoxColeta: '80',
     colorObservation: 'rgba(99, 159, 171, 1)',
     width: width,
+    height:height,
     colorButtonDelete: 'rgba(28, 93, 153, 1)',
 }
 

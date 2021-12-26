@@ -68,6 +68,9 @@ export async function GetServerDefaultOnDB() {
 export async function CreateServerOnDB(data) {
   return await Server.create(data)
 }
+export async function DeleteServerDB(param) {
+  return await Server.remove(param)
+}
 
 export async function GetOnDB(TableName ) {
   let ret = false

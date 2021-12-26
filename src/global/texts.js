@@ -10,6 +10,7 @@ const GText = {
     Preload: 'Preload',
     Login:'Login',
     FormServer: 'Alterar Server',
+    AddServer:'Adicionar Server',
     SelectToSync: 'Sincronizar Dados',
     Syncing: 'Sincronizando Dados',
     SyncFinish: 'Dados Sincronizados!',

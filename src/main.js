@@ -89,7 +89,14 @@ export default ({ navigation }) => {
 
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }} >
-           
+            <Stack.Screen 
+            // name='Login' component={login}
+             name={GText.FormServer} component={FormAltServer} 
+           //  initialParams={{origin:GText.Preload}}
+             options={{
+                animationEnabled: true,
+            }}
+            />
              <Stack.Screen 
             // name='Login' component={login}
              name={GText.Preload} component={Preload} 
@@ -98,14 +105,7 @@ export default ({ navigation }) => {
                 animationEnabled: true,
             }}
             />
-             <Stack.Screen 
-            // name='Login' component={login}
-             name={GText.FormServer} component={FormAltServer} 
-           //  initialParams={{origin:GText.Preload}}
-             options={{
-                animationEnabled: true,
-            }}
-            />
+            
             
              <Stack.Screen name='Login' component={login} options={{
                 animationEnabled: true,
