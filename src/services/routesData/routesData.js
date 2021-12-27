@@ -71,6 +71,9 @@ export async function CreateServerOnDB(data) {
 export async function DeleteServerDB(param) {
   return await Server.remove(param)
 }
+export async function UpdateServerDB(id, obj) {
+  return await Server.update(id, obj)
+}
 
 export async function GetOnDB(TableName ) {
   let ret = false

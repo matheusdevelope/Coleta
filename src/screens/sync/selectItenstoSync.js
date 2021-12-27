@@ -8,7 +8,7 @@ import Global from "../../global/global.js";
 import CheckBox from "@react-native-community/checkbox";
 import Button from "../../componentes/button/button.js";
 import ConfirmationModal from "../../componentes/modalConfirmation/modalConfirmation.js";
-import { GetLastLogOnDB } from "../../services/routesData/routesData.js";
+import { DeleteOnDB, GetLastLogOnDB } from "../../services/routesData/routesData.js";
 
 const RoutesGet1 = [
     { name: GText.Routes.warranty, checked: false },
@@ -21,6 +21,7 @@ const RoutesGet1 = [
 ]
 
 export default ({ route }) => {
+    const Origin = route.params !== undefined ? route.params.origin : ''
     const ModalRef = useRef()
     const IsFocused = useIsFocused()
     const navigate = useNavigation()
@@ -43,21 +44,30 @@ export default ({ route }) => {
     }
 
    
-
-    function handleSync() {
+    async function handleDeleteDataOnDB(SelectedData){
+        for(let i = 0; i<SelectedData.length; i++){
+            await DeleteOnDB(SelectedData[i])
+        }
+        alert('Finish')
+    }
+    function handleButtonModal() {
         let SelectedData = []
         data.map((obj) => {
             obj.checked &&
                 SelectedData.push(obj.name)
         })
+        ModalRef.current.toggle()
         //  handleOnChangeCheckBox(false,null,true)
+        Origin === GText.Config ? 
+        handleDeleteDataOnDB(SelectedData)
+        :
         navigate.navigate(GText.Syncing, { routes: SelectedData, origin: GText.SelectToSync })
     }
 
     function toggleChecedkAll(closelist) {
         CheckedAll.current = !CheckedAll.current
         handleOnChangeCheckBox(closelist ? false : CheckedAll.current, null, true)
-        closelist && navigate.goBack()
+        closelist && navigate.openDrawer()
     }
 
     function handleOnChangeCheckBox(checked, param, all) {
@@ -80,7 +90,7 @@ export default ({ route }) => {
 
     function OpenConfirmation(data) {
         if (ItensChecked.current > 0) {
-            ModalRef.current.setLabel(GText.labelModalSyncItens)
+            ModalRef.current.setLabel( Origin === GText.Config ? GText.labelModalDeleteOnDB : GText.labelModalSyncItens)
             ModalRef.current.toggle()
             ModalRef.current.sendvalue(data)
         }
@@ -92,7 +102,6 @@ export default ({ route }) => {
         IsFocused &&
             GetLastSyncRoutes()
          return ()=>{
-           
              handleOnChangeCheckBox(false,null,true)
          }
     }, [IsFocused])
@@ -100,7 +109,7 @@ export default ({ route }) => {
 
     return (
         <Container>
-            <Header title={GText.SelectToSync} name={Global.iconBack} name2={Global.IconList}
+            <Header title={Origin === GText.Config ? GText.SelectToDelete : GText.SelectToSync} name={Global.iconBack} name2={Global.IconList}
                 size={Global.sizeIconHeader} color={Global.colorIconHeader} onClickLeft={() => { toggleChecedkAll(true) }}
                 onClickRight={() => { toggleChecedkAll() }} />
             <ScrollView>
@@ -120,11 +129,11 @@ export default ({ route }) => {
                 })}
             </ScrollView>
             <Line style={{ display: ItensChecked.current > 0 ? 'flex' : 'none' }}>
-                <Button name={Global.IconSync} size={40} color={Global.colorButtonDelete}
+                <Button name={ Origin === GText.Config ? Global.IconTrash : Global.IconSync} size={40} color={Global.colorButtonDelete}
                     onClick={() => { OpenConfirmation('left') }}
                     style={{ flex: 1 }} />
             </Line>
-            <ConfirmationModal ref={ModalRef} button={handleSync} label={GText.labelModalSyncItens} />
+            <ConfirmationModal ref={ModalRef} button={handleButtonModal} label={GText.labelModalSyncItens} />
         </Container>
     )
 }

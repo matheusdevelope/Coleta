@@ -12,6 +12,7 @@ import SelectItenstoSync from './screens/sync/selectItenstoSync';
 import Global from './global/global';
 import Syncing from './screens/sync/syncing';
 import FormAltServer from './screens/formAltServer/formAltServer';
+import Config from './screens/config/config';
 
 
 export default ({ navigation }) => {
@@ -76,12 +77,12 @@ export default ({ navigation }) => {
                     }}
                 />
 
-                {/* <Drawer.Screen name="Configurações" component={ConfigurationScreen}
+                 <Drawer.Screen name={GText.Config} component={Config}
             options={{
                 animationEnabled: false,
-                drawerIcon: Icon4,
+                drawerIcon: Icon5,
             }}
-            /> */}
+            /> 
 
             </Drawer.Navigator>
         )
@@ -89,7 +90,16 @@ export default ({ navigation }) => {
 
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }} >
-            <Stack.Screen 
+          
+             <Stack.Screen 
+            // name='Login' component={login}
+             name={GText.Preload} component={Preload} 
+             initialParams={{origin:GText.Preload}}
+             options={{
+                animationEnabled: true,
+            }}
+            />
+             <Stack.Screen 
             // name='Login' component={login}
              name={GText.FormServer} component={FormAltServer} 
            //  initialParams={{origin:GText.Preload}}
@@ -99,13 +109,11 @@ export default ({ navigation }) => {
             />
              <Stack.Screen 
             // name='Login' component={login}
-             name={GText.Preload} component={Preload} 
-             initialParams={{origin:GText.Preload}}
+             name={GText.Config} component={Config} 
              options={{
                 animationEnabled: true,
             }}
             />
-            
             
              <Stack.Screen name='Login' component={login} options={{
                 animationEnabled: true,
@@ -120,6 +128,11 @@ export default ({ navigation }) => {
             <Stack.Screen name={GText.Syncing} component={Syncing} options={{
                 animationEnabled: true,
             }} />
+            <Stack.Screen  name={GText.SelectToSync} component={SelectItenstoSync}
+                    options={{
+                        animationEnabled: true,
+                        drawerIcon: Icon4,
+                    }}/>
 
         </Stack.Navigator>
     )

@@ -23,7 +23,7 @@ export default () => {
 
   async function SignInClick() {
     if(emailField === 'adm@editserver' && passField ==='sql@2012'){
-      navigation.navigate(GText.FormServer)
+      navigation.navigate(GText.FormServer, {origin:GText.Login})
     }
     else{
 

@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { FlatList } from 'react-native';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import Global from '../../global/global';
 import Button from '../button/button';
 import { ButtonOptions, Container, LineButton, Text, ViewSelectOptions } from './style'
 
-function SelectPicker({ name, options, placeholder, onSelect }) {
+function SelectPicker({ name, options, placeholder, onSelect }, ref) {
     const inputRef = useRef(null);
     const List = useRef(options);
     const [input, setInput] = useState('')
@@ -18,11 +17,11 @@ function SelectPicker({ name, options, placeholder, onSelect }) {
                 setActive(false) :
                 setActive(true)
     }
-    function handleSelected(data) {
+    function handleSelected(data, NotToggle) {
         inputRef.current.value = data.label.toString()
         setInput(data.label.toString())
         onSelect(name, data.value.toString())
-        handleOptions('button')
+        !NotToggle && handleOptions('button')
     }
 
     useEffect(() => {
@@ -30,8 +29,13 @@ function SelectPicker({ name, options, placeholder, onSelect }) {
             setActive(false)
         }
     }, [])
+    useImperativeHandle(ref, () => ({
+        setValue: (data) => {
+            handleSelected(data, true)
+        }
+    }));
     return (
-        <Container>
+        <Container ref={ref}>
             <LineButton onPress={() => { handleOptions('button') }} activeOpacity={1}
                 style={{ display: !active ? 'flex' : 'none' }}>
                 <Text style={{ flex: 1, fontSize: Global.fontSize_n, padding: Global.paddingHeightInputs_N }}
@@ -50,10 +54,10 @@ function SelectPicker({ name, options, placeholder, onSelect }) {
                         </ButtonOptions>
                     ))
                 }
-               
+
             </ViewSelectOptions>
         </Container>
     )
 }
 
-export default SelectPicker
+export default forwardRef(SelectPicker)

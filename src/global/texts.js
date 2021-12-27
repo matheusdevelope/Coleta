@@ -12,6 +12,7 @@ const GText = {
     FormServer: 'Alterar Server',
     AddServer:'Adicionar Server',
     SelectToSync: 'Sincronizar Dados',
+    SelectToDelete: 'Excluir Dados',
     Syncing: 'Sincronizando Dados',
     SyncFinish: 'Dados Sincronizados!',
     messageLastSync: 'Última Att.',
@@ -36,6 +37,10 @@ const GText = {
     money: 'R$',
     yes:'Sim',
     no:'Não',
+
+    nameMenuLogoff:'Sair da Conta',
+    nameMenuChangeServer:'Configurar Servidor',
+    nameMenuClearData:'Limpar dados',
     //ServerDefault needs be = the model of InfoDB.Table.Server.Fields
     PlaceholderFormServer: {
         PT: {
@@ -97,7 +102,18 @@ const GText = {
         nNameError: 'Erros'
     },
     ValueDefaultServer: 'S',
-
+    labelModalLogoff: {
+        title: 'Desconectar sua conta',
+        message: 'Seus dados não sincronizados serão descartados, tem certeza que deseja sair?',
+        buttonLeft: 'Voltar',
+        buttonRight: 'Sair'
+    },
+    labelModalSelectServer: {
+        title: 'Selecionar Servidor',
+        message: 'Este servidor será definido e utilizado como padrão, deseja continuar?',
+        buttonLeft: 'Voltar',
+        buttonRight: 'Selecionar'
+    },
     labelModalSendColetaHome: {
         title: 'Enviar Coleta',
         message: 'Essa coleta será enviada para o retaguarda, deseja continuar?',
@@ -158,6 +174,12 @@ const GText = {
         message: 'Deseja sincronizar os dados selecionados?',
         buttonLeft: 'Voltar',
         buttonRight: 'Sincronizar'
+    },
+    labelModalDeleteOnDB: {
+        title: 'Deletar Dados',
+        message: 'Deseja realmente deletar os dados selecionados?',
+        buttonLeft: 'Voltar',
+        buttonRight: 'Deletar'
     },
     MessageAlertEditingItemNewColeta: 'Termine de editar o item anterior!',
     ValueTotal: 'ValorTotal',
