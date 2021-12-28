@@ -84,7 +84,7 @@ export async function GetOnDB(TableName ) {
       ret = await Branch.all();
       break;
 
-    case routes.Brand:
+    case routes.Brands:
       ret = await Brands.all();
       break;
 
@@ -123,18 +123,18 @@ export async function GetOnDB(TableName ) {
 }
 
 export async function CreateOnDB(TableName, data) {
-  
+ 
   let ret = false
   switch (TableName) {
     case routes.Branch:
       ret = await Branch.create(data);
       break;
 
-    case routes.Brand:
+    case routes.Brands:
       ret = await Brands.create(data);
       break;
 
-    case routes.client:
+    case routes.Client:
       ret = await Clients.create(data);
       break;
 
@@ -163,7 +163,7 @@ export async function CreateOnDB(TableName, data) {
         ret = await log.create(data);
         break;
     default:
-      alert("Failed on routesData CreateOnDB function!");
+      console.log("Failed on routesData CreateOnDB function!");
   }
   return ret
 }
@@ -180,7 +180,7 @@ export async function DeleteOnDB(TableName ) {
       ret = await Branch.removeAll();
       break;
 
-    case routes.Brand:
+    case routes.Brands:
       ret = await Brands.removeAll();
       break;
 

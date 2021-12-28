@@ -26,7 +26,8 @@ export async function GetAPI(route, params) {
     if(params !== undefined){
     url = url + '/' + params
     }
-   // console.log(url)
+
+  //  console.log(url)
    // const ret = await API.GetItensDB(`Coletas/${data.Cod_Importacao}`)
 
     try {
@@ -50,14 +51,25 @@ export async function TestServerAPI(route) {
  * 
  * - Needs a array with Coletas object to send to DB online
  * 
- * - Retuns a bolean, true(sucess), false(failed)
+ * - Retuns a boolean, true(sucess), false(failed)
  */
-export async function SendItensAPI(data) {
-    let ret = true
-    //conect and send itens to DB online
+export async function SendItensAPI(data, params) {
+   // let ret = false
+    let url = await GetAddresServer()
+    url = url + "Coletas"
+    if(params !== undefined){
+    url = url + '/' + params
+    }
 
-    //after send with sucess
-    return await ret
+    console.log(url)
+   // const ret = await API.GetItensDB(`Coletas/${data.Cod_Importacao}`)
+
+    try {
+        const resp = await api.post(url, data);
+        return await resp.data
+    } catch (err) {
+        return Promise.reject(err);
+    }
 }
 export async function CancelItensAPI(data) {
     let ret = true

@@ -3,7 +3,7 @@
  export const Profile = {
          Nome: 'Matheus',
          Email:'emersonmatheustu@gmail.com',
-         CodVendedor:17,
+         CodVendedor:14,
          CodEmpresa:1,
          FilialPadrao:null,
          InicioSequenciaColeta:300000,

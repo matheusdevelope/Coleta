@@ -81,6 +81,17 @@ const GText = {
         Padrao: 'S',
         Extra: ''
     },
+    ServerDefaultLocal: {
+        Nome: 'Server Local',
+        Descricao: 'Apenas para debug',
+        Protocolo: 'http',
+        Ip: '192.168.100.15',
+        Porta: '3200',
+        BaseURL: 'http://192.168.100.15:3200/',
+        Prioridade: 1,
+        Padrao: 'S',
+        Extra: ''
+    },
     ObjectSyncOnPreload: {
         nNameRoute: 'Rota',
         namountRegister: 'Total de Itens',
@@ -470,7 +481,7 @@ const GText = {
             },
             Server: {
                 name: 'Server',
-                userAccess: false,
+                userAccess: true,
                 fields: {
                     id: 'CodServer',
                     name: 'Nome',

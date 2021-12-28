@@ -6,7 +6,7 @@ import NetInfo from "@react-native-community/netinfo";
 import { CreateOnDB, DeleteOnDB, GetLogDB, GetOnDB } from "../../services/routesData/routesData";
 import { Container, TextStyled, ViewStyled, ScrollView, Text, ViewLineSyncing, TextButton } from './style.js'
 import { GetAPI } from "../../services/Api/routesApi";
-import GText from "../../global/texts";
+import GText, { routes } from "../../global/texts";
 import Global from "../../global/global";
 import { GetDataFormatPT } from "../../componentes/functions/Itens";
 
@@ -73,21 +73,23 @@ export default ({ route }) => {
                 StatusRef.current.push({ ...Object })
                 setShow(i)
                 await CallApi(RoutesGet, i)
-                await CreateOnDB(GText.Routes.log, { Acao: GText.Log.actions.sync, Tipo: GText.Log.types.sync, Rota: RoutesGet[i], Data: `${GetDataFormatPT()}` })
+                await CreateOnDB(routes.Log, { Acao: GText.Log.actions.sync, Tipo: GText.Log.types.sync, Rota: RoutesGet[i], Data: `${GetDataFormatPT()}` })
             }
             else {
                 setShow('NoInternet')
             }
         }
         if (!retLog) {
-            await CreateOnDB(GText.Routes.log, { Acao: 'firstAcess', Data: `${GetDataFormatPT()}` })
+            await CreateOnDB(routes.Log, { Acao: 'firstAcess', Data: `${GetDataFormatPT()}` })
         }
     }
 
     async function CallApi(RoutesGet, i) {
-        const RetProfile = await GetOnDB(GText.infoDB.Table.Profile.name)
+        const retPro = await GetOnDB(GText.infoDB.Table.Profile.name)
+        const RetProfile = RoutesGet[i] === routes.Itens ? retPro[0][GText.infoDB.Table.Profile.fields.id] : ''
+
         try {
-            const ret = await GetAPI(RoutesGet[i], RetProfile[0][GText.infoDB.Table.Profile.fields.id])
+            const ret = await GetAPI(RoutesGet[i], RetProfile)
             StatusRef.current[i].amountRegister = ret.length
             setShow(i)
 
@@ -105,8 +107,8 @@ export default ({ route }) => {
         }
         catch (e) {
             StatusRef.current[i].Errors.push(e)
-            await CreateOnDB(GText.Routes.log,
-                { Acao: 'GetApi on preload', Data: `${GetDataFormatPT()}`, Erro: e.toString() })
+             await CreateOnDB(routes.Log,
+                 { Acao: 'GetApi on preload', Data: `${GetDataFormatPT()}`, Erro: e.toString() })
             setShow(i + 1)
             // alert('handleInitialSyncData GetAPI, preload', e)
         }
@@ -164,11 +166,11 @@ export default ({ route }) => {
     useEffect(() => {
         handleSync()
         BackHandler.addEventListener('hardwareBackPress', onBackPress);
-        return () =>{
+        return () => {
             StatusRef.current = []
             BackHandler.removeEventListener('hardwareBackPress', onBackPress);
         }
-           
+
     }, [])
 
     function handleTitleHeader() {

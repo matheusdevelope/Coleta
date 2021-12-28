@@ -150,14 +150,17 @@ function Home({ route }) {
         await DeleteItensDB(GText.infoDB.Table.Itens.fields.ColetaNumber, data)
     }
     async function handleSendColeta(data) {
+        
         const GT = GText.infoDB.Table.Itens.fields
         const Itens = await GetItensDB(GT.ColetaNumber, data)
+       // console.log('sendColetas',Itens)
         const ret = await SendItensAPI(Itens)
         if (ret) {
             await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
         }
         else {
-            alert(GText.failedOnSendItens)
+           // alert(GText.failedOnSendItens)
+           console.log(GText.failedOnSendItens)
         }
     }
     async function handleCancelColeta(data) {

@@ -132,16 +132,18 @@ ${e}`)
 
     }
   }
-  function handleEditServer(item) {
+  async function handleEditServer(item) {
     setForm({ ...item })
     OnEdit.current = item
     copyShow.NewServer = true
-    copyShow.buttons = false
+    copyShow.buttons = []
     setShow({ ...copyShow })
   }
   function onBackPress() {
     if (show.NewServer) {
+      OnEdit.current = false
       copyShow.NewServer = false
+      
       setShow({ ...copyShow })
     } else {
       navigation.canGoBack() && navigation.goBack()
@@ -190,6 +192,7 @@ ${e}`)
         </List>
 
         <SingInButton onPress={() => {
+          copyShow.loading = false
           copyShow.NewServer = !copyShow.NewServer
           setShow({ ...copyShow })
         }}>
@@ -223,7 +226,8 @@ ${e}`)
               </LineButton>
               <LineButton>
                 <TextLabel>{GText.PlaceholderFormServer.PT[BaseForm.protocol] + ':'}</TextLabel>
-                <SelectPicker ref={SelectPickerRef} name={BaseForm.protocol} options={options.Protocol} onSelect={handleChangeText} />
+                <SelectPicker ref={SelectPickerRef} name={BaseForm.protocol} options={options.Protocol} 
+                onSelect={handleChangeText} />
               </LineButton>
               <LineButton>
                 <TextLabel>{GText.PlaceholderFormServer.PT[BaseForm.ip] + ':'}</TextLabel>

@@ -20,7 +20,6 @@ export default () => {
       })
     );
   }
-  profile.all()
 
   async function SignInClick() {
     if(emailField === 'adm@editserver' && passField ==='sql@2012'){

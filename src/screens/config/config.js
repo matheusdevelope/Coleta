@@ -40,8 +40,8 @@ export default function Config({ route }) {
 
     async function GoToScreen(obj) {
         if (obj.screen === GText.Login) {
-         //   await DeleteOnDB(GText.infoDB.Table.Log.name)
-          //  await DeleteOnDB(GText.infoDB.Table.Profile.name)
+            await DeleteOnDB(GText.infoDB.Table.Log.name)
+            await DeleteOnDB(GText.infoDB.Table.Profile.name)
         }
         navigate.navigate(obj.screen, { origin: GText.Config })
     }

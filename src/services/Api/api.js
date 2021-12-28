@@ -9,7 +9,8 @@ export async function GetAddresServer() {
     if (ret) {
         return ret[0][GText.infoDB.Table.Server.fields.baseURL]
     } else {
-        const ret1 = await CreateServerOnDB(GText.ServerDefault)
+     //   await CreateServerOnDB(GText.ServerDefault)
+        await CreateServerOnDB(GText.ServerDefaultLocal)
         const ret2 = await GetServerDefaultOnDB()
             return ret2[0][GText.infoDB.Table.Server.fields.baseURL]
     }
