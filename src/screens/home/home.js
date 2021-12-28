@@ -5,15 +5,12 @@ import Header from "../../componentes/header/header.js";
 import ConfirmationModal from "../../componentes/modalConfirmation/modalConfirmation.js";
 import SearchBox from "../../componentes/searchBox/searchBox.js";
 import Global from "../../global/global.js";
-import GText, { RoutesGet } from "../../global/texts.js";
+import GText, { Routes } from "../../global/texts.js";
 import { Container, Line } from './style.js'
 import { DeleteItensDB, GetItensDB, GetItensGrouped, UpdateStatusItensOnDB } from '../../services/routesData/routesData'
 import { CancelItensAPI, SendItensAPI } from "../../services/Api/routesApi.js";
 import Button from "../../componentes/button/button.js";
 import { Alert, BackHandler } from "react-native";
-import { GetAddresServer } from "../../services/Api/api.js";
-import Itens from "../../services/SQLite/tables/Itens.js";
-import clients from "../../services/SQLite/tables/clients.js";
 
 function Home({ route }) {
     const RouteName = route.name
@@ -68,7 +65,8 @@ function Home({ route }) {
         }
     }
     function handleSyncColeta() {
-        navigation.navigate(GText.Syncing, { routes: [GText.Routes.itens], origin: GText.SendedColetas })
+        const routes = Routes()
+        navigation.navigate(GText.Syncing, { routes: [routes.itens], origin: GText.SendedColetas })
     }  
     function ButtonHeaderLeft() {
         navigation.openDrawer()

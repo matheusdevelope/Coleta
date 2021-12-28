@@ -218,7 +218,7 @@ const findLike = (field, param) => {
   });
 };
 
-const findLastLog = (field, param) => {
+const findLastLog = (field, param, field2, param2) => {
   const sql =  param === undefined
   ?
   `SELECT * FROM ${GText.infoDB.Table.Log.name} 
@@ -227,7 +227,8 @@ const findLastLog = (field, param) => {
   ////tem que pesquisar com fazer o "TOP 1 no sqlite"
 
   `SELECT * FROM ${GText.infoDB.Table.Log.name} 
-  WHERE ${field} = '${param}'
+  WHERE ${field} = '${param}' and
+  ${field2} = '${param2}'
   ORDER BY ${GText.infoDB.Table.Log.fields.id} DESC  ;`
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -311,7 +312,7 @@ const all = () => {
               results.push(item);
             }
           }
-        // console.log(results)
+      //   console.log(results)
           resolve(results)  //return de object when the Promisse is complete
         },
         error => {

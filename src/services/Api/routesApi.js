@@ -1,7 +1,11 @@
+
 import { Profile } from "../../../DadosOffline/Coletas Lista"
 import api, { GetAddresServer } from "./api"
 
 export async function SignInAPI(data) {
+    
+
+  //  console.log(await GetOnDB(GText.infoDB.Table.Profile.fields))
     let ret = true
     //conect and veryfy login profile to DB online
     //returns the data Profile user
@@ -19,6 +23,12 @@ export async function SignInAPI(data) {
 export async function GetAPI(route, params) {
     let url = await GetAddresServer()
     url = url + route
+    if(params !== undefined){
+    url = url + '/' + params
+    }
+   // console.log(url)
+   // const ret = await API.GetItensDB(`Coletas/${data.Cod_Importacao}`)
+
     try {
         const resp = await api.get(url);
         return await resp.data

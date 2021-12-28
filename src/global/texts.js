@@ -8,14 +8,15 @@ const GText = {
     EditColeta: 'Editar Coleta',
     Config: 'Configurações',
     Preload: 'Preload',
-    Login:'Login',
+    Login: 'Login',
     FormServer: 'Alterar Server',
-    AddServer:'Adicionar Server',
+    AddServer: 'Adicionar Server',
     SelectToSync: 'Sincronizar Dados',
     SelectToDelete: 'Excluir Dados',
     Syncing: 'Sincronizando Dados',
     SyncFinish: 'Dados Sincronizados!',
     messageLastSync: 'Última Att.',
+    messageDeleted: 'Deletado',
     messageTryAgainSync: 'Tentar Novamente',
     messageExitApp: 'Sair do aplicativo',
     noInternet: 'Sem Conexão com a Internet!',
@@ -35,12 +36,12 @@ const GText = {
     placeholderPasswordLogin: 'Insira sua senha',
     placeholderEmailLogin: 'Insira seu email',
     money: 'R$',
-    yes:'Sim',
-    no:'Não',
+    yes: 'Sim',
+    no: 'Não',
 
-    nameMenuLogoff:'Sair da Conta',
-    nameMenuChangeServer:'Configurar Servidor',
-    nameMenuClearData:'Limpar dados',
+    nameMenuLogoff: 'Sair da Conta',
+    nameMenuChangeServer: 'Configurar Servidor',
+    nameMenuClearData: 'Limpar dados',
     //ServerDefault needs be = the model of InfoDB.Table.Server.Fields
     PlaceholderFormServer: {
         PT: {
@@ -55,7 +56,7 @@ const GText = {
             Prioridade: 'Prioridade Servidor',
             Protocolo: 'Protocolo Conexão',
             RotaTeste: 'Rota Teste',
-            data:'Data'
+            data: 'Data'
         },
         EN: {
             name: 'Nome Servidor',
@@ -80,20 +81,6 @@ const GText = {
         Padrao: 'S',
         Extra: ''
     },
-    Routes: {
-        branch: 'Filial',
-        brand: 'Marcas',
-        itens: 'Coletas',
-        client: 'Clientes',
-        company: 'Empresas',
-        profile: 'Perfil',
-        server: 'Server',
-        situation: 'Situacao',
-        warranty: 'Garantia',
-        log: 'Log'
-    },
-
-
     ObjectSyncOnPreload: {
         nNameRoute: 'Rota',
         namountRegister: 'Total de Itens',
@@ -338,10 +325,23 @@ const GText = {
         InitialPlatform: 'Coleta Mobile',   ///pegar o nome do dispositivo
         InitialImportValue: 'Sim',
     },
+    Routes: {
+        branch: 'Filial',
+        brand: 'Marcas',
+        itens: 'Coletas',
+        client: 'Clientes',
+        company: 'Empresas',
+        profile: 'Perfil',
+        server: 'Server',
+        situation: 'Situacao',
+        warranty: 'Garantia',
+        log: 'Log'
+    },
     infoDB: {
         Table: {
             Itens: {
                 name: 'Coletas',
+                userAccess: true,
                 fields: {
                     IdMobile: 'IdMobile',
                     CodImport: 'Cod_Importacao',
@@ -397,6 +397,7 @@ const GText = {
             },
             Clients: {
                 name: 'Clientes',
+                userAccess: true,
                 fields: {
                     id: 'CodCliente',
                     name: 'Nome',
@@ -408,6 +409,7 @@ const GText = {
             },
             Brands: {
                 name: 'Marcas',
+                userAccess: true,
                 fields: {
                     id: 'CodMarca',
                     name: 'Nome',
@@ -419,6 +421,7 @@ const GText = {
             },
             Profile: {
                 name: 'Perfil',
+                userAccess: false,
                 fields: {
                     id: 'CodVendedor',
                     name: 'Nome',
@@ -431,13 +434,15 @@ const GText = {
             },
             Company: {
                 name: 'Empresa',
+                userAccess: false,
                 fields: {
                     id: 'CodEmpresa',
                     name: 'Nome',
                 }
             },
             Branch: {
-                name: 'Filial3',
+                name: 'Filial',
+                userAccess: false,
                 fields: {
                     id: 'CodFilial',
                     name: 'Nome',
@@ -446,6 +451,7 @@ const GText = {
             },
             Situation: {
                 name: 'Situacao',
+                userAccess: true,
                 typeKey: 'INTEGER',
                 fields: {
                     id: 'CodSituacao',
@@ -454,6 +460,7 @@ const GText = {
             },
             Warranty: {
                 name: 'Garantia',
+                userAccess: true,
                 typeKey: 'TEXT',
                 fields: {
                     id: 'CodGarantia',
@@ -463,6 +470,7 @@ const GText = {
             },
             Server: {
                 name: 'Server',
+                userAccess: false,
                 fields: {
                     id: 'CodServer',
                     name: 'Nome',
@@ -474,12 +482,13 @@ const GText = {
                     priority: 'Prioridade',
                     default: 'Padrao',
                     extra: 'Extra',
-                    testRoute:'RotaTeste',
-                    data:'data'
+                    testRoute: 'RotaTeste',
+                    data: 'data'
                 }
             },
             Log: {
                 name: 'Log',
+                userAccess: false,
                 fields: {
                     id: 'ID',
                     action: 'Acao',
@@ -499,25 +508,62 @@ const GText = {
         types: {
             sync: 'Sync',
             error: 'Error',
+            delete: 'Delete',
             access: 'Access'
         },
         actions: {
             sync: 'Sync',
             error: 'Error',
+            delete: 'Delete',
             access: 'Access'
         },
 
     }
 }
+
+export function Routes() {
+    const BaseForm = GText.infoDB.Table
+    let RoutesGet = {}
+    for (let prop in BaseForm) {
+        // if (BaseForm[prop].name !== BaseForm.Log.name, BaseForm[prop].name !== BaseForm.Clients.name)
+        RoutesGet[prop] = BaseForm[prop].name
+    }
+    return RoutesGet
+}
+export function Tables() {
+    const BaseForm = GText.infoDB.Table
+    let RoutesGet = {}
+    for (let prop in BaseForm) {
+        RoutesGet[prop] = prop
+    }
+    return RoutesGet
+}
+export const tables = Tables()
+
+
+export function NameTables(params) {
+    const BaseForm = GText.infoDB.Table
+    let RoutesGet = []
+    for (let prop in BaseForm) {
+        //  if (BaseForm[prop].name !== BaseForm.Log.name, BaseForm[prop].name !== BaseForm.Clients.name)
+        RoutesGet.push(BaseForm[prop].name)
+    }
+    return RoutesGet
+}
+
+export const routes = Routes()
+
 export const RoutesGet = [
-    { name: GText.Routes.warranty, checked: false },
-    { name: GText.Routes.brand, checked: false },
-    { name: GText.Routes.situation, checked: false },
-    { name: GText.Routes.client, checked: false },
-    { name: GText.Routes.company, checked: false },
-    { name: GText.Routes.itens, checked: false },
-    { name: GText.Routes.branch, checked: false }
+    { name: routes.Warranty, checked: false },
+    { name: routes.Brand, checked: false },
+    { name: routes.Situation, checked: false },
+    { name: routes.Client, checked: false },
+    { name: routes.Company, checked: false },
+    { name: routes.Itens, checked: false },
+    { name: routes.Branch, checked: false }
 ]
+
+
 export const fiedlsHide = [
     { name: GText.infoInputs.fiedlsHide.CodImport, initialData: null },
     { name: GText.infoInputs.fiedlsHide.CodCompany },

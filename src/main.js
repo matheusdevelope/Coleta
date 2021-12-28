@@ -75,6 +75,8 @@ export default ({ navigation }) => {
                         animationEnabled: true,
                         drawerIcon: Icon4,
                     }}
+                    
+                    initialParams={{origin:GText.Preload}}
                 />
 
                  <Drawer.Screen name={GText.Config} component={Config}
@@ -128,11 +130,11 @@ export default ({ navigation }) => {
             <Stack.Screen name={GText.Syncing} component={Syncing} options={{
                 animationEnabled: true,
             }} />
-            <Stack.Screen  name={GText.SelectToSync} component={SelectItenstoSync}
+            {/* <Stack.Screen  name={GText.SelectToSync} component={SelectItenstoSync}
                     options={{
                         animationEnabled: true,
                         drawerIcon: Icon4,
-                    }}/>
+                    }}/> */}
 
         </Stack.Navigator>
     )

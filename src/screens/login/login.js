@@ -20,6 +20,7 @@ export default () => {
       })
     );
   }
+  profile.all()
 
   async function SignInClick() {
     if(emailField === 'adm@editserver' && passField ==='sql@2012'){
@@ -42,7 +43,7 @@ export default () => {
     }
     else {
       if (retAPI[GText.infoDB.Table.Profile.fields.email] === emailField) {
-        await profile.removeAll()
+       // await profile.removeAll()
         await profile.create(retAPI)
         const retDB = await profile.all()
         if (retDB) {

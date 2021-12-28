@@ -1,24 +1,31 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigation, useIsFocused } from "@react-navigation/core";
+import { DrawerActions } from '@react-navigation/native';
 import { Container, TextStyled, ViewLine, ScrollView, Line, View } from './style.js'
 import Header from "../../componentes/header/header.js";
-import GText from "../../global/texts.js";
+import GText, { routes } from "../../global/texts.js";
 import Global from "../../global/global.js";
 import CheckBox from "@react-native-community/checkbox";
 import Button from "../../componentes/button/button.js";
 import ConfirmationModal from "../../componentes/modalConfirmation/modalConfirmation.js";
-import { DeleteOnDB, GetLastLogOnDB } from "../../services/routesData/routesData.js";
+import { CreateOnDB, DeleteOnDB, GetLastLogOnDB } from "../../services/routesData/routesData.js";
+import { GetDataFormatPT } from "../../componentes/functions/Itens.js";
 
-const RoutesGet1 = [
-    { name: GText.Routes.warranty, checked: false },
-    { name: GText.Routes.brand, checked: false },
-    { name: GText.Routes.situation, checked: false },
-    { name: GText.Routes.client, checked: false },
-    { name: GText.Routes.company, checked: false },
-    { name: GText.Routes.itens, checked: false },
-    { name: GText.Routes.branch, checked: false }
-]
+function CreateArray() {
+    let ret = []
+    for (let prop in routes) {
+        if (GText.infoDB.Table[prop].userAccess) {
+            ret.push({
+                name: routes[prop],
+                checked: false
+            })
+        }
+    }
+    return ret
+}
+const ListToSync = CreateArray()
+
 
 export default ({ route }) => {
     const Origin = route.params !== undefined ? route.params.origin : ''
@@ -27,27 +34,45 @@ export default ({ route }) => {
     const navigate = useNavigation()
     const CheckedAll = useRef(false)
     const ItensChecked = useRef(0)
-    const [data, setData] = useState(RoutesGet1)
+    const [data, setData] = useState(ListToSync)
 
     async function GetLastSyncRoutes() {
-        let Routes = RoutesGet1
-        for (let i = 0; i < RoutesGet1.length; i++) {
-            const ret = await GetLastLogOnDB(GText.infoDB.Table.Log.fields.route, Routes[i].name)
-            if(ret === null | ret === undefined){
-                Routes[i]['LastSync'] = ''                
+        let Routes = ListToSync
+        for (let i = 0; i < ListToSync.length; i++) {
+            const ret = await GetLastLogOnDB(GText.infoDB.Table.Log.fields.route, Routes[i].name, GText.infoDB.Table.Log.fields.action, GText.Log.actions.sync)
+            const ret1 = await GetLastLogOnDB(GText.infoDB.Table.Log.fields.route, Routes[i].name, GText.infoDB.Table.Log.fields.action, GText.Log.actions.delete)
+
+            if (ret === null | ret === undefined) {
+                Routes[i]['LastSync'] = ''
+                Routes[i]['ID'] = 0
             }
-            else{
+            else {
                 Routes[i]['LastSync'] = ret[0][GText.infoDB.Table.Log.fields.date]
+                Routes[i]['ID'] = ret[0][GText.infoDB.Table.Log.fields.id]
+            }
+
+            if (ret1 === null | ret1 === undefined) {
+                Routes[i]['Deleted'] = ''
+            }
+            else {
+                if (ret1[0][GText.infoDB.Table.Log.fields.id] > Routes[i]["ID"]) {
+                    Routes[i]['Deleted'] = ret1[0][GText.infoDB.Table.Log.fields.date]
+                } else {
+                    Routes[i]['Deleted'] = ''
+                }
             }
         }
         setData([...Routes])
     }
-
-   
-    async function handleDeleteDataOnDB(SelectedData){
-        for(let i = 0; i<SelectedData.length; i++){
+    async function handleDeleteDataOnDB(SelectedData) {
+        for (let i = 0; i < SelectedData.length; i++) {
             await DeleteOnDB(SelectedData[i])
+            await CreateOnDB(GText.Routes.log, {
+                Acao: GText.Log.actions.delete,
+                Tipo: GText.Log.types.delete, Rota: SelectedData[i], Data: `${GetDataFormatPT()}`
+            })
         }
+        GetLastSyncRoutes()
         alert('Finish')
     }
     function handleButtonModal() {
@@ -57,17 +82,18 @@ export default ({ route }) => {
                 SelectedData.push(obj.name)
         })
         ModalRef.current.toggle()
-        //  handleOnChangeCheckBox(false,null,true)
-        Origin === GText.Config ? 
-        handleDeleteDataOnDB(SelectedData)
-        :
-        navigate.navigate(GText.Syncing, { routes: SelectedData, origin: GText.SelectToSync })
+        Origin === GText.Config ?
+            handleDeleteDataOnDB(SelectedData)
+            :
+            navigate.navigate(GText.Syncing, { routes: SelectedData, origin: GText.SelectToSync })
     }
-
     function toggleChecedkAll(closelist) {
         CheckedAll.current = !CheckedAll.current
         handleOnChangeCheckBox(closelist ? false : CheckedAll.current, null, true)
-        closelist && navigate.openDrawer()
+        Origin === GText.Config ?
+            closelist && navigate.reset({ routes: [{ name: Origin, params: undefined }] })
+            :
+            closelist && navigate.dispatch(DrawerActions.openDrawer())
     }
 
     function handleOnChangeCheckBox(checked, param, all) {
@@ -87,10 +113,9 @@ export default ({ route }) => {
         ItensChecked.current = all ? checked ? copyData.length : 0 : checked ? ItensChecked.current + 1 : ItensChecked.current - 1;
         setData(newData)
     }
-
     function OpenConfirmation(data) {
         if (ItensChecked.current > 0) {
-            ModalRef.current.setLabel( Origin === GText.Config ? GText.labelModalDeleteOnDB : GText.labelModalSyncItens)
+            ModalRef.current.setLabel(Origin === GText.Config ? GText.labelModalDeleteOnDB : GText.labelModalSyncItens)
             ModalRef.current.toggle()
             ModalRef.current.sendvalue(data)
         }
@@ -101,9 +126,9 @@ export default ({ route }) => {
     useEffect(() => {
         IsFocused &&
             GetLastSyncRoutes()
-         return ()=>{
-             handleOnChangeCheckBox(false,null,true)
-         }
+        return () => {
+            handleOnChangeCheckBox(false, null, true)
+        }
     }, [IsFocused])
 
 
@@ -121,7 +146,13 @@ export default ({ route }) => {
                                 onValueChange={(newValue) => handleOnChangeCheckBox(newValue, item.name)} />
                             <View>
                                 <TextStyled>{item.name}</TextStyled>
-                                <TextStyled style={{ fontSize: 12 }} >  {GText.messageLastSync + `  ${item.LastSync}`} </TextStyled>
+                                {
+                                    item.Deleted !== '' ?
+                                        <TextStyled style={{ fontSize: 12 }} >  {GText.messageDeleted + `:  ${item.Deleted}`} </TextStyled>
+                                        :
+                                        <TextStyled style={{ fontSize: 12 }} >  {GText.messageLastSync + `:  ${item.LastSync}`} </TextStyled>
+                                }
+
                             </View>
 
                         </ViewLine>
@@ -129,7 +160,7 @@ export default ({ route }) => {
                 })}
             </ScrollView>
             <Line style={{ display: ItensChecked.current > 0 ? 'flex' : 'none' }}>
-                <Button name={ Origin === GText.Config ? Global.IconTrash : Global.IconSync} size={40} color={Global.colorButtonDelete}
+                <Button name={Origin === GText.Config ? Global.IconTrash : Global.IconSync} size={40} color={Global.colorButtonDelete}
                     onClick={() => { OpenConfirmation('left') }}
                     style={{ flex: 1 }} />
             </Line>

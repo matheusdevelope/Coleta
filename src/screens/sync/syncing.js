@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, BackHandler, Easing, StyleSheet } from 'react-native';
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { DrawerActions, useNavigation } from "@react-navigation/native";
 import NetInfo from "@react-native-community/netinfo";
 import { CreateOnDB, DeleteOnDB, GetLogDB, GetOnDB } from "../../services/routesData/routesData";
 import { Container, TextStyled, ViewStyled, ScrollView, Text, ViewLineSyncing, TextButton } from './style.js'
@@ -38,10 +38,11 @@ export default ({ route }) => {
     }
     function handleBack() {
         route.params.origin !== GText.Preload ?
-            navigate.navigate(route.params.origin, { origin: GText.Preload })
+            navigate.goBack()
             :
             BackHandler.exitApp()
     }
+
     async function handleInitialSyncData(origin, routes) {
         await LoopRoutes(routes)
         if (await HaveConnection()) {
@@ -49,9 +50,7 @@ export default ({ route }) => {
                 setShow('Finish')
             }
             else {
-                // HaveConnection() &&
                 navigate.navigate(route.params.origin, { origin: GText.Preload })
-                // handleBack()
             }
         }
         else {
@@ -63,7 +62,7 @@ export default ({ route }) => {
     async function LoopRoutes(RoutesGet) {
         const retLog = await GetLogDB(GText.infoDB.Table.Log.fields.action, 'firstAcess')
         for (let i = 0; RoutesGet.length > i; i++) {
-           let Object = {
+            let Object = {
                 NameRoute: '',
                 amountRegister: '',
                 ItemOnInsert: '',
@@ -86,8 +85,9 @@ export default ({ route }) => {
     }
 
     async function CallApi(RoutesGet, i) {
+        const RetProfile = await GetOnDB(GText.infoDB.Table.Profile.name)
         try {
-            const ret = await GetAPI(RoutesGet[i])
+            const ret = await GetAPI(RoutesGet[i], RetProfile[0][GText.infoDB.Table.Profile.fields.id])
             StatusRef.current[i].amountRegister = ret.length
             setShow(i)
 
@@ -106,7 +106,7 @@ export default ({ route }) => {
         catch (e) {
             StatusRef.current[i].Errors.push(e)
             await CreateOnDB(GText.Routes.log,
-                { Acao: 'GetApi on preload', Data:`${GetDataFormatPT()}`, Erro: e.toString() })
+                { Acao: 'GetApi on preload', Data: `${GetDataFormatPT()}`, Erro: e.toString() })
             setShow(i + 1)
             // alert('handleInitialSyncData GetAPI, preload', e)
         }
@@ -144,30 +144,31 @@ export default ({ route }) => {
             Animated.loop(animation).stop()
     }, [show]);
 
+    // useEffect(() => {
+    //     handleSync()
+    //     return () => {
+    //         StatusRef.current = []
+    //     }
+    // }, [])
 
-
-
-    useEffect(() => {
-        handleSync()
-        return () => {
-            StatusRef.current = []
-        }
-    }, [])
     const onBackPress = () => {
         if (show === 'Finish' | show === 'NoInternet') {
             return false
         }
         else {
-            //Sem Retorno
+            handleBack()
             return true;
         }
 
     };
     useEffect(() => {
-
+        handleSync()
         BackHandler.addEventListener('hardwareBackPress', onBackPress);
-        return () =>
+        return () =>{
+            StatusRef.current = []
             BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+        }
+           
     }, [])
 
     function handleTitleHeader() {

@@ -11,12 +11,7 @@ export async function GetAddresServer() {
     } else {
         const ret1 = await CreateServerOnDB(GText.ServerDefault)
         const ret2 = await GetServerDefaultOnDB()
-        // if (ret1) {
             return ret2[0][GText.infoDB.Table.Server.fields.baseURL]
-        // }
-        // else (
-        //     alert('Failed on find and define the default server!')
-        // )
     }
     return 'http://127.0.0.1:8080/'
 }

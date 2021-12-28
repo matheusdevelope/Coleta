@@ -5,17 +5,19 @@ import Itens from '../SQLite/tables/Itens'
 import Company from '../SQLite/tables/company'
 import Branch from '../SQLite/tables/branch'
 import db from "../SQLite/SQLiteDatabase";
-import GText from "../../global/texts";
+import GText, { Routes } from "../../global/texts";
 import Profile from "../SQLite/tables/profile";
 import Warranty from "../SQLite/tables/warranty";
 import Situation from "../SQLite/tables/situation";
 import Server from "../SQLite/tables/server";
 import log from "../SQLite/tables/log";
 
+const routes = Routes()
 /**
  * - This Function returns a Promise Object with data of local DB.
  * Don't need any parameters
  */
+
 export async function GetClientsDB(params) {
   return await Clients.all()
 }
@@ -78,135 +80,136 @@ export async function UpdateServerDB(id, obj) {
 export async function GetOnDB(TableName ) {
   let ret = false
   switch (TableName) {
-    case GText.Routes.branch:
+    case routes.Branch:
       ret = await Branch.all();
       break;
 
-    case GText.Routes.brand:
+    case routes.Brand:
       ret = await Brands.all();
       break;
 
-    case GText.Routes.client:
+    case routes.Client:
       ret = await Clients.all();
       break;
 
-    case GText.Routes.company:
+    case routes.Company:
       ret = await Company.all();
       break;
 
-    case GText.Routes.itens:
+    case routes.Itens:
       ret = await Itens.all();
       break;
 
-    case GText.Routes.profile:
+    case routes.Profile:
       ret = await Profile.all();
       break;
 
-    case GText.Routes.server:
+    case routes.Server:
       ret = await Server.all();
       break;
-    case GText.Routes.situation:
+    case routes.Situation:
       ret = await Situation.all();
       break;
-    case GText.Routes.warranty:
+    case routes.Warranty:
       ret = await Warranty.all();
       break;
-      case GText.Routes.log:
+      case routes.Log:
       ret = await log.all();
       break;
     default:
-      alert("Failed on routesData DeleteONDB function! ROUTEDATA");
-  }
-  return await ret
-}
-
-export async function CreateOnDB(TableName, data) {
-  let ret = false
-  switch (TableName) {
-    case GText.Routes.branch:
-      ret = await Branch.create(data);
-      break;
-
-    case GText.Routes.brand:
-      ret = await Brands.create(data);
-      break;
-
-    case GText.Routes.client:
-      ret = await Clients.create(data);
-      break;
-
-    case GText.Routes.company:
-      ret = await Company.create(data);
-      break;
-
-    case GText.Routes.itens:
-      ret = await Itens.create(data);
-      break;
-
-    case GText.Routes.profile:
-      ret = await Profile.create(data);
-      break;
-
-    case GText.Routes.server:
-      ret = await Server.create(data);
-      break;
-    case GText.Routes.situation:
-      ret = await Situation.create(data);
-      break;
-    case GText.Routes.warranty:
-      ret = await Warranty.create(data);
-      break;
-      case GText.Routes.log:
-        ret = await log.create(data);
-        break;
-    default:
-      alert("Failed on routesData createDB function!");
+      alert("Failed on routesData GetOnDB function! ROUTEDATA");
   }
   return ret
 }
 
-export async function GetLastLogOnDB(field, param) {
-  return await log.findLastLog(field, param)
+export async function CreateOnDB(TableName, data) {
+  
+  let ret = false
+  switch (TableName) {
+    case routes.Branch:
+      ret = await Branch.create(data);
+      break;
+
+    case routes.Brand:
+      ret = await Brands.create(data);
+      break;
+
+    case routes.client:
+      ret = await Clients.create(data);
+      break;
+
+    case routes.Company:
+      ret = await Company.create(data);
+      break;
+
+    case routes.Itens:
+      ret = await Itens.create(data);
+      break;
+
+    case routes.Profile:
+      ret = await Profile.create(data);
+      break;
+
+    case routes.Server:
+      ret = await Server.create(data);
+      break;
+    case routes.Situation:
+      ret = await Situation.create(data);
+      break;
+    case routes.Warranty:
+      ret = await Warranty.create(data);
+      break;
+      case routes.Log:
+        ret = await log.create(data);
+        break;
+    default:
+      alert("Failed on routesData CreateOnDB function!");
+  }
+  return ret
+}
+
+export async function GetLastLogOnDB(field, param, field2, param2) {
+  return await log.findLastLog(field, param, field2, param2)
 }
 
 
 export async function DeleteOnDB(TableName ) {
   let ret = false
   switch (TableName) {
-    case GText.Routes.branch:
+    case routes.Branch:
       ret = await Branch.removeAll();
       break;
 
-    case GText.Routes.brand:
+    case routes.Brand:
       ret = await Brands.removeAll();
       break;
 
-    case GText.Routes.client:
+    case routes.Client:
       ret = await Clients.removeAll();
       break;
 
-    case GText.Routes.company:
+    case routes.Company:
       ret = await Company.removeAll();
       break;
 
-    case GText.Routes.itens:
+    case routes.Itens:
       ret = await Itens.removeAll();
       break;
 
-    case GText.Routes.profile:
+    case routes.Profile:
       ret = await Profile.removeAll();
       break;
 
-    case GText.Routes.server:
+    case routes.Server:
       ret = await Server.removeAll();
       break;
-    case GText.Routes.situation:
+    case routes.Situation:
       ret = await Situation.removeAll();
       break;
-    case GText.Routes.warranty:
+    case routes.Warranty:
       ret = await Warranty.removeAll();
       break;
-      case GText.Routes.log:
+      case routes.Log:
         ret = await log.removeAll();
         break;
     default:
