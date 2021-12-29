@@ -153,17 +153,15 @@ function Home({ route }) {
     async function handleSendColeta(data) {
 
         const GT = GText.infoDB.Table.Itens.fields
-        await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
-        const Itens = await GetItensDB(GT.ColetaNumber, data)
-        const ret = await SendItensAPI(Itens)
-        if (ret) {
-            // console.log(ret)
-            //   await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
+        try {
+            await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
+            const Itens = await GetItensDB(GT.ColetaNumber, data)
+            await SendItensAPI(Itens)
         }
-        else {
-            await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.InitialStatusItem, GText.infoInputs.InitialStatusItem)
-             alert(GText.failedOnSendItens)
-            // console.log(GText.failedOnSendItens)
+        catch(e) {
+            await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.SendedStatusItem, GText.infoInputs.InitialStatusItem)
+            alert(GText.failedOnSendItens, e)
+            //console.log(e)
         }
     }
     async function handleCancelColeta(data) {
@@ -172,10 +170,10 @@ function Home({ route }) {
         const Itens = await GetItensDB(GT.ColetaNumber, data)
         const ret = await CancelItensAPI(Itens)
         if (ret) {
-         //   await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.SendedStatusItem, GText.infoInputs.CancelStatusItem)
+            //   await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.SendedStatusItem, GText.infoInputs.CancelStatusItem)
         }
         else {
-            await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.CancelStatusItem , GText.infoInputs.SendedStatusItem)
+            await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.CancelStatusItem, GText.infoInputs.SendedStatusItem)
             alert(GText.failedOnCancelItens)
         }
     }

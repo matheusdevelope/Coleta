@@ -352,7 +352,7 @@ const GText = {
     infoDB: {
         Table: {
             Itens: {
-                name: 'Coletas',
+                name: 'Coleta',
                 userAccess: true,
                 fields: {
                     IdMobile: 'IdMobile',
@@ -408,7 +408,7 @@ const GText = {
                 }
             },
             Clients: {
-                name: 'Clientes',
+                name: 'Cliente',
                 userAccess: true,
                 fields: {
                     id: 'CodCliente',
@@ -420,7 +420,7 @@ const GText = {
                 }
             },
             Brands: {
-                name: 'Marcas',
+                name: 'Marca',
                 userAccess: true,
                 fields: {
                     id: 'CodMarca',
@@ -433,15 +433,18 @@ const GText = {
             },
             Profile: {
                 name: 'Perfil',
-                userAccess: true,
+                userAccess: false,
                 fields: {
                     id: 'CodVendedor',
                     name: 'Nome',
                     email: 'Email',
+                    password: 'Senha',
                     company: 'CodEmpresa',
                     defaultBranch: 'FilialPadrao',
                     initSequence: 'InicioSequenciaColeta',
-                    finalSequence: 'FimSequenciaColeta'
+                    finalSequence: 'FimSequenciaColeta',
+                    totalAccess:'AcessoTotal',
+                    dateLastAccess:'DataUltimoAcesso'
                 }
             },
             Company: {
@@ -546,7 +549,7 @@ export function Tables() {
     const BaseForm = GText.infoDB.Table
     let RoutesGet = {}
     for (let prop in BaseForm) {
-        RoutesGet[prop] = prop
+        RoutesGet[prop] = BaseForm[prop].name
     }
     return RoutesGet
 }
@@ -559,6 +562,16 @@ export function NameTables(params) {
     for (let prop in BaseForm) {
         //  if (BaseForm[prop].name !== BaseForm.Log.name, BaseForm[prop].name !== BaseForm.Clients.name)
         RoutesGet.push(BaseForm[prop].name)
+    }
+    return RoutesGet
+}
+
+export function Properties(params) {
+    const BaseForm = GText.infoDB.Table.Profile.fields
+    let RoutesGet = []
+    for (let prop in BaseForm) {
+        //  if (BaseForm[prop].name !== BaseForm.Log.name, BaseForm[prop].name !== BaseForm.Clients.name)
+        RoutesGet.push(BaseForm[prop])
     }
     return RoutesGet
 }

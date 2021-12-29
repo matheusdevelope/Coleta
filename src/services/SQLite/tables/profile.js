@@ -17,7 +17,9 @@ import db from "../SQLiteDatabase";
         ${GText.infoDB.Table.Profile.fields.company}  INT,
         ${GText.infoDB.Table.Profile.fields.defaultBranch}  INT,
         ${GText.infoDB.Table.Profile.fields.initSequence}  INT,
-        ${GText.infoDB.Table.Profile.fields.finalSequence}  INT
+        ${GText.infoDB.Table.Profile.fields.finalSequence}  INT,
+        ${GText.infoDB.Table.Profile.fields.totalAccess}  TEXT,
+        ${GText.infoDB.Table.Profile.fields.dateLastAccess}  DATE
     );
       `,
         [],
@@ -50,9 +52,11 @@ import db from "../SQLiteDatabase";
           ${GText.infoDB.Table.Profile.fields.company},
           ${GText.infoDB.Table.Profile.fields.defaultBranch},
           ${GText.infoDB.Table.Profile.fields.initSequence},
-          ${GText.infoDB.Table.Profile.fields.finalSequence}
+          ${GText.infoDB.Table.Profile.fields.finalSequence},
+          ${GText.infoDB.Table.Profile.fields.totalAccess},
+          ${GText.infoDB.Table.Profile.fields.dateLastAccess}
         ) 
-        values (?, ?, ?, ?, ?, ?, ?);`,
+        values (?, ?, ?, ?, ?, ?, ?, ?, ?);`,
         [
           obj[`${GText.infoDB.Table.Profile.fields.id}`],
           obj[`${GText.infoDB.Table.Profile.fields.name}`],
@@ -60,7 +64,10 @@ import db from "../SQLiteDatabase";
           obj[`${GText.infoDB.Table.Profile.fields.company}`],
           obj[`${GText.infoDB.Table.Profile.fields.defaultBranch}`],
           obj[`${GText.infoDB.Table.Profile.fields.initSequence}`],
-          obj[`${GText.infoDB.Table.Profile.fields.finalSequence}`]
+          obj[`${GText.infoDB.Table.Profile.fields.finalSequence}`],
+          obj[`${GText.infoDB.Table.Profile.fields.totalAccess}`],
+          obj[`${GText.infoDB.Table.Profile.fields.dateLastAccess}`]
+          
         ],
         //generate a object with the result of SQL
         (sqlTxn, res) => {
@@ -103,7 +110,9 @@ const update = (id, obj) => {
         ${GText.infoDB.Table.Profile.fields.company}=?,
         ${GText.infoDB.Table.Profile.fields.defaultBranch}=?,
         ${GText.infoDB.Table.Profile.fields.initSequence}=?,
-        ${GText.infoDB.Table.Profile.fields.finalSequence}=?
+        ${GText.infoDB.Table.Profile.fields.finalSequence}=?,
+        ${GText.infoDB.Table.Profile.fields.totalAccess}=?,
+        ${GText.infoDB.Table.Profile.fields.dateLastAccess}=?
         WHERE ${GText.infoDB.Table.Profile.fields.id}=?;`,
         [
           obj[`${GText.infoDB.Table.Profile.fields.name}`],
@@ -112,6 +121,8 @@ const update = (id, obj) => {
           obj[`${GText.infoDB.Table.Profile.fields.defaultBranch}`],
           obj[`${GText.infoDB.Table.Profile.fields.initSequence}`],
           obj[`${GText.infoDB.Table.Profile.fields.finalSequence}`],
+          obj[`${GText.infoDB.Table.Profile.fields.totalAccess}`],
+          obj[`${GText.infoDB.Table.Profile.fields.dateLastAccess}`],
           id],
         //generate a object with the result of SQL
         (sqlTxn, res) => {

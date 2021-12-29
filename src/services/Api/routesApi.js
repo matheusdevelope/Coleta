@@ -1,35 +1,28 @@
 
 import { Profile } from "../../../DadosOffline/Coletas Lista"
+import { tables } from "../../global/texts"
 import api, { GetAddresServer } from "./api"
 
-export async function SignInAPI(data) {
-    
-
-  //  console.log(await GetOnDB(GText.infoDB.Table.Profile.fields))
-    let ret = true
-    //conect and veryfy login profile to DB online
-    //returns the data Profile user
-
-    //after send with sucess
-    //provisorio
-    if ('erro' !== 'err') {
-        return await Profile
+export async function SignInAPI(data, params) {
+    let url = await GetAddresServer()
+    url = url + tables.Profile + '/Login'
+    if (params !== undefined) {
+        url = url + '/' + params 
     }
-    else {
-        return false
+    try {
+        const resp = await api.post(url, data);
+        return await resp.data
+    } catch (err) {
+        return Promise.reject(err);
     }
 }
 
 export async function GetAPI(route, params) {
     let url = await GetAddresServer()
     url = url + route
-    if(params !== undefined){
-    url = url + '/' + params
+    if (params !== undefined) {
+        url = url + '/' + params
     }
-
-  //  console.log(url)
-   // const ret = await API.GetItensDB(`Coletas/${data.Cod_Importacao}`)
-
     try {
         const resp = await api.get(url);
         return await resp.data
@@ -54,16 +47,11 @@ export async function TestServerAPI(route) {
  * - Retuns a boolean, true(sucess), false(failed)
  */
 export async function SendItensAPI(data, params) {
-   // let ret = false
     let url = await GetAddresServer()
-    url = url + "Coletas"
-    if(params !== undefined){
-    url = url + '/' + params
+    url = url + tables.Itens
+    if (params !== undefined) {
+        url = url + '/' + params
     }
-
-  //  console.log(url)
-   // const ret = await API.GetItensDB(`Coletas/${data.Cod_Importacao}`)
-
     try {
         const resp = await api.post(url, data);
         return await resp.data

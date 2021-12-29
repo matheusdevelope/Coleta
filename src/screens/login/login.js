@@ -22,50 +22,34 @@ export default () => {
   }
 
   async function SignInClick() {
-    if(emailField === 'adm@editserver' && passField ==='sql@2012'){
-      navigation.navigate(GText.FormServer, {origin:GText.Login})
-    }
-    else{
-
-    
-    setSignInLoading(true)
-    ///provsorio
-    const dataLogin = {
-      user: emailField,
-      password: passField,
-      acessLogin: new Date()
-    }
-    
-    const retAPI = await SignInAPI(dataLogin)
-    if (!retAPI) {
-      alert('Erro ao processar login, tente novamente!')
+    if (emailField === 'adm@editserver' && passField === 'sql@2012') {
+      navigation.navigate(GText.FormServer, { origin: GText.Login })
     }
     else {
-      if (retAPI[GText.infoDB.Table.Profile.fields.email] === emailField) {
-       // await profile.removeAll()
-        await profile.create(retAPI)
-        const retDB = await profile.all()
-        if (retDB) {
-          if (retDB[0][GText.infoDB.Table.Profile.fields.email] === emailField) {
-            navigate()
-            return
-            ///init sync data
-          }
-          else {
-            alert('Conflito de dados interno, redefina o app para as configurações padrão!')
-          }
-        }
-        else {
-          alert('Conflito de dados interno, redefina o app para as configurações padrão!')
-        }
 
+      setSignInLoading(true)
+      let dataLogin = {}
+      dataLogin[GText.infoDB.Table.Profile.fields.email] = emailField
+      dataLogin[GText.infoDB.Table.Profile.fields.password] = passField
+
+      try {
+      const retAPI = await SignInAPI(dataLogin)
+        try {
+          await profile.removeAll()
+          await profile.create(retAPI)
+          navigate()
+        }
+        catch(e) {
+          alert('Conflito de dados interno, redefina o app para as configurações padrão!', e)
+          console.log(e)
+        }
       }
-      else {
+      catch(e) {
+        console.log(e)
         alert('Email ou senha incorretos, tente novamente!')
       }
+      setSignInLoading(false)
     }
-    setSignInLoading(false)
-  }
   }
 
 
