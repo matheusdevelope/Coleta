@@ -33,6 +33,7 @@ function Home({ route }) {
         }
         if (RouteName === GText.SendedColetas) {
             ret = await GetItensGrouped(GText.infoDB.Table.Itens.fields.Status, GText.infoInputs.SendedStatusItem, GText.infoInputs.CancelStatusItem)
+            console.log(ret)
         }
         dataRef.current = OrderList(ret, field, true)
         setData(OrderList(ret, field, true))
@@ -152,13 +153,16 @@ function Home({ route }) {
     async function handleSendColeta(data) {
         
         const GT = GText.infoDB.Table.Itens.fields
+        await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
         const Itens = await GetItensDB(GT.ColetaNumber, data)
        // console.log('sendColetas',Itens)
         const ret = await SendItensAPI(Itens)
         if (ret) {
-            await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
+           // console.log(ret)
+         //   await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
         }
         else {
+            await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.InitialStatusItem, GText.infoInputs.InitialStatusItem)
            // alert(GText.failedOnSendItens)
            console.log(GText.failedOnSendItens)
         }

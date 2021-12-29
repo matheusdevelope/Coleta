@@ -6,7 +6,7 @@ import NetInfo from "@react-native-community/netinfo";
 import { CreateOnDB, DeleteOnDB, GetLogDB, GetOnDB } from "../../services/routesData/routesData";
 import { Container, TextStyled, ViewStyled, ScrollView, Text, ViewLineSyncing, TextButton } from './style.js'
 import { GetAPI } from "../../services/Api/routesApi";
-import GText, { routes } from "../../global/texts";
+import GText, { routes, tables } from "../../global/texts";
 import Global from "../../global/global";
 import { GetDataFormatPT } from "../../componentes/functions/Itens";
 
@@ -92,10 +92,16 @@ export default ({ route }) => {
             const ret = await GetAPI(RoutesGet[i], RetProfile)
             StatusRef.current[i].amountRegister = ret.length
             setShow(i)
-
+          //  await DeleteOnDB(RoutesGet[i])
             const ret1 = await GetOnDB(RoutesGet[i])
             if (ret1.length !== ret.length) {
-                await DeleteOnDB(RoutesGet[i])
+                if(RoutesGet[i] === routes.Itens){
+                  //  console.log(GText.infoDB.Table.Itens.fields.Status, GText.infoInputs.InitialStatusItem)
+                    await DeleteOnDB(RoutesGet[i], GText.infoDB.Table.Itens.fields.Status, '<>', GText.infoInputs.InitialStatusItem)  
+                }
+                else{
+                    await DeleteOnDB(RoutesGet[i])
+                }
                 await InsertOnDb(RoutesGet[i], ret, i)
                 StatusRef.current[i].ItemOnInsert = ret.length
                 setShow(i)

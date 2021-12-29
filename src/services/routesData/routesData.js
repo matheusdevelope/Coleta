@@ -47,7 +47,7 @@ export async function GetLogDB(field, param) {
   }
 }
 export async function DeleteItensDB(field, param) {
-  return await Itens.remove(field, param)
+  return await Itens.remove(field,'=', param)
 }
 export async function CreateItensDB(data) {
   return await Itens.create(data)
@@ -88,7 +88,7 @@ export async function GetOnDB(TableName ) {
       ret = await Brands.all();
       break;
 
-    case routes.Client:
+    case routes.Clients:
       ret = await Clients.all();
       break;
 
@@ -134,7 +134,7 @@ export async function CreateOnDB(TableName, data) {
       ret = await Brands.create(data);
       break;
 
-    case routes.Client:
+    case routes.Clients:
       ret = await Clients.create(data);
       break;
 
@@ -173,7 +173,7 @@ export async function GetLastLogOnDB(field, param, field2, param2) {
 }
 
 
-export async function DeleteOnDB(TableName ) {
+export async function DeleteOnDB(TableName, field, condition, param) {
   let ret = false
   switch (TableName) {
     case routes.Branch:
@@ -184,7 +184,7 @@ export async function DeleteOnDB(TableName ) {
       ret = await Brands.removeAll();
       break;
 
-    case routes.Client:
+    case routes.Clients:
       ret = await Clients.removeAll();
       break;
 
@@ -193,7 +193,13 @@ export async function DeleteOnDB(TableName ) {
       break;
 
     case routes.Itens:
-      ret = await Itens.removeAll();
+      if(field){
+        ret = await Itens.remove(field, condition, param);
+      }
+      else{
+         ret = await Itens.removeAll();
+      }
+     
       break;
 
     case routes.Profile:

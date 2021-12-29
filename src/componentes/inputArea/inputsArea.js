@@ -154,6 +154,7 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
       const GTF = GT.fiedlsHide
       const InitialData = [
         { name: GTF.CodImport, initialData: '456' },
+        { name: GTF.Date, initialData: GetDate },
         { name: GTF.Item, initialData: LastItemOnEdit === undefined ? '1' : LastItemOnEdit.toString() },
         { name: GTF.CodCompany, initialData: ret[GText.infoDB.Table.Profile.fields.company].toString() },
         { name: GTF.CodSalesmanI, initialData: ret[GText.infoDB.Table.Profile.fields.id].toString() },

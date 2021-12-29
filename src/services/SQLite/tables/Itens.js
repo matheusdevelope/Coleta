@@ -522,7 +522,7 @@ const allGrouped = (where, param, param2) => {
       ` : ''}
       `
       //comando SQL modificável
-    // console.log(sql)
+    //  console.log(sql)
       tx.executeSql(
         sql
        ,
@@ -601,13 +601,13 @@ const allGrouped = (where, param, param2) => {
  *  - O resultado da Promise a quantidade de registros removidos (zero indica que nada foi removido);
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL.
  */
-const remove = (field, param) => {
+const remove = (field, condition, param) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
         `DELETE FROM ${GText.infoDB.Table.Itens.name} 
-        WHERE ${field}=?;`,
+        WHERE ${field} ${condition} ?;`,
         [param],
         (sqlTxn, res) => {
           let results = false
@@ -666,13 +666,15 @@ const removeAll = () => {
 
 const updateStatus = (where, param,param2, newStatus)=>{
   return new Promise((resolve, reject) => {
+    const sql = `UPDATE ${GText.infoDB.Table.Itens.name} SET 
+    ${GText.infoDB.Table.Itens.fields.Status} = '${newStatus}'
+    WHERE ${where} = '${param}' 
+    and ${GText.infoDB.Table.Itens.fields.Status} = '${param2}';`
+  //  console.log(sql)
     db.transaction((tx) => {
       tx.executeSql(
-        `UPDATE ${GText.infoDB.Table.Itens.name} SET 
-        ${GText.infoDB.Table.Itens.fields.Status} = ?
-        WHERE ${where} = ? 
-        and ${GText.infoDB.Table.Itens.fields.Status} = '${param2}';`,
-        [newStatus, param],
+        sql,
+        [],
         (sqlTxn, res) => {
           let results = false
           let len = res.rows.length;
