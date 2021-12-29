@@ -132,6 +132,8 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
        */
   async function NumberColeta(ret) {
     let LastNumberOfColeta = await GetLastItemOnDB()
+    
+    
     if (LastNumberOfColeta === null) {
       return ret[GText.infoDB.Table.Profile.fields.initSequence].toString()
     }
@@ -141,12 +143,12 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
     }
   }
   async function InitialValueFields(LastItemOnEdit) {
-    
+
     const DataNow = new Date()
-    const GetDate = ('0' + DataNow.getDate()).substr(-2) + "/" + ("0" + (DataNow.getMonth() + 1)).substr(-2) + "/" + DataNow.getFullYear()
+    const DateFormat = DataNow.toISOString().split('T')[0] + ' ' + DataNow.toTimeString().split(' ')[0]
     const Hour = (DataNow.getHours().toString() + ":" + DataNow.getMinutes().toString()).toString()
     let ret = DataDB.current.profile
-    if (ret == undefined) {
+    if (ret === undefined | ret === null) {
       alert('Dados Não Sincronizados')
       return
     }
@@ -154,12 +156,12 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
       const GTF = GT.fiedlsHide
       const InitialData = [
         { name: GTF.CodImport, initialData: '456' },
-        { name: GTF.Date, initialData: GetDate },
+        { name: GTF.Date, initialData: DateFormat },
         { name: GTF.Item, initialData: LastItemOnEdit === undefined ? '1' : LastItemOnEdit.toString() },
         { name: GTF.CodCompany, initialData: ret[GText.infoDB.Table.Profile.fields.company].toString() },
         { name: GTF.CodSalesmanI, initialData: ret[GText.infoDB.Table.Profile.fields.id].toString() },
         { name: GTF.CodPriority, initialData: null },
-        { name: GTF.ColetaDate, initialData: GetDate },
+        { name: GTF.ColetaDate, initialData: DateFormat },
         { name: GTF.CodSalesman, initialData: ret[GText.infoDB.Table.Profile.fields.id].toString() },
         { name: GTF.CodCollector, initialData: ret[GText.infoDB.Table.Profile.fields.id].toString() },
         { name: GTF.CodTechnician, initialData: '1' },
@@ -168,7 +170,7 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
         { name: GTF.CodCancel, initialData: null },
         { name: GTF.ColetaNumber, initialData: DataDB.current.numberColeta },
         { name: GTF.Status, initialData: GT.InitialStatusItem },
-        { name: GTF.InclusionDate, initialData: GetDate },
+        { name: GTF.InclusionDate, initialData: DateFormat },
         { name: GTF.InclusionHour, initialData: Hour },
         { name: GTF.InclusionUser, initialData: ret[GText.infoDB.Table.Profile.fields.name].toString() },
         { name: GTF.InclusionStation, initialData: GT.InitialPlatform },
@@ -237,9 +239,9 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
     resetForm: () => {
       handleResetForm()
     },
-    getData:()=>{
+    getData: () => {
       return formRef.current.getData()
-  }
+    }
   }));
 
   useEffect(() => {
@@ -252,7 +254,7 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
     }
     return () => {
       isFocused &&
-      handleResetForm()
+        handleResetForm()
     }
   }, [isFocused])
 

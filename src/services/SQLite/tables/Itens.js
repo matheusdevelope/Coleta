@@ -12,7 +12,7 @@ function Itens() {
     function droptable() {
       tx.executeSql(`DROP TABLE ${GText.infoDB.Table.Itens.name} ;`);
     }
-    //droptable()
+  //  droptable()
     //   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
 
     function createTable() {
@@ -42,7 +42,7 @@ function Itens() {
        ${GText.infoDB.Table.Itens.fields.InclusionHour} TEXT,
        ${GText.infoDB.Table.Itens.fields.InclusionUser}  TEXT,
        ${GText.infoDB.Table.Itens.fields.InclusionStation} TEXT,
-       ${GText.infoDB.Table.Itens.fields.Date}  TEXT,
+       ${GText.infoDB.Table.Itens.fields.Date}  DATE,
        ${GText.infoDB.Table.Itens.fields.NameClient}  TEXT,
        ${GText.infoDB.Table.Itens.fields.IdIdentityClient} TEXT,
        ${GText.infoDB.Table.Itens.fields.Phone} TEXT,

@@ -61,6 +61,17 @@ export async function GetLastItemOnDB(field, param) {
 export async function GetItensGrouped(where, param, param2) {
   return await Itens.allGrouped(where, param, param2)
 }
+/**
+ *  - `UPDATE ${GText.infoDB.Table.Itens.name} SET 
+    ${GText.infoDB.Table.Itens.fields.Status} = '${newStatus}'
+    WHERE ${where} = '${param}' 
+    and ${GText.infoDB.Table.Itens.fields.Status} = '${param2}';`
+ * @param {*} where 
+ * @param {*} param 
+ * @param {*} param2 
+ * @param {*} newStatus 
+ * @returns 
+ */
 export async function UpdateStatusItensOnDB(where, param, param2, newStatus) {
   return await Itens.updateStatus(where, param, param2, newStatus)
 }

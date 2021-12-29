@@ -24,8 +24,8 @@ function Home({ route }) {
     const [showCheckBox, setShowCheckBox] = useState(false)
     const [data, setData] = useState([])
     const field = GText.infoDB.Table.Itens.fields.ColetaNumber
- 
-//    clients.remove(60)
+
+    //    clients.remove(60)
     async function GetItens() {
         let ret = []
         if (RouteName === GText.MyColetas) {
@@ -33,7 +33,7 @@ function Home({ route }) {
         }
         if (RouteName === GText.SendedColetas) {
             ret = await GetItensGrouped(GText.infoDB.Table.Itens.fields.Status, GText.infoInputs.SendedStatusItem, GText.infoInputs.CancelStatusItem)
-            console.log(ret)
+            //    console.log(ret)
         }
         dataRef.current = OrderList(ret, field, true)
         setData(OrderList(ret, field, true))
@@ -68,7 +68,7 @@ function Home({ route }) {
     function handleSyncColeta() {
         const routes = Routes()
         navigation.navigate(GText.Syncing, { routes: [routes.itens], origin: GText.SendedColetas })
-    }  
+    }
     function ButtonHeaderLeft() {
         navigation.openDrawer()
     }
@@ -121,7 +121,7 @@ function Home({ route }) {
         closelist && setShowCheckBox(false)
 
     }
-    function handleOnChangeCheckBox(checked, param, all){
+    function handleOnChangeCheckBox(checked, param, all) {
         let copyRef = dataRef.current
         const newDataRef = copyRef.map((obj, index) => {
             if (all) {
@@ -151,34 +151,35 @@ function Home({ route }) {
         await DeleteItensDB(GText.infoDB.Table.Itens.fields.ColetaNumber, data)
     }
     async function handleSendColeta(data) {
-        
+
         const GT = GText.infoDB.Table.Itens.fields
         await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
         const Itens = await GetItensDB(GT.ColetaNumber, data)
-       // console.log('sendColetas',Itens)
         const ret = await SendItensAPI(Itens)
         if (ret) {
-           // console.log(ret)
-         //   await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
+            // console.log(ret)
+            //   await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
         }
         else {
             await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.InitialStatusItem, GText.infoInputs.InitialStatusItem)
-           // alert(GText.failedOnSendItens)
-           console.log(GText.failedOnSendItens)
+             alert(GText.failedOnSendItens)
+            // console.log(GText.failedOnSendItens)
         }
     }
     async function handleCancelColeta(data) {
         const GT = GText.infoDB.Table.Itens.fields
+        await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.SendedStatusItem, GText.infoInputs.CancelStatusItem)
         const Itens = await GetItensDB(GT.ColetaNumber, data)
         const ret = await CancelItensAPI(Itens)
         if (ret) {
-            await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.SendedStatusItem, GText.infoInputs.CancelStatusItem)
+         //   await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.SendedStatusItem, GText.infoInputs.CancelStatusItem)
         }
         else {
+            await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.CancelStatusItem , GText.infoInputs.SendedStatusItem)
             alert(GText.failedOnCancelItens)
         }
     }
-     
+
     function getLabelModal(origin) {
         let ret = {}
         function Label(more, one) {
@@ -249,19 +250,19 @@ function Home({ route }) {
                     toggleChecedkAll(true);
                     return true;
                 } else {
-                    Alert.alert('Sair','Deseja sair do aplicativo?',
+                    Alert.alert('Sair', 'Deseja sair do aplicativo?',
                         [
                             // {
                             //   text: "Ask me later",
                             //   onPress: () => console.log("Ask me later pressed")
                             // },
                             {
-                              text: "CONTINUAR",
-                              onPress: () => null,
-                              style: "cancel"
+                                text: "CONTINUAR",
+                                onPress: () => null,
+                                style: "cancel"
                             },
                             { text: "SAIR", onPress: () => BackHandler.exitApp() }
-                          ]
+                        ]
                     )
                     return true;
                 }

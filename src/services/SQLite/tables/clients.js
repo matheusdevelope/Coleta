@@ -20,7 +20,7 @@ function Clients() {
          `,
       [],
       (sqlTxn, res) => {
-         console.log("table created successfully");
+      //   console.log("table created successfully");
       },
       error => {
         console.log("error on creating table " + error.message);

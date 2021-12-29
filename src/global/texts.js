@@ -329,6 +329,7 @@ const GText = {
             CancelHour: 'HoraCancelamento',
             CancelUser: 'UsuarioCancelamento',
             CancelStation: 'EstacaoCancelamento',
+            Date:'DataEmissao'
         },
         InitialStatusItem: 'AguardandoEnvio',
         SendedStatusItem: 'Recebido',
@@ -432,7 +433,7 @@ const GText = {
             },
             Profile: {
                 name: 'Perfil',
-                userAccess: false,
+                userAccess: true,
                 fields: {
                     id: 'CodVendedor',
                     name: 'Nome',
@@ -612,7 +613,8 @@ export const fiedlsHide = [
     { name: GText.infoInputs.fiedlsHide.CancelStation },
     { name: GText.infoInputs.fiedlsHide.CodSituation },
     { name: GText.infoInputs.fiedlsHide.CodBranch },
-    { name: GText.infoInputs.fiedlsHide.CodWarranty }
+    { name: GText.infoInputs.fiedlsHide.CodWarranty },
+    { name: GText.infoInputs.fiedlsHide.Date },
 ]
 export const fieldsToString = [
 
@@ -665,6 +667,7 @@ export const fieldsToString = [
     GText.infoDB.Table.Itens.fields.CancelDate,
     GText.infoDB.Table.Itens.fields.CancelHour,
     GText.infoDB.Table.Itens.fields.CancelUser,
-    GText.infoDB.Table.Itens.fields.CancelStation
+    GText.infoDB.Table.Itens.fields.CancelStation,
+   // GText.infoDB.Table.Itens.fields.Date,
 ]
 export default GText

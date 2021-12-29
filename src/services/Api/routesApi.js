@@ -61,7 +61,7 @@ export async function SendItensAPI(data, params) {
     url = url + '/' + params
     }
 
-    console.log(url)
+  //  console.log(url)
    // const ret = await API.GetItensDB(`Coletas/${data.Cod_Importacao}`)
 
     try {
