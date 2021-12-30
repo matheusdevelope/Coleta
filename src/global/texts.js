@@ -303,6 +303,7 @@ const GText = {
 
 
         fiedlsHide: {
+            IdMobile: 'IdMobile',
             CodImport: 'Cod_Importacao',
             CodCompany: 'CodEmpresa',
             CodBranch: 'CodFilial',
@@ -607,7 +608,8 @@ export const RoutesGet = [
 
 
 export const fiedlsHide = [
-    { name: GText.infoInputs.fiedlsHide.CodImport, initialData: null },
+    { name: GText.infoInputs.fiedlsHide.IdMobile },
+    { name: GText.infoInputs.fiedlsHide.CodImport },
     { name: GText.infoInputs.fiedlsHide.CodCompany },
     { name: GText.infoInputs.fiedlsHide.CodSalesmanI },
     { name: GText.infoInputs.fiedlsHide.CodPriority },

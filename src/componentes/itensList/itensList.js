@@ -2,7 +2,7 @@ import React, { useImperativeHandle, forwardRef, useState, useRef } from 'react'
 import { useEffect } from 'react/cjs/react.development';
 import GText from '../../global/texts';
 import { CancelItensAPI } from '../../services/Api/routesApi';
-import { CreateItensDB, DeleteItensDB, GetItensDB, UpdateStatusItensOnDB } from '../../services/routesData/routesData';
+import { CreateItensDB, DeleteItensDB, GetItensDB, UpdateItensDB, UpdateStatusItensOnDB } from '../../services/routesData/routesData';
 import BoxItemColeta from '../boxItemColeta/boxItemColeta';
 import { FlatList } from './style';
 
@@ -10,25 +10,31 @@ import { FlatList } from './style';
 const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, HideCanceled }, ref) => {
     const [List, setList] = useState([])
     const ControlEditing = useRef(false)
-    const field = GText.infoDB.Table.Itens.fields.Item
+    const tableItem = GText.infoDB.Table.Itens.fields
+    const field = tableItem.Item
 
     async function InsertItensOnDB() {
         async function insert() {
-            const lenght = List.length
-            for (let i = 0; i < lenght; i++) {
+            for (let i = 0; i < List.length; i++) {
                 let copy = List[i]
-                if (copy[GText.infoDB.Table.Itens.fields.Status] === GText.infoInputs.SendedStatusItem) {
-                    copy[GText.infoDB.Table.Itens.fields.Status] = GText.infoInputs.InitialStatusItem
+                if (copy[tableItem.Status] === GText.infoInputs.SendedStatusItem) {
+                    copy[tableItem.Status] = GText.infoInputs.InitialStatusItem
                 }
-                await CreateItensDB(copy)
+                if (itens !== undefined) {
+                    const ret = await GetItensDB(tableItem.IdMobile, copy[tableItem.IdMobile])
+                    if (ret) {
+                        await UpdateItensDB(tableItem.IdMobile, copy[tableItem.IdMobile], copy)
+                    }
+                    else {
+                        await CreateItensDB(copy)
+                    }
+                }
+                else {
+                    await CreateItensDB(copy)
+                }
             }
         }
-        if (itens !== undefined) {
-            await DeleteItensDB(GText.infoDB.Table.Itens.fields.ColetaNumber, itens[GText.infoDB.Table.Itens.fields.ColetaNumber])
-            await insert()
-        } else {
-            await insert()
-        }
+        await insert()
     }
     function handleEditItem(data) {
         if (EditItem !== undefined) {
@@ -47,7 +53,7 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
         }
         else {
             if (itens !== undefined & details) {
-                await DeleteItensDB(GText.infoDB.Table.Itens.fields.IdMobile, data[GText.infoDB.Table.Itens.fields.IdMobile])
+                await DeleteItensDB(tableItem.IdMobile, data[tableItem.IdMobile])
                 await refresh()
             }
             let copy = List
@@ -57,11 +63,11 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
         }
     }
     async function CancelItem(data) {
-        const GT = GText.infoDB.Table.Itens.fields
+        const GT = tableItem
         const Itens = await GetItensDB(GT.IdMobile, data[GT.IdMobile])
         const ret = await CancelItensAPI(Itens)
         if (ret) {
-            await UpdateStatusItensOnDB(GT.IdMobile, data[GT.IdMobile],GText.infoInputs.SendedStatusItem, GText.infoInputs.CancelStatusItem)
+            await UpdateStatusItensOnDB(GT.IdMobile, data[GT.IdMobile], GText.infoInputs.SendedStatusItem, GText.infoInputs.CancelStatusItem)
             GetData()
         }
         else {
@@ -93,7 +99,7 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
     }
     async function GetData() {
         let ret = []
-        ret = await GetItensDB(GText.infoDB.Table.Itens.fields.ColetaNumber, itens[GText.infoDB.Table.Itens.fields.ColetaNumber])
+        ret = await GetItensDB(tableItem.ColetaNumber, itens[tableItem.ColetaNumber])
         setList(ret)
     }
 
@@ -110,7 +116,7 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
         getData: () => {
             return List
         },
-        GetItemOnEdit:()=>{
+        GetItemOnEdit: () => {
             return ControlEditing.current
         }
     }));

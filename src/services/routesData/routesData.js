@@ -39,6 +39,10 @@ export async function GetItensDB(field, param, field2, condition, param2) {
     return await Itens.all()
   }
 }
+export async function UpdateItensDB(where, param, obj) {
+    return await Itens.update(where, param, obj)
+
+}
 export async function GetLogDB(field, param) {
   if (field !== undefined) {
     return await log.findLike(field, param)
