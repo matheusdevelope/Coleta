@@ -9,7 +9,7 @@ import {FlatList} from './style';
   <FlatList
        data={data}
        renderItem={({item, index})=>(<BoxColeta data={item} index={index} buttonLeft={buttonLeft} buttonRight={buttonRight}
-        isFocused={isFocused} RouteName={RouteName} showCheckBox={showCheckBox} setShowCheckBox={setShowCheckBox} 
+        isFocused={isFocused} RouteName={RouteName} showCheckBox={showCheckBox} setShowCheckBox={setShowCheckBox}  readyOnly={false}
         handleOnChange={handleOnChange} />)}
        keyExtractor={item=>item[GText.infoDB.Table.Itens.fields.ColetaNumber]}
        />       

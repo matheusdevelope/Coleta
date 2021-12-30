@@ -20,6 +20,8 @@ const GText = {
     SelectToDelete: 'Excluir Dados',
     Syncing: 'Sincronizando Dados',
     SyncFinish: 'Dados Sincronizados!',
+    Sending: 'Enviando Coletas',
+    SendFinish: 'Coletas Enviadas',
     messageLastSync: 'Última Att.',
     messageDeleted: 'Deletado',
     messageTryAgainSync: 'Tentar Novamente',

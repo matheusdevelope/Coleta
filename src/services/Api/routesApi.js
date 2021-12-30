@@ -56,7 +56,7 @@ export async function SendItensAPI(data, params) {
         const resp = await api.post(url, data);
         return await resp.data
     } catch (err) {
-        return Promise.reject(err);
+        return Promise.reject(err.response.data);
     }
 }
 export async function CancelItensAPI(data) {

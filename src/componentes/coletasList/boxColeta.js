@@ -6,7 +6,7 @@ import GText from '../../global/texts';
 
 import { Container, Line, Text, ButtonBox, LineBox } from './style';
 
-const BoxColeta = ({ data, RouteName, showCheckBox, setShowCheckBox, handleOnChange }) => {
+const BoxColeta = ({ data, RouteName, showCheckBox, setShowCheckBox, handleOnChange, readyOnly }) => {
     const navigate = useNavigation()
 
     function handleSelectCheckBox(newValue) {
@@ -14,27 +14,34 @@ const BoxColeta = ({ data, RouteName, showCheckBox, setShowCheckBox, handleOnCha
     }
 
     function handleToggle() {
-        !showCheckBox && handleSelectCheckBox(true)
-        !showCheckBox && setShowCheckBox(!showCheckBox)
+        if (!readyOnly) {
+            !showCheckBox && handleSelectCheckBox(true)
+            !showCheckBox && setShowCheckBox(!showCheckBox)
+        }
     }
 
     function handleDetails() {
-        showCheckBox ?
-            handleSelectCheckBox(data.checked === true ? false : true) :
-            navigate.navigate(GText.Details, { data: data, routeOrigin: RouteName })
+        if (!readyOnly) {
+            showCheckBox ?
+                handleSelectCheckBox(data.checked === true ? false : true) :
+                navigate.navigate(GText.Details, { data: data, routeOrigin: RouteName })
+        }
     }
+    console.log(data)
 
     return (
         <Container >
-            {showCheckBox &&
+            {!readyOnly &&
+                showCheckBox &&
                 <CheckBox
                     value={data.checked === true ? true : false}
                     onValueChange={(newValue) => handleSelectCheckBox(newValue)}
-                />}
+                />
+            }
             <LineBox >
                 <ButtonBox onLongPress={handleToggle} onPress={handleDetails}
                     style={{
-                        backgroundColor: data.checked === true ? Global.bluelight2 : data[GText.ItensCanceledTotal] == data[GText.ItensTotal] ?
+                        backgroundColor: readyOnly ? data.color : data.checked === true ? Global.bluelight2 : data[GText.ItensCanceledTotal] == data[GText.ItensTotal] ?
                             Global.redCanceled : Global.white
                     }}>
                     <Line>
@@ -43,7 +50,7 @@ const BoxColeta = ({ data, RouteName, showCheckBox, setShowCheckBox, handleOnCha
                     <Line>
                         <Text>{data[GText.infoInputs.nColetaNumber]}</Text>
                         <Text>{GText.infoInputs.pItem}: {data[GText.ItensTotal]}</Text>
-                        {
+                        { !readyOnly &&
                             RouteName == GText.SendedColetas &&
                             data[GText.ItensCanceledTotal] > 0 &&
                             <Text>{GText.infoInputs.CancelStatusItem}: {data[GText.ItensCanceledTotal]}</Text>
@@ -51,9 +58,7 @@ const BoxColeta = ({ data, RouteName, showCheckBox, setShowCheckBox, handleOnCha
                         <Text>{GText.money} {data[GText.ValueTotal]}</Text>
                     </Line>
                 </ButtonBox>
-
             </LineBox>
-
         </Container>
     )
 }
