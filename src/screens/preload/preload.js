@@ -32,11 +32,8 @@ export default ({ route }) => {
         }
     }
     useEffect(() => {
-
         navigate()
     }, [route.params])
-    //profile.removeAll()
-    //   log.removeAll()
     return (
         <Container>
             <Fundo width='100%' height='100%' />

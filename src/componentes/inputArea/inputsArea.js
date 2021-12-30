@@ -2,7 +2,7 @@ import React, { useRef, useEffect, forwardRef, useImperativeHandle } from 'react
 import { StyleSheet } from 'react-native';
 import { Form } from '@unform/mobile';
 import Input from '../inputForm/input';
-import GText, { fiedlsHide, fieldsToString } from '../../global/texts';
+import GText, { DateFormat, fiedlsHide, fieldsToString, HourFormat } from '../../global/texts';
 import Global from '../../global/global';
 import InputSelect from '../inputSelected/inputSelect.js';
 import Button from '../button/button';
@@ -132,8 +132,6 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
        */
   async function NumberColeta(ret) {
     let LastNumberOfColeta = await GetLastItemOnDB()
-    
-    
     if (LastNumberOfColeta === null) {
       return ret[GText.infoDB.Table.Profile.fields.initSequence].toString()
     }
@@ -144,9 +142,6 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
   }
   async function InitialValueFields(LastItemOnEdit) {
 
-    const DataNow = new Date()
-    const DateFormat = DataNow.toISOString().split('T')[0] + ' ' + DataNow.toTimeString().split(' ')[0]
-    const Hour = (DataNow.getHours().toString() + ":" + DataNow.getMinutes().toString()).toString()
     let ret = DataDB.current.profile
     if (ret === undefined | ret === null) {
       alert('Dados Não Sincronizados')
@@ -171,7 +166,7 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
         { name: GTF.ColetaNumber, initialData: DataDB.current.numberColeta },
         { name: GTF.Status, initialData: GT.InitialStatusItem },
         { name: GTF.InclusionDate, initialData: DateFormat },
-        { name: GTF.InclusionHour, initialData: Hour },
+        { name: GTF.InclusionHour, initialData: HourFormat },
         { name: GTF.InclusionUser, initialData: ret[GText.infoDB.Table.Profile.fields.name].toString() },
         { name: GTF.InclusionStation, initialData: GT.InitialPlatform },
         { name: GTF.IdIdentityClient, initialData: null },

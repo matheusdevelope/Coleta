@@ -1,5 +1,9 @@
 import { GetProfileDB } from "../services/routesData/routesData"
 
+
+const DataNow = new Date()
+export const HourFormat = (DataNow.getHours().toString() + ":" + DataNow.getMinutes().toString()).toString()
+export const DateFormat = DataNow.toISOString().split('T')[0] + ' ' + DataNow.toTimeString().split(' ')[0]
 const GText = {
     title: 'Coletas',
     MyColetas: 'Minhas Coletas',
@@ -560,8 +564,13 @@ export function NameTables(params) {
     const BaseForm = GText.infoDB.Table
     let RoutesGet = []
     for (let prop in BaseForm) {
-        //  if (BaseForm[prop].name !== BaseForm.Log.name, BaseForm[prop].name !== BaseForm.Clients.name)
-        RoutesGet.push(BaseForm[prop].name)
+        if (BaseForm[prop].name !== BaseForm.Log.name & 
+            BaseForm[prop].name !== BaseForm.Profile.name &
+            BaseForm[prop].name !== BaseForm.Server.name &
+            BaseForm[prop].name !== BaseForm.Clients.name){
+              RoutesGet.push(BaseForm[prop].name)   
+            }
+       
     }
     return RoutesGet
 }

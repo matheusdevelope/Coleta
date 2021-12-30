@@ -92,7 +92,7 @@ export default ({ route }) => {
             const ret = await GetAPI(RoutesGet[i], RetProfile)
             StatusRef.current[i].amountRegister = ret.length
             setShow(i)
-          //  await DeleteOnDB(RoutesGet[i])
+            await DeleteOnDB(RoutesGet[i])
             const ret1 = await GetOnDB(RoutesGet[i])
             if (ret1.length !== ret.length) {
                 if(RoutesGet[i] === routes.Itens){

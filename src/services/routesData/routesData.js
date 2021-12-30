@@ -5,7 +5,7 @@ import Itens from '../SQLite/tables/Itens'
 import Company from '../SQLite/tables/company'
 import Branch from '../SQLite/tables/branch'
 import db from "../SQLite/SQLiteDatabase";
-import GText, { Routes } from "../../global/texts";
+import GText, { Routes, Tables } from "../../global/texts";
 import Profile from "../SQLite/tables/profile";
 import Warranty from "../SQLite/tables/warranty";
 import Situation from "../SQLite/tables/situation";
@@ -134,7 +134,7 @@ export async function GetOnDB(TableName ) {
 }
 
 export async function CreateOnDB(TableName, data) {
- 
+ // console.log(TableName, data)
   let ret = false
   switch (TableName) {
     case routes.Branch:

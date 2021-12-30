@@ -1,6 +1,6 @@
-import GText from "../../../global/texts";
+import GText, { DateFormat } from "../../../global/texts";
 import db from "../SQLiteDatabase";
-
+const profile = GText.infoDB.Table.Profile.fields
 /**
  * INICIALIZAÇÃO DA TABELA
  * - Executa sempre, mas só cria a tabela caso não exista (primeira execução)
@@ -11,15 +11,15 @@ import db from "../SQLiteDatabase";
       tx.executeSql(
         `CREATE TABLE IF NOT EXISTS ${GText.infoDB.Table.Profile.name} 
       (
-        ${GText.infoDB.Table.Profile.fields.id} INTEGER PRIMARY KEY,
-        ${GText.infoDB.Table.Profile.fields.name}  TEXT,
-        ${GText.infoDB.Table.Profile.fields.email}  TEXT,
-        ${GText.infoDB.Table.Profile.fields.company}  INT,
-        ${GText.infoDB.Table.Profile.fields.defaultBranch}  INT,
-        ${GText.infoDB.Table.Profile.fields.initSequence}  INT,
-        ${GText.infoDB.Table.Profile.fields.finalSequence}  INT,
-        ${GText.infoDB.Table.Profile.fields.totalAccess}  TEXT,
-        ${GText.infoDB.Table.Profile.fields.dateLastAccess}  DATE
+        ${profile.id} INTEGER PRIMARY KEY,
+        ${profile.name}  TEXT,
+        ${profile.email}  TEXT,
+        ${profile.company}  INT,
+        ${profile.defaultBranch}  INT,
+        ${profile.initSequence}  INT,
+        ${profile.finalSequence}  INT,
+        ${profile.totalAccess}  TEXT,
+        ${profile.dateLastAccess}  DATE
     );
       `,
         [],
@@ -41,36 +41,39 @@ import db from "../SQLiteDatabase";
  *  - Pode retornar erro (reject) caso exista erro no SQL ou nos parâmetros.
  */
  const create = (obj) => {
+   console.log(obj)
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //SQL Comand
       tx.executeSql(
         `INSERT INTO ${GText.infoDB.Table.Profile.name} (
-          ${GText.infoDB.Table.Profile.fields.id},
-          ${GText.infoDB.Table.Profile.fields.name},
-          ${GText.infoDB.Table.Profile.fields.email},
-          ${GText.infoDB.Table.Profile.fields.company},
-          ${GText.infoDB.Table.Profile.fields.defaultBranch},
-          ${GText.infoDB.Table.Profile.fields.initSequence},
-          ${GText.infoDB.Table.Profile.fields.finalSequence},
-          ${GText.infoDB.Table.Profile.fields.totalAccess},
-          ${GText.infoDB.Table.Profile.fields.dateLastAccess}
+          ${profile.id},
+          ${profile.name},
+          ${profile.email},
+          ${profile.company},
+          ${profile.defaultBranch},
+          ${profile.initSequence},
+          ${profile.finalSequence},
+          ${profile.totalAccess},
+          ${profile.dateLastAccess}
         ) 
         values (?, ?, ?, ?, ?, ?, ?, ?, ?);`,
         [
-          obj[`${GText.infoDB.Table.Profile.fields.id}`],
-          obj[`${GText.infoDB.Table.Profile.fields.name}`],
-          obj[`${GText.infoDB.Table.Profile.fields.email}`],
-          obj[`${GText.infoDB.Table.Profile.fields.company}`],
-          obj[`${GText.infoDB.Table.Profile.fields.defaultBranch}`],
-          obj[`${GText.infoDB.Table.Profile.fields.initSequence}`],
-          obj[`${GText.infoDB.Table.Profile.fields.finalSequence}`],
-          obj[`${GText.infoDB.Table.Profile.fields.totalAccess}`],
-          obj[`${GText.infoDB.Table.Profile.fields.dateLastAccess}`]
+          obj[`${profile.id}`],
+          obj[`${profile.name}`],
+          obj[`${profile.email}`],
+          obj[`${profile.company}`],
+          obj[`${profile.defaultBranch}`] === null ? '' :obj[`${profile.defaultBranch}`],
+          // obj[`${profile.defaultBranch}`],
+          obj[`${profile.initSequence}`],
+          obj[`${profile.finalSequence}`],
+          obj[`${profile.totalAccess}`],
+          DateFormat// obj[`${profile.dateLastAccess}`]
           
         ],
         //generate a object with the result of SQL
         (sqlTxn, res) => {
+
           let results = false
           let len = res.rows.length;
           if (len > 0) {
@@ -104,25 +107,25 @@ const update = (id, obj) => {
       //comando SQL modificável
       tx.executeSql(
         `UPDATE ${GText.infoDB.Table.Profile.name} SET 
-        ${GText.infoDB.Table.Profile.fields.id}=?,
-        ${GText.infoDB.Table.Profile.fields.name}=?,
-        ${GText.infoDB.Table.Profile.fields.email}=?,
-        ${GText.infoDB.Table.Profile.fields.company}=?,
-        ${GText.infoDB.Table.Profile.fields.defaultBranch}=?,
-        ${GText.infoDB.Table.Profile.fields.initSequence}=?,
-        ${GText.infoDB.Table.Profile.fields.finalSequence}=?,
-        ${GText.infoDB.Table.Profile.fields.totalAccess}=?,
-        ${GText.infoDB.Table.Profile.fields.dateLastAccess}=?
-        WHERE ${GText.infoDB.Table.Profile.fields.id}=?;`,
+        ${profile.id}=?,
+        ${profile.name}=?,
+        ${profile.email}=?,
+        ${profile.company}=?,
+        ${profile.defaultBranch}=?,
+        ${profile.initSequence}=?,
+        ${profile.finalSequence}=?,
+        ${profile.totalAccess}=?,
+        ${profile.dateLastAccess}=?
+        WHERE ${profile.id}=?;`,
         [
-          obj[`${GText.infoDB.Table.Profile.fields.name}`],
-          obj[`${GText.infoDB.Table.Profile.fields.email}`],
-          obj[`${GText.infoDB.Table.Profile.fields.company}`],
-          obj[`${GText.infoDB.Table.Profile.fields.defaultBranch}`],
-          obj[`${GText.infoDB.Table.Profile.fields.initSequence}`],
-          obj[`${GText.infoDB.Table.Profile.fields.finalSequence}`],
-          obj[`${GText.infoDB.Table.Profile.fields.totalAccess}`],
-          obj[`${GText.infoDB.Table.Profile.fields.dateLastAccess}`],
+          obj[`${profile.name}`],
+          obj[`${profile.email}`],
+          obj[`${profile.company}`],
+          obj[`${profile.defaultBranch}`],
+          obj[`${profile.initSequence}`],
+          obj[`${profile.finalSequence}`],
+          obj[`${profile.totalAccess}`],
+          obj[`${profile.dateLastAccess}`],
           id],
         //generate a object with the result of SQL
         (sqlTxn, res) => {
@@ -159,7 +162,7 @@ const find = (id) => {
       //comando SQL modificável
       tx.executeSql(
         `SELECT * FROM ${GText.infoDB.Table.Profile.name} 
-        WHERE ${GText.infoDB.Table.Profile.fields.id}=?;`,
+        WHERE ${profile.id}=?;`,
         [id],
         (sqlTxn, res) => {
           let results = false
@@ -244,6 +247,7 @@ const all = () => {
               results.push(item);
             }
           }
+         // console.log(results)
           resolve(results)  //return de object when the Promisse is complete
         },
         error => {
@@ -268,7 +272,7 @@ const remove = (id) => {
       //comando SQL modificável
       tx.executeSql(
         `DELETE FROM ${GText.infoDB.Table.Profile.name} 
-        WHERE ${GText.infoDB.Table.Profile.fields.id}=?;`,
+        WHERE ${profile.id}=?;`,
         [id],
         (sqlTxn, res) => {
           let results = false

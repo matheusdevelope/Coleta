@@ -36,7 +36,7 @@ export default () => {
       const retAPI = await SignInAPI(dataLogin)
         try {
           await profile.removeAll()
-          await profile.create(retAPI)
+          await profile.create(retAPI[0])
           navigate()
         }
         catch(e) {
