@@ -92,36 +92,26 @@ export default ({ navigation }) => {
 
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }} >
-          
              <Stack.Screen 
-            // name='Login' component={login}
              name={GText.Preload} component={Preload} 
              initialParams={{origin:GText.Preload}}
              options={{
                 animationEnabled: true,
-            }}
-            />
+            }} />
              <Stack.Screen 
-            // name='Login' component={login}
              name={GText.FormServer} component={FormAltServer} 
-           //  initialParams={{origin:GText.Preload}}
              options={{
                 animationEnabled: true,
-            }}
-            />
+            }} />
              <Stack.Screen 
-            // name='Login' component={login}
              name={GText.Config} component={Config} 
              options={{
                 animationEnabled: true,
-            }}
-            />
-            
-             <Stack.Screen name='Login' component={login} options={{
+            }} />
+             <Stack.Screen name={GText.Login} component={login} options={{
                 animationEnabled: true,
-            }}
-            /> 
-            <Stack.Screen name='HomeDrawer' component={HomeDrawer} options={{
+            }} /> 
+            <Stack.Screen name={GText.HomeDrawer} component={HomeDrawer} options={{
                 animationEnabled: true,
             }} />
             <Stack.Screen name={GText.Details} component={Details} options={{
@@ -130,11 +120,6 @@ export default ({ navigation }) => {
             <Stack.Screen name={GText.Syncing} component={Syncing} options={{
                 animationEnabled: true,
             }} />
-            {/* <Stack.Screen  name={GText.SelectToSync} component={SelectItenstoSync}
-                    options={{
-                        animationEnabled: true,
-                        drawerIcon: Icon4,
-                    }}/> */}
 
         </Stack.Navigator>
     )

@@ -6,15 +6,6 @@ import Global from "../../global/global.js";
 import GText from "../../global/texts.js";
 import InputArea from "../../componentes/inputArea/inputsArea.js";
 import { Container } from './style.js'
-import { Clientes, Marcas, Profile, Situation, Warranty, Company, Branch, Coletas } from "../../../DadosOffline/Coletas Lista.js";
-import warranty from "../../services/SQLite/tables/warranty";
-import situation from "../../services/SQLite/tables/situation";
-import brands from "../../services/SQLite/tables/brands.js";
-import branch from "../../services/SQLite/tables/branch.js";
-import clients from "../../services/SQLite/tables/clients.js";
-import profile from "../../services/SQLite/tables/profile.js";
-import Itens from "../../services/SQLite/tables/Itens";
-import company from "../../services/SQLite/tables/company";
 import { GetItensGrouped } from "../../services/routesData/routesData.js";
 import ConfirmationModal from "../../componentes/modalConfirmation/modalConfirmation.js";
 import { BackHandler } from "react-native";
@@ -30,24 +21,24 @@ function NewColeta({ route }) {
         // *Route* is a explicit route used to block 
         //cancel itens on details screen when the coleta from SendedItens is saved.
         const ret = await GetItensGrouped(GText.infoDB.Table.Itens.fields.ColetaNumber, data[GText.infoDB.Table.Itens.fields.ColetaNumber])
-        const dataToDetails = { data: ret[0], FromEditColeta: true, routeOrigin:Route ? Route : route?.params.routeOrigin }
+        const dataToDetails = { data: ret[0], FromEditColeta: true, routeOrigin: Route ? Route : route?.params.routeOrigin }
         return dataToDetails
     }
     async function SaveItensOnDB() {
         //save changes and includes the go to :
-        if(!ListRef.current.GetItemOnEdit()){
+        if (!ListRef.current.GetItemOnEdit()) {
             await ListRef.current.InsertOnDB()
-        await InputRef.current.resetForm()
-        await ListRef.current.resetList()
-        data !== undefined ?
-            navigation.navigate(GText.Details, await dataToDetails(GText.MyColetas))
-            :
-            navigation.goBack()
+            await InputRef.current.resetForm()
+            await ListRef.current.resetList()
+            data !== undefined ?
+                navigation.navigate(GText.Details, await dataToDetails(GText.MyColetas))
+                :
+                navigation.goBack()
         }
-        else{
+        else {
             alert(GText.MessageAlertEditingItemNewColeta)
         }
-        
+
     }
     async function ButtonHeaderRight() {
         const ret = ListRef.current.getData()
@@ -59,8 +50,9 @@ function NewColeta({ route }) {
         data !== undefined ?
             navigation.navigate(GText.Details, await dataToDetails())
             :
-            navigation.goBack()
+            navigation.navigate(GText.MyColetas)
     }
+
     function ButtonHeaderLeft() {
         const ret = ListRef.current.getData()
         if (ret[0] === undefined) {
@@ -77,67 +69,22 @@ function NewColeta({ route }) {
         InputRef.current.SetDataFielsOnEdit(data)
     }
 
-    async function CreateDataOffline(params) {
-        //   const a = Object.keys(Coletas).length
-        //      for (let index = 0; index < a; index++) {
-        //       Itens.create(Coletas[index])
-        //       }
-        //     Itens.all()
+    useFocusEffect(
+        React.useCallback(() => {
+            const onBackPress = () => {
+                ButtonHeaderLeft();
+                return true;
+            };
+            BackHandler.addEventListener('hardwareBackPress', onBackPress);
+            return () =>
+                BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+        }, [])
+    );
 
-        // await profile.create(Profile)
-        //  profile.all()
-
-        // await company.create(Company)
-        //  company.all()
-
-        //  const d = Object.keys(Branch).length
-        //  for (let index = 0; index < d; index++) {
-        //      branch.create(Branch[index])
-        //  }
-
-        // branch.removeAll()
-
-        //  const e = Object.keys(Clientes).length
-        //  for (let index = 0; index < e; index++) {
-        //    await  clients.create(Clientes[index])
-        //  }
-        //  clients.all()
-        // warranty.removeAll()
-        // const f = Object.keys(Warranty).length
-        // for (let index = 0; index < f; index++) {
-        //      warranty.create(Warranty[index])
-        // }
-
-        // situation.removeAll()
-        // const g = Object.keys(Situation).length
-        // for (let index = 0; index < g; index++) {
-        //     situation.create(Situation[index])
-        // }
-
-        // brands.removeAll()
-        // const h = Object.keys(Marcas).length
-        // for (let index = 0; index < h; index++) {
-        //     brands.create(Marcas[index])
-        // }
-
-    }
-    // CreateDataOffline()
-     useFocusEffect(
-         React.useCallback(() => {
-             const onBackPress = () => {
-                 ButtonHeaderLeft();
-                 return true;
-             };
-             BackHandler.addEventListener('hardwareBackPress', onBackPress);
-             return () =>
-                 BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-         }, [])
-     );
-  
     return (
         <Container>
             <Header title={route.params.titleScreen !== undefined ? route.params.titleScreen : GText.NewColeta}
-             name={Global.iconBack} name2={Global.iconSave}
+                name={Global.iconBack} name2={Global.iconSave}
                 size={Global.sizeIconHeader} color={Global.colorIconHeader} style={{ marginLeft: 8 }}
                 onClickLeft={() => { ButtonHeaderLeft() }} onClickRight={() => { ButtonHeaderRight() }} />
             <InputArea ref={InputRef} itens={data} isFocused={isFocused} InsertNewItemOnList={InsertNewItemOnList} />

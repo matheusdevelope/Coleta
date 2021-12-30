@@ -13,6 +13,7 @@ const GText = {
     Config: 'Configurações',
     Preload: 'Preload',
     Login: 'Login',
+    HomeDrawer:'HomeDrawer',
     FormServer: 'Alterar Server',
     AddServer: 'Adicionar Server',
     SelectToSync: 'Sincronizar Dados',
@@ -23,7 +24,14 @@ const GText = {
     messageDeleted: 'Deletado',
     messageTryAgainSync: 'Tentar Novamente',
     messageExitApp: 'Sair do aplicativo',
+    objMessageExitApp:{
+        title:'Sair',
+        message:'Deseja sair do aplicativo?',
+        buttonLeft:'Continuar',
+        buttonRight:'Sair'
+    },
     noInternet: 'Sem Conexão com a Internet!',
+    totalErrors:'Total de Erros',
     Send: 'Enviar',
     Cancel: 'Cancelar',
     SearchBox: 'Nome Cliente',
@@ -489,7 +497,7 @@ const GText = {
             },
             Server: {
                 name: 'Server',
-                userAccess: true,
+                userAccess: false,
                 fields: {
                     id: 'CodServer',
                     name: 'Nome',

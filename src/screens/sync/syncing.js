@@ -36,12 +36,7 @@ export default ({ route }) => {
         const Net = await NetInfo.fetch()
         return Net.isConnected
     }
-    function handleBack() {
-        route.params.origin !== GText.Preload ?
-            navigate.goBack()
-            :
-            BackHandler.exitApp()
-    }
+
 
     async function handleInitialSyncData(origin, routes) {
         await LoopRoutes(routes)
@@ -95,11 +90,10 @@ export default ({ route }) => {
             await DeleteOnDB(RoutesGet[i])
             const ret1 = await GetOnDB(RoutesGet[i])
             if (ret1.length !== ret.length) {
-                if(RoutesGet[i] === routes.Itens){
-                  //  console.log(GText.infoDB.Table.Itens.fields.Status, GText.infoInputs.InitialStatusItem)
-                    await DeleteOnDB(RoutesGet[i], GText.infoDB.Table.Itens.fields.Status, '<>', GText.infoInputs.InitialStatusItem)  
+                if (RoutesGet[i] === routes.Itens) {
+                    await DeleteOnDB(RoutesGet[i], GText.infoDB.Table.Itens.fields.Status, '<>', GText.infoInputs.InitialStatusItem)
                 }
-                else{
+                else {
                     await DeleteOnDB(RoutesGet[i])
                 }
                 await InsertOnDb(RoutesGet[i], ret, i)
@@ -113,10 +107,9 @@ export default ({ route }) => {
         }
         catch (e) {
             StatusRef.current[i].Errors.push(e)
-             await CreateOnDB(routes.Log,
-                 { Acao: 'GetApi on preload', Data: `${GetDataFormatPT()}`, Erro: e.toString() })
+            await CreateOnDB(routes.Log,
+                { Acao: 'GetApi on preload', Data: `${GetDataFormatPT()}`, Erro: e.toString() })
             setShow(i + 1)
-            // alert('handleInitialSyncData GetAPI, preload', e)
         }
     }
     async function InsertOnDb(TableName, data, index) {
@@ -136,11 +129,18 @@ export default ({ route }) => {
         if (clearAll) {
             StatusRef.current = []
             setShow(1)
-            handleInitialSyncData(route.params.origin, route.params.routes)
+            await handleInitialSyncData(route.params.origin, route.params.routes)
         }
         else {
-            handleInitialSyncData(route.params.origin, route.params.routes)
+            await handleInitialSyncData(route.params.origin, route.params.routes)
         }
+    }
+    function CountErrors() {
+        let ret = 0
+        StatusRef.current.map((obj) => {
+            obj.Errors.length > 0 ? ret = ret + 1 : () => { }
+        })
+        return ret
     }
 
     useEffect(() => {
@@ -152,19 +152,19 @@ export default ({ route }) => {
             Animated.loop(animation).stop()
     }, [show]);
 
-    // useEffect(() => {
-    //     handleSync()
-    //     return () => {
-    //         StatusRef.current = []
-    //     }
-    // }, [])
+
+    function handleBack() {
+        route.params.origin !== GText.Preload ?
+            navigate.goBack()
+            :
+            BackHandler.exitApp()
+    }
 
     const onBackPress = () => {
         if (show === 'Finish' | show === 'NoInternet') {
             return false
         }
         else {
-            handleBack()
             return true;
         }
 
@@ -216,11 +216,20 @@ export default ({ route }) => {
             </ScrollView>
             {
                 show === 'Finish' &&
-                <ViewLineSyncing onPress={handleBack}>
-                    <TextButton style={{ color: Global.white }}>
-                        {GText.ButtonFinishSync}
-                    </TextButton>
-                </ViewLineSyncing>
+                <>
+                    <Text>{GText.totalErrors + ': ' + CountErrors()}</Text>
+                    <ViewLineSyncing onPress={() => { handleSync(true) }} >
+                        <TextButton style={{ color: Global.white }}>
+                            {GText.messageTryAgainSync}
+                        </TextButton>
+                    </ViewLineSyncing>
+                    <ViewLineSyncing onPress={handleBack}>
+                        <TextButton style={{ color: Global.white }}>
+                            {GText.ButtonFinishSync}
+                        </TextButton>
+                    </ViewLineSyncing>
+                </>
+
             }
             {
                 show === 'NoInternet' &&

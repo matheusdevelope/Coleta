@@ -20,15 +20,16 @@ function ConfirmationModal({button, label }, ref) {
         setLabel:(data)=>{
             labelRef.current = data
         }
+        ,
+        close:()=>{
+            labelRef.current = false
+            setVisible(false)
+        }
     }));
     function toggle() {
         setVisible(!visible)
     }
-    useEffect(()=>{
-        return()=>{
-            setVisible(false)
-        }
-    },[])
+ 
     return (
         <Modal visible={visible} onRequestClose={toggle} transparent={true} ref={ref}  >
             <Container activeOpacity={1} onPress={toggle} >

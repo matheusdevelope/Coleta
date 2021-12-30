@@ -11,6 +11,7 @@ import { DeleteItensDB, GetItensDB, GetItensGrouped, UpdateStatusItensOnDB } fro
 import { CancelItensAPI, SendItensAPI } from "../../services/Api/routesApi.js";
 import Button from "../../componentes/button/button.js";
 import { Alert, BackHandler } from "react-native";
+import profile from "../../services/SQLite/tables/profile.js";
 
 function Home({ route }) {
     const RouteName = route.name
@@ -25,8 +26,9 @@ function Home({ route }) {
     const [data, setData] = useState([])
     const field = GText.infoDB.Table.Itens.fields.ColetaNumber
 
-    //    clients.remove(60)
+
     async function GetItens() {
+        // console.log(await  profile.all())
         let ret = []
         if (RouteName === GText.MyColetas) {
             ret = await GetItensGrouped(GText.infoDB.Table.Itens.fields.Status, GText.infoInputs.InitialStatusItem)
@@ -119,7 +121,6 @@ function Home({ route }) {
         CheckedAll.current = !CheckedAll.current
         handleOnChangeCheckBox(closelist ? false : CheckedAll.current, null, true)
         closelist && setShowCheckBox(false)
-
     }
     function handleOnChangeCheckBox(checked, param, all) {
         let copyRef = dataRef.current
@@ -158,10 +159,9 @@ function Home({ route }) {
             const Itens = await GetItensDB(GT.ColetaNumber, data)
             await SendItensAPI(Itens)
         }
-        catch(e) {
+        catch (e) {
             await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.SendedStatusItem, GText.infoInputs.InitialStatusItem)
             alert(GText.failedOnSendItens, e)
-            //console.log(e)
         }
     }
     async function handleCancelColeta(data) {
@@ -248,18 +248,13 @@ function Home({ route }) {
                     toggleChecedkAll(true);
                     return true;
                 } else {
-                    Alert.alert('Sair', 'Deseja sair do aplicativo?',
-                        [
-                            // {
-                            //   text: "Ask me later",
-                            //   onPress: () => console.log("Ask me later pressed")
-                            // },
-                            {
-                                text: "CONTINUAR",
-                                onPress: () => null,
-                                style: "cancel"
-                            },
-                            { text: "SAIR", onPress: () => BackHandler.exitApp() }
+                    Alert.alert(GText.objMessageExitApp.title, GText.objMessageExitApp.message,
+                        [{
+                            text: GText.objMessageExitApp.buttonLeft,
+                            onPress: () => null,
+                            style: "cancel"
+                        },
+                        { text: GText.objMessageExitApp.buttonRight, onPress: () => BackHandler.exitApp() }
                         ]
                     )
                     return true;
@@ -270,6 +265,13 @@ function Home({ route }) {
                 BackHandler.removeEventListener('hardwareBackPress', onBackPress);
         }, [showCheckBox])
     );
+    useEffect(() => {
+        return () => {
+            ModalRef.current.close()
+            CheckedAll.current = false
+            ItensChecked.current = 0
+        }
+    }, [])
     function setSearch(value) {
         search.current = value
         setData(FilterList(dataRef.current, GText.infoInputs.nNameClient, search.current))

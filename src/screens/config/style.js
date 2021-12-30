@@ -7,7 +7,7 @@ width: 100%;
 height: 100%;
 `
 export const Text = styled.Text`
-font-size:${Global.fontSizeTitle};
+font-size:${Global.fontSize};
 color:${Global.textColor};
 font-weight:900;
 `

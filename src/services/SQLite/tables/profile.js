@@ -41,7 +41,6 @@ const profile = GText.infoDB.Table.Profile.fields
  *  - Pode retornar erro (reject) caso exista erro no SQL ou nos parâmetros.
  */
  const create = (obj) => {
-   console.log(obj)
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //SQL Comand

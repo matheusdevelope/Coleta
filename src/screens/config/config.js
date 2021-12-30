@@ -1,5 +1,5 @@
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useNavigation, DrawerActions } from "@react-navigation/core";
 import { Container, Text, ViewIcon, View } from './style.js'
 import Header from "../../componentes/header/header.js";
@@ -10,7 +10,7 @@ import ConfirmationModal from "../../componentes/modalConfirmation/modalConfirma
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { DeleteOnDB } from "../../services/routesData/routesData.js";
 
-
+ 
 export default function Config({ route }) {
     const ModalRef = useRef()
     const navigate = useNavigation()
@@ -55,6 +55,11 @@ export default function Config({ route }) {
             GoToScreen(obj)
         }
     }
+    useEffect(()=>{
+        return()=>{
+            ModalRef.current.close()  
+        }
+    },[])
 
     return (
         <Container>
@@ -65,7 +70,7 @@ export default function Config({ route }) {
                     <View key={key} onPress={() => { handleConfirmationModal(obj) }} activeOpacity={0.5}>
                         <Text>{obj.name}</Text>
                         <ViewIcon>
-                            <Icon name={obj.icon} size={40} color={Global.blue} />
+                            <Icon name={obj.icon} size={Global.sizeiconsConfig} color={Global.blue} />
                         </ViewIcon>
                     </View>
                 ))

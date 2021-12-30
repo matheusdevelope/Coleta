@@ -60,6 +60,7 @@ const Global = {
     IconList:'list-ul',
     IconConfig: 'cog',
     sizeiconAdd: 40,
+    sizeiconsConfig: 30,
     colorPlaceholder: 'rgba(34, 34, 34, 1)',
     MaxHeigtBoxItemColeta: '70',
     MaxHeigtBoxColeta: '80',

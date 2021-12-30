@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
+import React, {useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { StyleSheet } from 'react-native';
 import { Form } from '@unform/mobile';
 import Input from '../inputForm/input';
@@ -6,12 +6,13 @@ import GText, { DateFormat, fiedlsHide, fieldsToString, HourFormat } from '../..
 import Global from '../../global/global';
 import InputSelect from '../inputSelected/inputSelect.js';
 import Button from '../button/button';
-import { Line } from './style';
+import { Label, Line } from './style';
 import { GetLastItemOnDB, GetProfileDB } from '../../services/routesData/routesData';
 function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
   const formRef = useRef(null);
   const DataDB = useRef(null);
   const HigherItem = useRef(0);
+  const [OnEdit, setOnEdit] = useState(false)
   const GT = GText.infoInputs
 
   const options = {
@@ -98,6 +99,7 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
       ClearFields()
       InsertNewItemOnList(data)
       SetCountItem()
+      OnEdit && setOnEdit(false)
     }
   }
   /**
@@ -146,7 +148,7 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
     if (ret === undefined | ret === null) {
       alert('Dados Não Sincronizados')
       return
-    }
+    } 
     else {
       const GTF = GT.fiedlsHide
       const InitialData = [
@@ -230,6 +232,7 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
         ret[obj] = temp
       })
       formRef.current.setData(data)
+      setOnEdit(true)
     },
     resetForm: () => {
       handleResetForm()
@@ -290,8 +293,11 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
           )
         })
       }
-      <Button name={Global.IconAdd} size={Global.sizeiconAdd} color={Global.bluelight}
-        onClick={() => formRef.current.submitForm()}
+      <Line>
+        <Label>{OnEdit ? 'Editando Item' : 'Novo Item'}</Label>
+      </Line>
+      <Button name={OnEdit? Global.IconEdit : Global.IconAdd} size={Global.sizeiconAdd} color={Global.bluelight} //label={'Salvar edição!'}
+        onClick={() => formRef.current.submitForm()} styleLabel={{fontSize:20, color:Global.white}}
         style={{ borderRadius: 10, backgroundColor: Global.blue, margin: 8 }} />
     </Form>
   );

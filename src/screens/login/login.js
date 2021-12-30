@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigation, CommonActions } from '@react-navigation/native'
 import styled from 'styled-components/native'
 import ImgLogin from '../../assets/login.svg'
@@ -6,6 +6,7 @@ import Global from '../../global/global'
 import GText from '../../global/texts'
 import { SignInAPI } from '../../services/Api/routesApi'
 import profile from '../../services/SQLite/tables/profile'
+import { Alert, BackHandler } from 'react-native'
 
 export default () => {
   const navigation = useNavigation()
@@ -33,18 +34,18 @@ export default () => {
       dataLogin[GText.infoDB.Table.Profile.fields.password] = passField
 
       try {
-      const retAPI = await SignInAPI(dataLogin)
+        const retAPI = await SignInAPI(dataLogin)
         try {
           await profile.removeAll()
           await profile.create(retAPI[0])
           navigate()
         }
-        catch(e) {
+        catch (e) {
           alert('Conflito de dados interno, redefina o app para as configurações padrão!', e)
           console.log(e)
         }
       }
-      catch(e) {
+      catch (e) {
         console.log(e)
         alert('Email ou senha incorretos, tente novamente!')
       }
@@ -52,6 +53,26 @@ export default () => {
     }
   }
 
+  function onBackPress() {
+    Alert.alert(GText.objMessageExitApp.title, GText.objMessageExitApp.message,
+      [{
+          text: GText.objMessageExitApp.buttonLeft,
+          onPress: () => null,
+          style: "cancel"
+      },
+      { text: GText.objMessageExitApp.buttonRight, onPress: () => BackHandler.exitApp() }
+      ]
+  )
+    return true;
+  }
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }
+
+  }, [])
 
   return (
     <Container>

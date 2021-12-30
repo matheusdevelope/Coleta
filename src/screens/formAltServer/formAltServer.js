@@ -93,7 +93,7 @@ export default function FormAltServer({ route }) {
       
 ${e}`)
       console.log('erro teste', e)
-    }
+    } 
     copyShow.loading = false
     setShow({ ...copyShow })
   }
@@ -124,7 +124,13 @@ ${e}`)
     for (let i = 0; i < newList.length; i++) {
       try {
         await UpdateServerDB(newList[i][BaseForm.id], newList[i])
-        navigation.reset({ routes: [{ name: route.params.origin }] })
+        if(route.params.origin === GText.Login){
+          navigation.reset({ routes: [{ name: route.params.origin }] })
+        }
+        else{
+          navigation.canGoBack() && navigation.goBack()
+        }
+      
       }
       catch (e) {
         alert(e)
@@ -143,7 +149,6 @@ ${e}`)
     if (show.NewServer) {
       OnEdit.current = false
       copyShow.NewServer = false
-      
       setShow({ ...copyShow })
     } else {
       navigation.canGoBack() && navigation.goBack()

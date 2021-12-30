@@ -6,9 +6,8 @@ import GText from '../../global/texts';
 
 import { Container, Line, Text, ButtonBox, LineBox } from './style';
 
-const BoxColeta = ({ data, RouteName, showCheckBox, setShowCheckBox, handleOnChange}) => {
+const BoxColeta = ({ data, RouteName, showCheckBox, setShowCheckBox, handleOnChange }) => {
     const navigate = useNavigation()
-   
 
     function handleSelectCheckBox(newValue) {
         handleOnChange(newValue, data[GText.infoInputs.nColetaNumber])
@@ -16,26 +15,28 @@ const BoxColeta = ({ data, RouteName, showCheckBox, setShowCheckBox, handleOnCha
 
     function handleToggle() {
         !showCheckBox && handleSelectCheckBox(true)
-        setShowCheckBox(!showCheckBox)
+        !showCheckBox && setShowCheckBox(!showCheckBox)
     }
-    
+
     function handleDetails() {
         showCheckBox ?
-            handleSelectCheckBox(data.checked ===true ? false : true) :
+            handleSelectCheckBox(data.checked === true ? false : true) :
             navigate.navigate(GText.Details, { data: data, routeOrigin: RouteName })
     }
-   
+
     return (
         <Container >
-             {showCheckBox &&
+            {showCheckBox &&
                 <CheckBox
-                    value={data.checked ===true ? true : false}
+                    value={data.checked === true ? true : false}
                     onValueChange={(newValue) => handleSelectCheckBox(newValue)}
                 />}
             <LineBox >
                 <ButtonBox onLongPress={handleToggle} onPress={handleDetails}
-                    style={{ backgroundColor: data.checked === true ? Global.bluelight2 : data[GText.ItensCanceledTotal] == data[GText.ItensTotal] ? 
-                    Global.redCanceled : Global.white }}>
+                    style={{
+                        backgroundColor: data.checked === true ? Global.bluelight2 : data[GText.ItensCanceledTotal] == data[GText.ItensTotal] ?
+                            Global.redCanceled : Global.white
+                    }}>
                     <Line>
                         <Text style={{ fontWeight: 'bold' }}>{data[GText.infoInputs.nNameClient]}</Text>
                     </Line>
@@ -50,9 +51,9 @@ const BoxColeta = ({ data, RouteName, showCheckBox, setShowCheckBox, handleOnCha
                         <Text>{GText.money} {data[GText.ValueTotal]}</Text>
                     </Line>
                 </ButtonBox>
-                
+
             </LineBox>
-            
+
         </Container>
     )
 }
