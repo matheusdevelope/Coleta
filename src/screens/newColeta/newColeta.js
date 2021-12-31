@@ -79,7 +79,7 @@ function NewColeta({ route }) {
             return () =>
                 BackHandler.removeEventListener('hardwareBackPress', onBackPress);
         }, [])
-    );
+    ); 
 
     return (
         <Container>

@@ -23,6 +23,7 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
                 if (itens !== undefined) {
                     const ret = await GetItensDB(tableItem.IdMobile, copy[tableItem.IdMobile])
                     if (ret) {
+                        
                         await UpdateItensDB(tableItem.IdMobile, copy[tableItem.IdMobile], copy)
                     }
                     else {
