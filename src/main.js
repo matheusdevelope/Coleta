@@ -87,9 +87,7 @@ export default ({ navigation }) => {
 
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }} >
-            <Stack.Screen name={GText.Sending} component={Sending} options={{
-                animationEnabled: true,
-            }} />
+
             <Stack.Screen
                 name={GText.Preload} component={Preload}
                 initialParams={{ origin: GText.Preload }}
@@ -115,7 +113,9 @@ export default ({ navigation }) => {
             <Stack.Screen name={GText.Syncing} component={Syncing} options={{
                 animationEnabled: true,
             }} />
-
+            <Stack.Screen name={GText.Sending} component={Sending} options={{
+                animationEnabled: true,
+            }} />
 
         </Stack.Navigator>
     )

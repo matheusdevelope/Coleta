@@ -12,7 +12,7 @@ function Itens() {
     function droptable() {
       tx.executeSql(`DROP TABLE ${GText.infoDB.Table.Itens.name} ;`);
     }
-  //  droptable()
+   // droptable()
     //   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
 
     function createTable() {
@@ -68,7 +68,9 @@ function Itens() {
        ${GText.infoDB.Table.Itens.fields.CancelStation} TEXT, 
        ${GText.infoDB.Table.Itens.fields.CodSituation} TEXT,
        ${GText.infoDB.Table.Itens.fields.CodWarranty} TEXT,
-       ${GText.infoDB.Table.Itens.fields.CodBranch} TEXT
+       ${GText.infoDB.Table.Itens.fields.CodBranch} TEXT,
+       ${GText.infoDB.Table.Itens.fields.createdAt} TEXT,
+       ${GText.infoDB.Table.Itens.fields.updatedAt} TEXT     
        
    );
      `,
@@ -149,11 +151,13 @@ const create = (obj) => {
           ${GText.infoDB.Table.Itens.fields.CancelStation} ,
           ${GText.infoDB.Table.Itens.fields.CodSituation} ,
           ${GText.infoDB.Table.Itens.fields.CodBranch} ,
-          ${GText.infoDB.Table.Itens.fields.CodWarranty}
+          ${GText.infoDB.Table.Itens.fields.CodWarranty},
+          ${GText.infoDB.Table.Itens.fields.createdAt},
+          ${GText.infoDB.Table.Itens.fields.updatedAt}  
         ) 
         values (
           ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,
-          ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`,
+          ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`,
         [
           obj[`${GText.infoDB.Table.Itens.fields.CodImport}`],
           obj[`${GText.infoDB.Table.Itens.fields.CodCompany}`],
@@ -203,7 +207,9 @@ const create = (obj) => {
           obj[`${GText.infoDB.Table.Itens.fields.CancelStation}`],
           obj[`${GText.infoDB.Table.Itens.fields.CodSituation}`],
           obj[`${GText.infoDB.Table.Itens.fields.CodBranch}`],
-          obj[`${GText.infoDB.Table.Itens.fields.CodWarranty}`]
+          obj[`${GText.infoDB.Table.Itens.fields.CodWarranty}`],
+          obj[`${GText.infoDB.Table.Itens.fields.createdAt}`],
+          obj[`${GText.infoDB.Table.Itens.fields.updatedAt}`]
 
         ],
         (sqlTxn, res) => {

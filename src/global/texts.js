@@ -344,7 +344,9 @@ const GText = {
             CancelHour: 'HoraCancelamento',
             CancelUser: 'UsuarioCancelamento',
             CancelStation: 'EstacaoCancelamento',
-            Date:'DataEmissao'
+            Date:'DataEmissao',
+            updatedAt:'updatedAt',
+            createdAt:'createdAt'
         },
         InitialStatusItem: 'AguardandoEnvio',
         SendedStatusItem: 'Recebido',
@@ -420,6 +422,8 @@ const GText = {
                     CancelHour: 'HoraCancelamento',
                     CancelUser: 'UsuarioCancelamento',
                     CancelStation: 'EstacaoCancelamento',
+                    updatedAt:'updatedAt',
+                    createdAt:'createdAt'
                 }
             },
             Clients: {
@@ -649,6 +653,8 @@ export const fiedlsHide = [
     { name: GText.infoInputs.fiedlsHide.CodBranch },
     { name: GText.infoInputs.fiedlsHide.CodWarranty },
     { name: GText.infoInputs.fiedlsHide.Date },
+    { name: GText.infoInputs.fiedlsHide.createdAt },
+    { name: GText.infoInputs.fiedlsHide.updatedAt },
 ]
 export const fieldsToString = [
 

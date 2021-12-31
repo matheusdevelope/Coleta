@@ -183,7 +183,9 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
         { name: GTF.CancelDate, initialData: null },
         { name: GTF.CancelHour, initialData: null },
         { name: GTF.CancelUser, initialData: null },
-        { name: GTF.CancelStation, initialData: null }
+        { name: GTF.CancelStation, initialData: null },
+        { name: GTF.createdAt, initialData: '' },
+        { name: GTF.updatedAt, initialData: '' }
       ]
       InitialData.forEach((data) => {
         formRef.current.setFieldValue(data.name, data.initialData)

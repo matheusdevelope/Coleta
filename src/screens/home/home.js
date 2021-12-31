@@ -89,28 +89,28 @@ function Home({ route }) {
                 arrayItens.push(obj)
             }
         })
-        // async function forArray(action) {
-        //     for (let i = 0; i < arrayItens.length; i++) {
-        //         await action(arrayItens[i])
-        //     }
-        // }
-        // async function routeName(action1, action2) {
-        //     if (RouteName == GText.MyColetas) {
-        //         await forArray(action1)
-        //     }
-        //     else if (RouteName == GText.SendedColetas) {
-        //         await forArray(action2)
-        //     }
-        // }
-        // if (origin === 'left') {
-        //     await routeName(handleDelete, handleCancelColeta)
-        // }
-        // else if (origin == 'right') {
-        //     await routeName(handleSendColeta, handleSyncColeta)
-        // }
+         async function forArray(action) {
+             for (let i = 0; i < arrayItens.length; i++) {
+                 await action(arrayItens[i], arrayItens, origin)
+             }
+         }
+         async function routeName(action1, action2) {
+             if (RouteName == GText.MyColetas) {
+                 await forArray(action1)
+             }
+             else if (RouteName == GText.SendedColetas) {
+                 await forArray(action2)
+             }
+         }
+         if (origin === 'left') {
+             await routeName(handleDelete, handleCancelColeta)
+         }
+         else if (origin == 'right') {
+             await routeName(handleSendColeta, handleSyncColeta)
+         }
         ModalRef.current.toggle()
       //  await GetItens()
-      navigation.navigate(GText.Sending, {data:arrayItens, buttonOrigin:origin, routeName:RouteName},)
+      
        // toggleChecedkAll(true)
     }
     function handleOpenCheckBox() {
@@ -152,21 +152,21 @@ function Home({ route }) {
     async function handleDelete(data) {
         await DeleteItensDB(GText.infoDB.Table.Itens.fields.ColetaNumber, data)
     }
-    async function handleSendColeta(data) {
-
-        const GT = GText.infoDB.Table.Itens.fields
-        try {
-            await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
-            const Itens = await GetItensDB(GT.ColetaNumber, data)
-            await SendItensAPI(Itens)
-        }
-        catch (e) {
-            await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.SendedStatusItem, GText.infoInputs.InitialStatusItem)
-            Alert.alert(GText.failedOnSendItens, `${e[0].message}${' , Value: '}${e[0].value}`, [
-                { text: 'Ok', onPress: () => null }
-            ]
-            )
-        }
+    async function handleSendColeta(_,data, origin) {
+        navigation.navigate(GText.Sending, {data:data, buttonOrigin:origin, routeName:RouteName},)
+        // const GT = GText.infoDB.Table.Itens.fields
+        // try {
+        //     await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
+        //     const Itens = await GetItensDB(GT.ColetaNumber, data)
+        //     await SendItensAPI(Itens)
+        // }
+        // catch (e) {
+        //     await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.SendedStatusItem, GText.infoInputs.InitialStatusItem)
+        //     Alert.alert(GText.failedOnSendItens, `${e[0].message}${' , Value: '}${e[0].value}`, [
+        //         { text: 'Ok', onPress: () => null }
+        //     ]
+        //     )
+        // }
     }
     async function handleCancelColeta(data) {
         const GT = GText.infoDB.Table.Itens.fields

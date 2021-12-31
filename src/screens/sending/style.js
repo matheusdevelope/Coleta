@@ -27,7 +27,6 @@ font-weight:900;
 export const TextStyled = styled.Text`
 font-size:${Global.fontSize};
 color:${Global.textColor};
-flex:1;
 `
 export const ViewStyled = styled.View`
 margin: ${Global.margin} ${Global.margin} 2px ${Global.margin};
@@ -35,14 +34,15 @@ border-radius:${Global.borderRadius};
 padding:${Global.padding};
 `
 export const ViewItens = styled.View`
+flex: 1;
 margin: ${Global.margin} ${Global.margin} 2px ${Global.margin};
 border-radius:${Global.borderRadius};
-/* padding:${Global.padding}; */
+ padding:1px 0;
+ background-color:${Global.white} ;
 `
-export const View = styled.View`
+export const View = styled.TouchableOpacity`
 flex:1;
-flex-direction:row;
-justify-content:space-between;
+
 `
 export const ViewLine = styled.TouchableOpacity`
 flex-direction:row;
@@ -52,7 +52,7 @@ border-radius:${Global.borderRadius};
 padding:${Global.padding};
 `
 export const ViewLineSyncing = styled.TouchableOpacity`
-margin: 0 10px 10px 10px;
+margin: 5px 10px 10px 10px;
 border-radius:${Global.borderRadius};
 padding:${Global.padding};
 background-color: ${Global.blue};

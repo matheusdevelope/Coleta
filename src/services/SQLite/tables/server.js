@@ -297,6 +297,7 @@ const all = () => {
   });
 };
 
+
 /**
  * REMOVE UM REGISTRO POR MEIO DO ID
  * - Recebe o ID do registro;

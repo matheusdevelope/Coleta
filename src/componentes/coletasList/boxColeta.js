@@ -27,7 +27,6 @@ const BoxColeta = ({ data, RouteName, showCheckBox, setShowCheckBox, handleOnCha
                 navigate.navigate(GText.Details, { data: data, routeOrigin: RouteName })
         }
     }
-    console.log(data)
 
     return (
         <Container >
