@@ -8,10 +8,9 @@ import Global from "../../global/global.js";
 import GText, { Routes } from "../../global/texts.js";
 import { Container, Line } from './style.js'
 import { DeleteItensDB, GetItensDB, GetItensGrouped, UpdateStatusItensOnDB } from '../../services/routesData/routesData'
-import { CancelItensAPI, SendItensAPI } from "../../services/Api/routesApi.js";
+import { CancelItensAPI } from "../../services/Api/routesApi.js";
 import Button from "../../componentes/button/button.js";
 import { Alert, BackHandler } from "react-native";
-import profile from "../../services/SQLite/tables/profile.js";
 
 function Home({ route }) {
     const RouteName = route.name
@@ -89,29 +88,33 @@ function Home({ route }) {
                 arrayItens.push(obj)
             }
         })
-         async function forArray(action) {
-             for (let i = 0; i < arrayItens.length; i++) {
-                 await action(arrayItens[i], arrayItens, origin)
-             }
-         }
-         async function routeName(action1, action2) {
-             if (RouteName == GText.MyColetas) {
-                 await forArray(action1)
-             }
-             else if (RouteName == GText.SendedColetas) {
-                 await forArray(action2)
-             }
-         }
-         if (origin === 'left') {
-             await routeName(handleDelete, handleCancelColeta)
-         }
-         else if (origin == 'right') {
-             await routeName(handleSendColeta, handleSyncColeta)
-         }
-        ModalRef.current.toggle()
-      //  await GetItens()
-      
-       // toggleChecedkAll(true)
+        async function forArray(action) {
+            for (let i = 0; i < arrayItens.length; i++) {
+                await action(arrayItens[i][GText.infoDB.Table.Itens.fields.ColetaNumber], arrayItens, origin)
+            }
+        }
+        async function routeName(action1, action2) {
+            if (RouteName == GText.MyColetas) {
+                await forArray(action1)
+            }
+            else if (RouteName == GText.SendedColetas) {
+                await forArray(action2)
+            }
+        }
+        if (origin === 'left') {
+            await routeName(handleDelete, handleCancelColeta)
+            ModalRef.current.toggle()
+            await GetItens()
+            toggleChecedkAll(true)
+        }
+        else if (origin == 'right') {
+            toggleChecedkAll(true)
+            await routeName(handleSendColeta, handleSyncColeta)
+        }
+        //  ModalRef.current.toggle()
+        //  await GetItens()
+
+        // toggleChecedkAll(true)
     }
     function handleOpenCheckBox() {
         setShowCheckBox(!showCheckBox)
@@ -141,19 +144,20 @@ function Home({ route }) {
     }
     function handleEdit(data) {
         if (RouteName === GText.MyColetas) {
-           // console.log(data)
-            navigation.navigate(GText.Sending, {data:[data]})
-           // handleSendColeta(data)
+            // console.log(data)
+            navigation.navigate(GText.Sending, { data: [data] })
+            // handleSendColeta(data)
         }
         else if (RouteName === GText.SendedColetas) {
             navigation.navigate(GText.NewColeta, { data: data, routeOrigin: RouteName })
         }
     }
     async function handleDelete(data) {
+        console.log('handleDelete', data)
         await DeleteItensDB(GText.infoDB.Table.Itens.fields.ColetaNumber, data)
     }
-    async function handleSendColeta(_,data, origin) {
-        navigation.navigate(GText.Sending, {data:data, buttonOrigin:origin, routeName:RouteName},)
+    async function handleSendColeta(_, data, origin) {
+        navigation.navigate(GText.Sending, { data: data, buttonOrigin: origin, routeName: RouteName },)
         // const GT = GText.infoDB.Table.Itens.fields
         // try {
         //     await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
@@ -181,7 +185,6 @@ function Home({ route }) {
             alert(GText.failedOnCancelItens)
         }
     }
-
     function getLabelModal(origin) {
         let ret = {}
         function Label(more, one) {
@@ -286,7 +289,7 @@ function Home({ route }) {
             <SearchBox placeholder={GText.SearchBox} name={Global.iconSearchBox}
                 size={Global.sizeIconSearch} color={Global.colorIconSearch} input={search.current} setInput={setSearch} />
             <ColetasList data={data} //buttonLeft={OpenConfirmation} buttonRight={handleEdit} 
-            isFocused={isFocused}
+                isFocused={isFocused}
                 RouteName={RouteName} showCheckBox={showCheckBox} setShowCheckBox={handleOpenCheckBox}
                 handleOnChange={handleOnChangeCheckBox}
             />

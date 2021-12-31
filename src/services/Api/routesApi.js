@@ -53,7 +53,9 @@ export async function SendItensAPI(data, params) {
         url = url + '/' + params
     }
     try {
+       // console.log(data)
         const resp = await api.post(url, data);
+        console.log('resp.data',resp.data)
         return await resp.data
         
     } catch (err) {

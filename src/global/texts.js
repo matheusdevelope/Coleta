@@ -32,6 +32,11 @@ const GText = {
         buttonLeft:'Continuar',
         buttonRight:'Sair'
     },
+    objSendingItens:{
+        totalToSend:'Coletas para Enviar',
+        sended:'Coletas Enviadas',
+        error:'Coletas com Erros'
+    },
     noInternet: 'Sem Conexão com a Internet!',
     totalErrors:'Total de Erros',
     Send: 'Enviar',

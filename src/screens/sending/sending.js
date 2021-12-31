@@ -3,26 +3,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { Animated, BackHandler, Easing, StyleSheet } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import NetInfo from "@react-native-community/netinfo";
-import { GetItensDB, UpdateStatusItensOnDB } from "../../services/routesData/routesData";
+import { GetItensDB, UpdateItensDB, UpdateStatusItensOnDB } from "../../services/routesData/routesData";
 import { Container, TextStyled, ViewStyled, ScrollView, Text, ViewLineSyncing, TextButton, TextTitle, ViewItens, View } from './style.js'
-import {  SendItensAPI } from "../../services/Api/routesApi";
+import { SendItensAPI } from "../../services/Api/routesApi";
 import GText from "../../global/texts";
 import Global from "../../global/global";
 import BoxColeta from "../../componentes/coletasList/boxColeta";
 
 
 export default ({ route }) => {
-    const routess = {
-        params: {
-            data: [{ "NomeCliente": "teste", "NumeroColeta": "200000", "TotalItens": 2, "TotalItensCancelados": 0, "TotalItensNaoEnviados": 2, "ValorTotal": 486, "checked": true },
-            { "NomeCliente": "teste", "NumeroColeta": "200001", "TotalItens": 2, "TotalItensCancelados": 0, "TotalItensNaoEnviados": 2, "ValorTotal": 486, "checked": true },
-                // { "NomeCliente": "teste", "NumeroColeta": "200000", "TotalItens": 2, "TotalItensCancelados": 0, "TotalItensNaoEnviados": 2, "ValorTotal": 486, "checked": true },
-                // { "NomeCliente": "teste", "NumeroColeta": "200001", "TotalItens": 2, "TotalItensCancelados": 0, "TotalItensNaoEnviados": 2, "ValorTotal": 486, "checked": true },         
-            ]
-            , buttonOrigin: 'right',
-            routeName: GText.MyColetas
-        }
-    }
     let initialStatus = { total: 0, sended: 0, error: 0, showError: false, status: 'Sending' }
     const navigate = useNavigation()
     const StatusRef = useRef([])
@@ -31,7 +20,7 @@ export default ({ route }) => {
     const RouteName = route.params.routeName
     const Data = route.params.data
     const FieldItem = GText.infoDB.Table.Itens.fields
-   
+
 
     ////animation
     const [offsetX] = useState(new Animated.Value(-400));
@@ -70,38 +59,58 @@ export default ({ route }) => {
         copy.status = 'Sending'
         setstatus({ ...copy })
         let ItemFromDB = []
-        let ItensSeparated = { ItemToCreate: [], ItemToUpdate: [] }
         for (let i = 0; i < Itens.length; i++) {
             try {
-                await UpdateStatusItensOnDB(FieldItem.ColetaNumber, Itens[i][FieldItem.ColetaNumber], GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
+                //  await UpdateStatusItensOnDB(FieldItem.ColetaNumber, Itens[i][FieldItem.ColetaNumber], GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
                 ItemFromDB = await GetItensDB(FieldItem.ColetaNumber, Itens[i][FieldItem.ColetaNumber])
                 ItemFromDB ?
-                    await handleSendToApi(SeparateItens(ItensSeparated, ItemFromDB), Itens[i])
+                    await handleSendToApi(SeparateItens(ItemFromDB), Itens[i])
                     :
                     handleCreateList(Itens[i], [{ message: 'Não encontrado no banco de dados' }])
             }
             catch (e) {
-                await UpdateStatusItensOnDB(FieldItem.ColetaNumber, Itens[i][FieldItem.ColetaNumber], GText.infoInputs.SendedStatusItem, GText.infoInputs.InitialStatusItem)
+                //  await UpdateStatusItensOnDB(FieldItem.ColetaNumber, Itens[i][FieldItem.ColetaNumber], GText.infoInputs.SendedStatusItem, GText.infoInputs.InitialStatusItem)
                 handleCreateList(Itens[i], e)
             }
         }
-
         copy.status = 'Finish'
         setstatus({ ...copy })
     }
     async function handleSendToApi(Itens, objItem) {
-        try {
-            Itens.ItemToCreate.length > 0 && await SendItensAPI(Itens.ItemToCreate)
-            Itens.ItemToUpdate.length > 0 && await SendItensAPI(Itens.ItemToUpdate, 'update')
-            handleCreateList(objItem)
+
+        if (Itens.ItemToCreate.length > 0) {
+            try {
+                await SendItensAPI(Itens.ItemToCreate)
+                Itens.ItemToCreate.map(async (obj) => {
+                    await UpdateItensDB(FieldItem.IdMobile, obj[FieldItem.IdMobile, obj])
+                })
+            }
+            catch (e) {
+                //   await UpdateStatusItensOnDB(FieldItem.ColetaNumber, objItem[FieldItem.ColetaNumber], GText.infoInputs.SendedStatusItem, GText.infoInputs.InitialStatusItem)
+                handleCreateList(objItem, e)
+            }
         }
-        catch (e) {
-            await UpdateStatusItensOnDB(FieldItem.ColetaNumber, objItem[FieldItem.ColetaNumber], GText.infoInputs.SendedStatusItem, GText.infoInputs.InitialStatusItem)
-            handleCreateList(objItem, e)
+
+        if (Itens.ItemToUpdate.length > 0) {
+            try {
+                await SendItensAPI(Itens.ItemToUpdate, 'update')
+                Itens.ItemToUpdate.map(async (obj) => {
+                    await UpdateItensDB(FieldItem.IdMobile, obj[FieldItem.IdMobile, obj])
+                })
+            }
+            catch (e) {
+                handleCreateList(objItem, e)
+            }
+
         }
+
+        //    handleCreateList(objItem)
+
     }
-    function SeparateItens(ObjSeparate, itens) {
+    function SeparateItens(itens) {
+        let ObjSeparate = { ItemToCreate: [], ItemToUpdate: [] }
         itens.map((obj) => {
+            obj[FieldItem.Status] = GText.infoInputs.SendedStatusItem
             if (obj[FieldItem.createdAt] !== '' & obj[FieldItem.createdAt] !== undefined & obj[FieldItem.createdAt] !== null) {
                 ObjSeparate.ItemToUpdate.push(obj)
             }
@@ -189,21 +198,6 @@ export default ({ route }) => {
         ret = status.status === 'Finish' ? GText.SendFinish : status.status === 'NoInternet' ? GText.noInternet : GText.Sending
         return ret
     }
-    function RenderTotalOfItens() {
-        return (
-            <ViewStyled>
-                <Text>
-                    Coletas para Enviar : {status.total}
-                </Text>
-                <Text>
-                    Coletas Enviadas : {status.sended}
-                </Text>
-                <Text>
-                    Coletas com Erros : {status.error}
-                </Text>
-            </ViewStyled>
-        )
-    }
     function RenderAnimation() {
         return (
             <Animated.View style={styles.syncProgressBarContainer}>
@@ -214,7 +208,24 @@ export default ({ route }) => {
             </Animated.View>
         )
     }
-    
+    function RenderTotalOfItens() {
+        return (
+            <ViewStyled>
+                <Text>
+                    {GText.objSendingItens.totalToSend} : {status.total}
+                </Text>
+                <Text>
+                    {GText.objSendingItens.sended} : {status.sended}
+                </Text>
+                <Text>
+                    {GText.objSendingItens.error} : {status.error}
+                </Text>
+            </ViewStyled>
+        )
+    }
+
+
+
     return (
         <Container>
             <TextTitle >{handleTitleHeader()}</TextTitle>
@@ -230,9 +241,7 @@ export default ({ route }) => {
                                 {StatusRef.current[key1].showError &&
                                     <TextStyled >{item.error}</TextStyled>
                                 }
-
                             </View>
-
                         ))}
                     </ViewItens>
                 ))}
@@ -240,20 +249,19 @@ export default ({ route }) => {
             {
                 ShowButtons() > 0 &&
                 <>
-{CountErrors() > 0 &&
-                    <ViewLineSyncing onPress={() => { HaveConnection(handleTryAgain) }} >
-                        <TextButton style={{ color: Global.white }}>
-                            {GText.messageTryAgainSync}
-                        </TextButton>
-                    </ViewLineSyncing>
-            }
+                    {CountErrors() > 0 &&
+                        <ViewLineSyncing onPress={() => { HaveConnection(handleTryAgain) }} >
+                            <TextButton style={{ color: Global.white }}>
+                                {GText.messageTryAgainSync}
+                            </TextButton>
+                        </ViewLineSyncing>
+                    }
                     <ViewLineSyncing onPress={onBackPress}>
                         <TextButton style={{ color: Global.white }}>
                             {GText.ButtonFinishSync}
                         </TextButton>
                     </ViewLineSyncing>
                 </>
-
             }
         </Container>
     )
