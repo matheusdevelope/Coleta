@@ -8,6 +8,7 @@ import InputSelect from '../inputSelected/inputSelect.js';
 import Button from '../button/button';
 import { Label, Line } from './style';
 import { GetLastItemOnDB, GetProfileDB } from '../../services/routesData/routesData';
+import profile from '../../services/SQLite/tables/profile';
 function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
   const formRef = useRef(null);
   const DataDB = useRef(null);
@@ -53,9 +54,10 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
     GT.nSerieNumber,
     GT.nDesign,
     GT.nBrand,
-    GT.nValue,
+    // GT.nValue,
     GT.nWarranty,
     GT.nSituation,
+    GT.nId,
   ]
   const fieldsNeedsValue = [
     GT.nNameClient,
@@ -96,9 +98,9 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
   }
   function handleSubmit(data) {
     if (!setErrorsFields(data)) {
-      ClearFields()
       InsertNewItemOnList(data)
       SetCountItem()
+      ClearFields()
       OnEdit && setOnEdit(false)
     }
   }
@@ -143,7 +145,6 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
     }
   }
   async function InitialValueFields(LastItemOnEdit) {
-
     let ret = DataDB.current.profile
     if (ret === undefined | ret === null) {
       alert('Dados Não Sincronizados')
@@ -152,6 +153,7 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
     else {
       const GTF = GT.fiedlsHide
       const InitialData = [
+        { name: GTF.id, initialData: '' },
         { name: GTF.IdMobile, initialData: '' },
         { name: GTF.CodImport, initialData: '1' },
         { name: GTF.Date, initialData: DateFormat },
@@ -211,8 +213,8 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
       profile: ret[0],
       numberColeta
     }
+    HigherItem.current = LastItem !== undefined ? LastItem : 0
     SetDataHideFields(itens[GT.nNameClient], GT.nNameClient)
-
     DataDB.current = obj
     InitialValueFields(LastItem)
   }

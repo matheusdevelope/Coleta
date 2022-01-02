@@ -5,8 +5,8 @@ import { useNavigation } from "@react-navigation/native";
 import NetInfo from "@react-native-community/netinfo";
 import { GetItensDB, UpdateItensDB, UpdateStatusItensOnDB } from "../../services/routesData/routesData";
 import { Container, TextStyled, ViewStyled, ScrollView, Text, ViewLineSyncing, TextButton, TextTitle, ViewItens, View } from './style.js'
-import { SendItensAPI } from "../../services/Api/routesApi";
-import GText from "../../global/texts";
+import { SendItensAPI, UpdateItensAPI } from "../../services/Api/routesApi";
+import GText, { FormatDate } from "../../global/texts";
 import Global from "../../global/global";
 import BoxColeta from "../../componentes/coletasList/boxColeta";
 
@@ -61,15 +61,13 @@ export default ({ route }) => {
         let ItemFromDB = []
         for (let i = 0; i < Itens.length; i++) {
             try {
-                //  await UpdateStatusItensOnDB(FieldItem.ColetaNumber, Itens[i][FieldItem.ColetaNumber], GText.infoInputs.InitialStatusItem, GText.infoInputs.SendedStatusItem)
                 ItemFromDB = await GetItensDB(FieldItem.ColetaNumber, Itens[i][FieldItem.ColetaNumber])
                 ItemFromDB ?
-                    await handleSendToApi(SeparateItens(ItemFromDB), Itens[i])
+                    await handleSendToApi(SeparateItens(ItemFromDB, Itens[i]), Itens[i])
                     :
                     handleCreateList(Itens[i], [{ message: 'Não encontrado no banco de dados' }])
             }
             catch (e) {
-                //  await UpdateStatusItensOnDB(FieldItem.ColetaNumber, Itens[i][FieldItem.ColetaNumber], GText.infoInputs.SendedStatusItem, GText.infoInputs.InitialStatusItem)
                 handleCreateList(Itens[i], e)
             }
         }
@@ -77,47 +75,72 @@ export default ({ route }) => {
         setstatus({ ...copy })
     }
     async function handleSendToApi(Itens, objItem) {
-
         if (Itens.ItemToCreate.length > 0) {
             try {
-                await SendItensAPI(Itens.ItemToCreate)
-                Itens.ItemToCreate.map(async (obj) => {
-                    await UpdateItensDB(FieldItem.IdMobile, obj[FieldItem.IdMobile, obj])
-                })
+                let ret = await SendItensAPI(Itens.ItemToCreate)
+                for (let i = 0; i < ret.length; i++) {
+                    try {
+                        await UpdateItensDB(FieldItem.IdMobile, ret[i][FieldItem.IdMobile], ret[i])
+                    }
+                    catch (e) {
+                        handleCreateList(objItem, { message: 'Falha atualizar status localmente, faça a sincronização do dados,', error: e })
+                    }
+                }
+                handleCreateList(objItem)
             }
             catch (e) {
-                //   await UpdateStatusItensOnDB(FieldItem.ColetaNumber, objItem[FieldItem.ColetaNumber], GText.infoInputs.SendedStatusItem, GText.infoInputs.InitialStatusItem)
                 handleCreateList(objItem, e)
             }
         }
-
         if (Itens.ItemToUpdate.length > 0) {
             try {
-                await SendItensAPI(Itens.ItemToUpdate, 'update')
-                Itens.ItemToUpdate.map(async (obj) => {
-                    await UpdateItensDB(FieldItem.IdMobile, obj[FieldItem.IdMobile, obj])
-                })
+                let ret = await UpdateItensAPI(Itens.ItemToUpdate)
+                for (let i = 0; i < ret.length; i++) {
+                    try {
+                        await UpdateItensDB(FieldItem.id, ret[i][FieldItem.id], ret[i])
+                    }
+                    catch (e) {
+                        handleCreateList(objItem, { message: 'Falha atualizar status localmente, faça a sincronização do dados,', error: e })
+                    }
+                }
+                handleCreateList(objItem)
             }
             catch (e) {
                 handleCreateList(objItem, e)
             }
-
         }
-
-        //    handleCreateList(objItem)
-
     }
-    function SeparateItens(itens) {
+    function SeparateItens(itens, objItens) {
         let ObjSeparate = { ItemToCreate: [], ItemToUpdate: [] }
         itens.map((obj) => {
-            obj[FieldItem.Status] = GText.infoInputs.SendedStatusItem
-            if (obj[FieldItem.createdAt] !== '' & obj[FieldItem.createdAt] !== undefined & obj[FieldItem.createdAt] !== null) {
-                ObjSeparate.ItemToUpdate.push(obj)
+            
+            if (obj[FieldItem.Status] === GText.infoInputs.InitialStatusItem) {
+                obj[FieldItem.Status] = GText.infoInputs.SendedStatusItem
+
+                for (let props in obj) {
+                    if (props.toString().includes('Data')) {
+                        obj[props] = obj[props] !== null ? obj[props].slice(0, 19).replace('T', ' ') : obj[props]
+                    }
+                    else {
+                    }
+                }
+
+                if (obj[FieldItem.createdAt] !== ''
+                    & obj[FieldItem.createdAt] !== undefined & obj[FieldItem.createdAt] !== null) {
+                        if (obj[FieldItem.id] !== null & FieldItem.id !== undefined & FieldItem.id !== '') {
+                        ObjSeparate.ItemToUpdate.push(obj)
+                    }
+                    else {
+                        handleCreateList(objItens, { message: 'Coleta Sem ID do retaguarda para update.', error: [obj] })
+                    }
+                }
+                else {
+                    ObjSeparate.ItemToCreate.push(obj)
+                }
             }
-            else {
-                ObjSeparate.ItemToCreate.push(obj)
-            }
+
         })
+        console.log(ObjSeparate)
         return ObjSeparate
     }
     function handleCreateList(item, error) {
@@ -138,13 +161,15 @@ export default ({ route }) => {
         let copy = status
         error ? () => null : copy.sended = copy.sended + 1
         copy.error = CountErrors()
-        //copy.sended = copy.total - CountErrors()
         setstatus({ ...copy })
     }
     function handleTryAgain() {
         let ItensWithErrors = []
+        let ColetaNumbers = []
         StatusRef.current.map((obj) => {
-            obj.Errors.length > 0 && ItensWithErrors.push(obj.data)
+            let have = ColetaNumbers.find(number => number === obj.data[FieldItem.ColetaNumber])
+            ColetaNumbers.push(obj.data[FieldItem.ColetaNumber])
+            have === undefined & obj.Errors.length > 0 && ItensWithErrors.push(obj.data)
         })
         StatusRef.current = []
         handleSendItens(ItensWithErrors)

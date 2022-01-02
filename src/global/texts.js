@@ -3,7 +3,11 @@ import { GetProfileDB } from "../services/routesData/routesData"
 
 const DataNow = new Date()
 export const HourFormat = (DataNow.getHours().toString() + ":" + DataNow.getMinutes().toString()).toString()
-export const DateFormat = DataNow.toISOString().split('T')[0] + ' ' + DataNow.toTimeString().split(' ')[0]
+export const DateFormat = FormatDate(DataNow)
+export function FormatDate(date) {
+    let NewDate = date.toISOString().split('T')[0] + ' ' + date.toTimeString().split(' ')[0]
+    return  NewDate
+}
 const GText = {
     title: 'Coletas',
     MyColetas: 'Minhas Coletas',
@@ -13,7 +17,7 @@ const GText = {
     Config: 'Configurações',
     Preload: 'Preload',
     Login: 'Login',
-    HomeDrawer:'HomeDrawer',
+    HomeDrawer: 'HomeDrawer',
     FormServer: 'Alterar Server',
     AddServer: 'Adicionar Server',
     SelectToSync: 'Sincronizar Dados',
@@ -26,19 +30,19 @@ const GText = {
     messageDeleted: 'Deletado',
     messageTryAgainSync: 'Tentar Novamente',
     messageExitApp: 'Sair do aplicativo',
-    objMessageExitApp:{
-        title:'Sair',
-        message:'Deseja sair do aplicativo?',
-        buttonLeft:'Continuar',
-        buttonRight:'Sair'
+    objMessageExitApp: {
+        title: 'Sair',
+        message: 'Deseja sair do aplicativo?',
+        buttonLeft: 'Continuar',
+        buttonRight: 'Sair'
     },
-    objSendingItens:{
-        totalToSend:'Coletas para Enviar',
-        sended:'Coletas Enviadas',
-        error:'Coletas com Erros'
+    objSendingItens: {
+        totalToSend: 'Coletas para Enviar',
+        sended: 'Coletas Enviadas',
+        error: 'Coletas com Erros'
     },
     noInternet: 'Sem Conexão com a Internet!',
-    totalErrors:'Total de Erros',
+    totalErrors: 'Total de Erros',
     Send: 'Enviar',
     Cancel: 'Cancelar',
     SearchBox: 'Nome Cliente',
@@ -106,7 +110,7 @@ const GText = {
         Protocolo: 'http',
         Ip: '192.168.100.15',
         Porta: '3200',
-        BaseURL: 'http://192.168.100.15:3200/',
+        BaseURL: 'http://192.168.0.88:3200/',
         Prioridade: 1,
         Padrao: 'S',
         Extra: ''
@@ -206,6 +210,7 @@ const GText = {
     LastItem: 'UltimoItem',
 
     infoInputs: {
+        nId:'id',
         nIdMobile: 'IdMobile',
         nCodImport: 'Cod_Importacao',
         nCodCompany: 'CodEmpresa',
@@ -310,6 +315,7 @@ const GText = {
 
 
         fiedlsHide: {
+            id:'id',
             IdMobile: 'IdMobile',
             CodImport: 'Cod_Importacao',
             CodCompany: 'CodEmpresa',
@@ -349,9 +355,9 @@ const GText = {
             CancelHour: 'HoraCancelamento',
             CancelUser: 'UsuarioCancelamento',
             CancelStation: 'EstacaoCancelamento',
-            Date:'DataEmissao',
-            updatedAt:'updatedAt',
-            createdAt:'createdAt'
+            Date: 'DataEmissao',
+            updatedAt: 'updatedAt',
+            createdAt: 'createdAt'
         },
         InitialStatusItem: 'AguardandoEnvio',
         SendedStatusItem: 'Recebido',
@@ -378,6 +384,7 @@ const GText = {
                 userAccess: true,
                 fields: {
                     IdMobile: 'IdMobile',
+                    id:'id',
                     CodImport: 'Cod_Importacao',
                     CodCompany: 'CodEmpresa',
                     CodBranch: 'CodFilial',
@@ -427,8 +434,8 @@ const GText = {
                     CancelHour: 'HoraCancelamento',
                     CancelUser: 'UsuarioCancelamento',
                     CancelStation: 'EstacaoCancelamento',
-                    updatedAt:'updatedAt',
-                    createdAt:'createdAt'
+                    updatedAt: 'updatedAt',
+                    createdAt: 'createdAt'
                 }
             },
             Clients: {
@@ -467,8 +474,8 @@ const GText = {
                     defaultBranch: 'FilialPadrao',
                     initSequence: 'InicioSequenciaColeta',
                     finalSequence: 'FimSequenciaColeta',
-                    totalAccess:'AcessoTotal',
-                    dateLastAccess:'DataUltimoAcesso'
+                    totalAccess: 'AcessoTotal',
+                    dateLastAccess: 'DataUltimoAcesso'
                 }
             },
             Company: {
@@ -559,6 +566,74 @@ const GText = {
 
     }
 }
+export function CreateSQLUpdate(Nametable, fields, where, param, obj) {
+    function format(value) {
+        if (value === undefined | value === null ) {
+            return null
+        } else if(value.length <=0){
+            return null 
+        }
+        else {
+            return `'${value}'`
+        }
+    }
+    let SQL = `UPDATE ${Nametable} SET `
+    for (let props in fields) {
+        console.log(fields[props] + ' = ' + format(obj[fields[props]]))
+        SQL = SQL + fields[props] + ' = ' + format(obj[fields[props]]) + ', '
+    }
+    SQL = SQL.substring(0, (SQL.length - 2))
+    SQL += ` WHERE ${where} = ${param}`
+    return SQL
+}
+export function CreateSQLInsert(Nametable, fields, obj) {
+    
+    function format(value) {
+        if (value === undefined | value === null) {
+            return null
+        } else {
+            return `'${value}'`
+        }
+    }
+    let SQL = `INSERT INTO ${Nametable} ( `
+    for (let props in fields) {
+        if (fields[props] !== 'IdMobile') {
+            SQL = SQL + fields[props] + ', '
+        }
+    }
+    SQL = SQL.substring(0, (SQL.length - 2))
+    SQL += ') VALUES ( '
+
+    for (let props in fields) {
+        if (fields[props] !== 'IdMobile') {
+           // SQL += '?, '
+          
+           SQL += format(obj[fields[props]]) + ', '
+        }
+    }
+    SQL = SQL.substring(0, (SQL.length - 2))
+
+    SQL += ` )`
+    return SQL
+}
+
+// export function CreateValuesSQLInsert(fields, obj) {
+//   //  let fields = fields
+//     // delete fields.IdMobile
+//     function format(value) {
+//         if (value === undefined | value === null) {
+//             return null
+//         } else {
+//             return value
+//         }
+//     }
+//     let SQL = []
+//     for (let props in copyFields) {
+//         SQL += '?, ' 
+//         SQL.push(format(obj[copyFields[props]]))
+//     }
+//     return SQL
+// }
 
 export function Routes() {
     const BaseForm = GText.infoDB.Table
@@ -584,13 +659,13 @@ export function NameTables(params) {
     const BaseForm = GText.infoDB.Table
     let RoutesGet = []
     for (let prop in BaseForm) {
-        if (BaseForm[prop].name !== BaseForm.Log.name & 
+        if (BaseForm[prop].name !== BaseForm.Log.name &
             BaseForm[prop].name !== BaseForm.Profile.name &
             BaseForm[prop].name !== BaseForm.Server.name &
-            BaseForm[prop].name !== BaseForm.Clients.name){
-              RoutesGet.push(BaseForm[prop].name)   
-            }
-       
+            BaseForm[prop].name !== BaseForm.Clients.name) {
+            RoutesGet.push(BaseForm[prop].name)
+        }
+
     }
     return RoutesGet
 }
@@ -619,6 +694,7 @@ export const RoutesGet = [
 
 
 export const fiedlsHide = [
+    { name: GText.infoInputs.fiedlsHide.id },
     { name: GText.infoInputs.fiedlsHide.IdMobile },
     { name: GText.infoInputs.fiedlsHide.CodImport },
     { name: GText.infoInputs.fiedlsHide.CodCompany },
@@ -662,7 +738,7 @@ export const fiedlsHide = [
     { name: GText.infoInputs.fiedlsHide.updatedAt },
 ]
 export const fieldsToString = [
-
+    GText.infoDB.Table.Itens.fields.id,
     GText.infoDB.Table.Itens.fields.IdMobile,
     GText.infoDB.Table.Itens.fields.CodImport,
     GText.infoDB.Table.Itens.fields.CodCompany,
@@ -713,6 +789,6 @@ export const fieldsToString = [
     GText.infoDB.Table.Itens.fields.CancelHour,
     GText.infoDB.Table.Itens.fields.CancelUser,
     GText.infoDB.Table.Itens.fields.CancelStation,
-   // GText.infoDB.Table.Itens.fields.Date,
+    // GText.infoDB.Table.Itens.fields.Date,
 ]
 export default GText
