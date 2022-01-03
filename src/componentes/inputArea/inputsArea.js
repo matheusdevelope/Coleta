@@ -8,7 +8,6 @@ import InputSelect from '../inputSelected/inputSelect.js';
 import Button from '../button/button';
 import { Label, Line } from './style';
 import { GetLastItemOnDB, GetProfileDB } from '../../services/routesData/routesData';
-import profile from '../../services/SQLite/tables/profile';
 function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
   const formRef = useRef(null);
   const DataDB = useRef(null);

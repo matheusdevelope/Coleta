@@ -110,7 +110,7 @@ const GText = {
         Protocolo: 'http',
         Ip: '192.168.100.15',
         Porta: '3200',
-        BaseURL: 'http://192.168.0.88:3200/',
+        BaseURL: 'http://192.168.100.15:3200/',
         Prioridade: 1,
         Padrao: 'S',
         Extra: ''
@@ -579,7 +579,7 @@ export function CreateSQLUpdate(Nametable, fields, where, param, obj) {
     }
     let SQL = `UPDATE ${Nametable} SET `
     for (let props in fields) {
-        console.log(fields[props] + ' = ' + format(obj[fields[props]]))
+      //  console.log(fields[props] + ' = ' + format(obj[fields[props]]))
         SQL = SQL + fields[props] + ' = ' + format(obj[fields[props]]) + ', '
     }
     SQL = SQL.substring(0, (SQL.length - 2))
@@ -587,7 +587,6 @@ export function CreateSQLUpdate(Nametable, fields, where, param, obj) {
     return SQL
 }
 export function CreateSQLInsert(Nametable, fields, obj) {
-    
     function format(value) {
         if (value === undefined | value === null) {
             return null
@@ -606,13 +605,10 @@ export function CreateSQLInsert(Nametable, fields, obj) {
 
     for (let props in fields) {
         if (fields[props] !== 'IdMobile') {
-           // SQL += '?, '
-          
            SQL += format(obj[fields[props]]) + ', '
         }
     }
     SQL = SQL.substring(0, (SQL.length - 2))
-
     SQL += ` )`
     return SQL
 }
@@ -691,8 +687,6 @@ export const RoutesGet = [
     { name: routes.Itens, checked: false },
     { name: routes.Branch, checked: false }
 ]
-
-
 export const fiedlsHide = [
     { name: GText.infoInputs.fiedlsHide.id },
     { name: GText.infoInputs.fiedlsHide.IdMobile },

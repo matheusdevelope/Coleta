@@ -1,6 +1,6 @@
-import GText, { CreateSQLInsert, CreateSQLUpdate, CreateValuesSQLInsert } from "../../../global/texts";
+import GText, { CreateSQLInsert, CreateSQLUpdate } from "../../../global/texts";
 import db from "../SQLiteDatabase";
-
+const item = GText.infoDB.Table.Itens.fields
 /**
  * INICIALIZAÇÃO DA TABELA
  * - Executa sempre, mas só cria a tabela caso não exista (primeira execução)
@@ -89,8 +89,6 @@ function Itens() {
   });
 }
 Itens()
-
-
 /**
  * CRIAÇÃO DE UM NOVO REGISTRO
  * - Recebe um objeto;
@@ -99,126 +97,13 @@ Itens()
  *  - Pode retornar erro (reject) caso exista erro no SQL ou nos parâmetros.
  */
 const create = (obj) => {
-  console.log(CreateSQLInsert(GText.infoDB.Table.Itens.name, GText.infoDB.Table.Itens.fields, obj))
+ // console.log(CreateSQLInsert(GText.infoDB.Table.Itens.name, GText.infoDB.Table.Itens.fields, obj))
 //  console.log(CreateValuesSQLInsert( GText.infoDB.Table.Itens.fields, obj))
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
-      //comando SQL modificável
       tx.executeSql(
-        // `INSERT INTO ${GText.infoDB.Table.Itens.name} (
-        //   ${GText.infoDB.Table.Itens.fields.CodImport}  ,
-        //   ${GText.infoDB.Table.Itens.fields.CodCompany} ,
-        //   ${GText.infoDB.Table.Itens.fields.CodBranch}  ,
-        //   ${GText.infoDB.Table.Itens.fields.CodPriority} ,
-        //   ${GText.infoDB.Table.Itens.fields.ColetaDate} ,
-        //   ${GText.infoDB.Table.Itens.fields.CodSalesmanI} ,
-        //   ${GText.infoDB.Table.Itens.fields.CodSalesman} ,
-        //   ${GText.infoDB.Table.Itens.fields.CodCollector} ,
-        //   ${GText.infoDB.Table.Itens.fields.CodTechnician}  ,
-        //   ${GText.infoDB.Table.Itens.fields.CodClient} ,
-        //   ${GText.infoDB.Table.Itens.fields.CodSituation} ,
-        //   ${GText.infoDB.Table.Itens.fields.CodProduct} ,
-        //   ${GText.infoDB.Table.Itens.fields.CodBrand}  ,
-        //   ${GText.infoDB.Table.Itens.fields.CodType} ,
-        //   ${GText.infoDB.Table.Itens.fields.CodCancel} ,
-        //   ${GText.infoDB.Table.Itens.fields.Item} ,
-        //   ${GText.infoDB.Table.Itens.fields.ColetaNumber} ,
-        //   ${GText.infoDB.Table.Itens.fields.Status}  ,
-        //   ${GText.infoDB.Table.Itens.fields.InclusionDate}  ,
-        //   ${GText.infoDB.Table.Itens.fields.InclusionHour} ,
-        //   ${GText.infoDB.Table.Itens.fields.InclusionUser}  ,
-        //   ${GText.infoDB.Table.Itens.fields.InclusionStation} ,
-        //   ${GText.infoDB.Table.Itens.fields.Date}  ,
-        //   ${GText.infoDB.Table.Itens.fields.NameClient}  ,
-        //   ${GText.infoDB.Table.Itens.fields.IdIdentityClient} ,
-        //   ${GText.infoDB.Table.Itens.fields.Phone} ,
-        //   ${GText.infoDB.Table.Itens.fields.Warranty} ,
-        //   ${GText.infoDB.Table.Itens.fields.ImportColeta} ,
-        //   ${GText.infoDB.Table.Itens.fields.NameProduct} ,
-        //   ${GText.infoDB.Table.Itens.fields.SerieNumber} ,
-        //   ${GText.infoDB.Table.Itens.fields.Brand} ,
-        //   ${GText.infoDB.Table.Itens.fields.Modelo} ,
-        //   ${GText.infoDB.Table.Itens.fields.Dimension} ,
-        //   ${GText.infoDB.Table.Itens.fields.Design} ,
-        //   ${GText.infoDB.Table.Itens.fields.FireNumber} ,
-        //   ${GText.infoDB.Table.Itens.fields.DotNumber} ,
-        //   ${GText.infoDB.Table.Itens.fields.Board} ,
-        //   ${GText.infoDB.Table.Itens.fields.ServicesExec} ,
-        //   ${GText.infoDB.Table.Itens.fields.InitialExam} ,
-        //   ${GText.infoDB.Table.Itens.fields.Observation}  ,
-        //   ${GText.infoDB.Table.Itens.fields.Value}  ,
-        //   ${GText.infoDB.Table.Itens.fields.CancelObservation} ,
-        //   ${GText.infoDB.Table.Itens.fields.CancelDate}  ,
-        //   ${GText.infoDB.Table.Itens.fields.CancelHour} ,
-        //   ${GText.infoDB.Table.Itens.fields.CancelUser} ,
-        //   ${GText.infoDB.Table.Itens.fields.CancelStation} ,
-        //   ${GText.infoDB.Table.Itens.fields.CodSituation} ,
-        //   ${GText.infoDB.Table.Itens.fields.CodBranch} ,
-        //   ${GText.infoDB.Table.Itens.fields.CodWarranty},
-        //   ${GText.infoDB.Table.Itens.fields.createdAt},
-        //   ${GText.infoDB.Table.Itens.fields.updatedAt}  
-        // ) 
-        // values (
-        //   ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,
-        //   ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`
         CreateSQLInsert(GText.infoDB.Table.Itens.name, GText.infoDB.Table.Itens.fields, obj),
-     //   CreateValuesSQLInsert( GText.infoDB.Table.Itens.fields, obj)
      []
-        //[
-
-          // obj[`${GText.infoDB.Table.Itens.fields.CodImport}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CodCompany}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CodBranch}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CodPriority}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.ColetaDate}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CodSalesmanI}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CodSalesman}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CodCollector}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CodTechnician}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CodClient}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CodSituation}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CodProduct}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CodBrand}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CodType}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CodCancel}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.Item}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.ColetaNumber}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.Status}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.InclusionDate}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.InclusionHour}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.InclusionUser}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.InclusionStation}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.Date}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.NameClient}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.IdIdentityClient}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.Phone}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.Warranty}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.ImportColeta}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.NameProduct}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.SerieNumber}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.Brand}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.Modelo}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.Dimension}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.Design}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.FireNumber}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.DotNumber}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.Board}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.ServicesExec}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.InitialExam}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.Observation}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.Value}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CancelObservation}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CancelDate}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CancelHour}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CancelUser}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CancelStation}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CodSituation}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CodBranch}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.CodWarranty}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.createdAt}`],
-          // obj[`${GText.infoDB.Table.Itens.fields.updatedAt}`]
-
-        //]
         ,
         (sqlTxn, res) => {
           // console.log(sqlTxn)
@@ -230,8 +115,7 @@ const create = (obj) => {
               results.push(item);
             }
           }
-          // console.log(results)
-          resolve(results)  //return de object when the Promisse is complete
+          resolve(results)
         },
         error => {
           reject(error.message, obj)
@@ -248,9 +132,6 @@ const create = (obj) => {
  *  - O resultado da Promise é a quantidade de registros atualizados;
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL.
  */
-
-const item = GText.infoDB.Table.Itens.fields
-
 const update = (where, param, obj) => {
   //console.log(CreateSQLUpdate(GText.infoDB.Table.Itens.name, item ,where, param, obj))
   return new Promise((resolve, reject) => {
@@ -621,6 +502,7 @@ const updateStatus = (where, param, param2, newStatus) => {
     });
   });
 }
+// all().then((obj)=>{console.log(obj)})
 
 export default {
   create,

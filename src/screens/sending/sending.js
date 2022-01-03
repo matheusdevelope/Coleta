@@ -3,10 +3,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { Animated, BackHandler, Easing, StyleSheet } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import NetInfo from "@react-native-community/netinfo";
-import { GetItensDB, UpdateItensDB, UpdateStatusItensOnDB } from "../../services/routesData/routesData";
+import { GetItensDB, UpdateItensDB } from "../../services/routesData/routesData";
 import { Container, TextStyled, ViewStyled, ScrollView, Text, ViewLineSyncing, TextButton, TextTitle, ViewItens, View } from './style.js'
 import { SendItensAPI, UpdateItensAPI } from "../../services/Api/routesApi";
-import GText, { FormatDate } from "../../global/texts";
+import GText from "../../global/texts";
 import Global from "../../global/global";
 import BoxColeta from "../../componentes/coletasList/boxColeta";
 
@@ -112,11 +112,10 @@ export default ({ route }) => {
     }
     function SeparateItens(itens, objItens) {
         let ObjSeparate = { ItemToCreate: [], ItemToUpdate: [] }
-        itens.map((obj) => {
-            
+        itens.forEach((obj) => {
             if (obj[FieldItem.Status] === GText.infoInputs.InitialStatusItem) {
                 obj[FieldItem.Status] = GText.infoInputs.SendedStatusItem
-
+                 // Format Date to: 2021-01-01 12:00:00
                 for (let props in obj) {
                     if (props.toString().includes('Data')) {
                         obj[props] = obj[props] !== null ? obj[props].slice(0, 19).replace('T', ' ') : obj[props]
@@ -124,10 +123,9 @@ export default ({ route }) => {
                     else {
                     }
                 }
-
-                if (obj[FieldItem.createdAt] !== ''
-                    & obj[FieldItem.createdAt] !== undefined & obj[FieldItem.createdAt] !== null) {
-                        if (obj[FieldItem.id] !== null & FieldItem.id !== undefined & FieldItem.id !== '') {
+                const createdAt = obj[FieldItem.createdAt]
+                if (createdAt !== '' & createdAt !== undefined & createdAt !== null) {
+                        if (obj[FieldItem.id] !== null & obj[FieldItem.id] !== undefined & obj[FieldItem.id] !== '') {
                         ObjSeparate.ItemToUpdate.push(obj)
                     }
                     else {
@@ -138,9 +136,7 @@ export default ({ route }) => {
                     ObjSeparate.ItemToCreate.push(obj)
                 }
             }
-
         })
-        console.log(ObjSeparate)
         return ObjSeparate
     }
     function handleCreateList(item, error) {
@@ -248,8 +244,6 @@ export default ({ route }) => {
             </ViewStyled>
         )
     }
-
-
 
     return (
         <Container>

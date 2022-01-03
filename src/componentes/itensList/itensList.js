@@ -14,6 +14,8 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
     const field = tableItem.Item
 
     async function InsertItensOnDB() {
+        console.log('List: ',List)
+        console.log('Itens: ',itens)
         async function insert() {
             for (let i = 0; i < List.length; i++) {
                 let copy = List[i]
@@ -23,10 +25,11 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
                 if (itens !== undefined) {
                     const ret = await GetItensDB(tableItem.IdMobile, copy[tableItem.IdMobile])
                     if (ret) {
-                        console.log('copy pre updste',copy)
+                        console.log('Update: ')
                         await UpdateItensDB(tableItem.IdMobile, copy[tableItem.IdMobile], copy)
                     }
                     else {
+                        console.log('Insert: ')
                         await CreateItensDB(copy)
                     }
                 }
