@@ -30,7 +30,7 @@ const BoxItemColeta = ({ data, DeleteItem, EditItem, RouteName, HideCanceled, de
                 <ButtonBox onPress={handleEditItem} onLongPress={() => { data[GText.infoInputs.nStatus] !== GText.infoInputs.CancelStatusItem && setToggle(!toggle) }}  
                 style={{backgroundColor: data[GText.infoInputs.nStatus] == GText.infoInputs.CancelStatusItem ? Global.redCanceled : Global.white}}>
                     <Text style={{ margin: 'auto', fontSize: Global.fontSize_n }}>
-                        Item: {data[GText.infoInputs.nItem]}    IDmobile:{data[GText.infoInputs.nId]} {data[GText.infoInputs.nStatus]}
+                        Item: {data[GText.infoInputs.nItem]}    ID:{data[GText.infoInputs.nId]}    {data[GText.infoInputs.nStatus]}     IDMobile:{data[GText.infoInputs.nIdMobile]}
                     </Text>
                     <Line>
                         <Text style={{ fontWeight: 'bold' }}>

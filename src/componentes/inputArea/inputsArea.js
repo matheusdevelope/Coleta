@@ -57,6 +57,7 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
     GT.nWarranty,
     GT.nSituation,
     GT.nId,
+    GT.nIdMobile,
   ]
   const fieldsNeedsValue = [
     GT.nNameClient,
@@ -96,9 +97,11 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
     })
   }
   function handleSubmit(data) {
+    data[GT.nStatus] = GT.InitialStatusItem
     if (!setErrorsFields(data)) {
-      InsertNewItemOnList(data)
+      InitialValueFields()
       SetCountItem()
+      InsertNewItemOnList(data)
       ClearFields()
       OnEdit && setOnEdit(false)
     }
@@ -125,8 +128,6 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
       formRef.current.setFieldValue(GT.fiedlsHide.Item, newItem.toString())
       HigherItem.current = newItem
     }
-
-
   }
   /**
        * The "LastNumberOfColeta" get and set the sequencial id to orders;
@@ -223,6 +224,7 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
     HigherItem.current = 0
     InitialValueFields()
   }
+ 
   useImperativeHandle(ref, () => ({
     SetDataFielsOnEdit: (data) => {
       let ret = data

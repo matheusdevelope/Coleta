@@ -53,37 +53,28 @@ export async function SendItensAPI(data, params) {
         url = url + '/' + params
     }
     try {
-        // console.log(data)
         const resp = await api.post(url, data);
-        // console.log('resp.data',resp.data)
         return await resp.data
 
     } catch (err) {
-        if (err.response !== undefined) {
-            if (err.response.status === 400) {
-                return Promise.reject(err.response.data.errors)
-            }
-            else {
-                return Promise.reject(err)
-            }
-        }
-        else {
-            return Promise.reject(err)
-        }
+        return Promise.reject(err)
     }
 }
+
+
 export async function UpdateItensAPI(data) {
     let url = await GetAddresServer()
     url += tables.Itens
     url += '/Update'
     try {
         const resp = await api.post(url, data);
-       // console.log('reotorn',resp.data)
+        // console.log('reotorn',resp.data)
         return await resp.data
 
     }
     catch (err) {
-       // console.log('errroooo',err.response.data)
+        console.log(err)
+        // console.log('errroooo',err.response.data)
         if (err.response !== undefined) {
             if (err.response.status === 400) {
                 return Promise.reject(err.response.data.errors)

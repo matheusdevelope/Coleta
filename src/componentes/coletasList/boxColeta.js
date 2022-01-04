@@ -6,9 +6,8 @@ import GText from '../../global/texts';
 
 import { Container, Line, Text, ButtonBox, LineBox } from './style';
 
-const BoxColeta = ({ data, RouteName, showCheckBox, setShowCheckBox, handleOnChange, readyOnly }) => {
+const BoxColeta = ({ data, RouteName, showCheckBox, setShowCheckBox, handleOnChange, readyOnly}) => {
     const navigate = useNavigation()
-
     function handleSelectCheckBox(newValue) {
         handleOnChange(newValue, data[GText.infoInputs.nColetaNumber])
     }
@@ -40,7 +39,7 @@ const BoxColeta = ({ data, RouteName, showCheckBox, setShowCheckBox, handleOnCha
             <LineBox >
                 <ButtonBox onLongPress={handleToggle} onPress={handleDetails}
                     style={{
-                        backgroundColor: readyOnly ? data.color : data.checked === true ? Global.bluelight2 : data[GText.ItensCanceledTotal] == data[GText.ItensTotal] ?
+                        backgroundColor:  data.checked === true ? Global.bluelight2 : data[GText.ItensCanceledTotal] == data[GText.ItensTotal] ?
                             Global.redCanceled : Global.white
                     }}>
                     <Line>

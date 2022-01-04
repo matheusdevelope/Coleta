@@ -65,12 +65,24 @@ export default ({ route }) => {
                 ItemFromDB ?
                     await handleSendToApi(SeparateItens(ItemFromDB, Itens[i]), Itens[i])
                     :
-                    handleCreateList(Itens[i], [{ message: 'Não encontrado no banco de dados' }])
+                    handleCreateList(Itens[i], GText.objOnSending.OnGetLocal, [{ message: 'Não encontrado no banco de dados' }])
             }
             catch (e) {
-                handleCreateList(Itens[i], e)
+                //  console.log(e)
+                if (e === 'Network Error') {
+                    let copy = status
+                    copy.status = 'NoConnectionServer'
+                    setstatus({ ...copy })
+                    handleCreateList(Itens[i], GText.objOnSending.noConnectionServer, e)
+                    return
+                }
+                else {
+                    handleCreateList(Itens[i], GText.objOnSending.OnGetLocal, e)
+                }
+
             }
         }
+
         copy.status = 'Finish'
         setstatus({ ...copy })
     }
@@ -78,35 +90,44 @@ export default ({ route }) => {
         if (Itens.ItemToCreate.length > 0) {
             try {
                 let ret = await SendItensAPI(Itens.ItemToCreate)
+                objItem[GText.ItensTotal] = ret.length
                 for (let i = 0; i < ret.length; i++) {
                     try {
+
                         await UpdateItensDB(FieldItem.IdMobile, ret[i][FieldItem.IdMobile], ret[i])
                     }
                     catch (e) {
-                        handleCreateList(objItem, { message: 'Falha atualizar status localmente, faça a sincronização do dados,', error: e })
+                        handleCreateList(objItem, GText.objOnSending.eOnInsert, { message: 'Falha atualizar status localmente, faça a sincronização do dados,', error: e })
                     }
                 }
-                handleCreateList(objItem)
+                handleCreateList(objItem, GText.objOnSending.OnInsert)
             }
             catch (e) {
-                handleCreateList(objItem, e)
+                if (e.message === 'Network Error') {
+                    return Promise.reject('Network Error')
+                }
+                handleCreateList(objItem, GText.objOnSending.eOnInsert, e)
             }
         }
         if (Itens.ItemToUpdate.length > 0) {
             try {
                 let ret = await UpdateItensAPI(Itens.ItemToUpdate)
+                objItem[GText.ItensTotal] = ret.length
                 for (let i = 0; i < ret.length; i++) {
                     try {
                         await UpdateItensDB(FieldItem.id, ret[i][FieldItem.id], ret[i])
                     }
                     catch (e) {
-                        handleCreateList(objItem, { message: 'Falha atualizar status localmente, faça a sincronização do dados,', error: e })
+                        handleCreateList(objItem, GText.objOnSending.eOnUpdate, { message: 'Falha atualizar status localmente, faça a sincronização do dados,', error: e })
                     }
                 }
-                handleCreateList(objItem)
+                handleCreateList(objItem, GText.objOnSending.OnUpdate)
             }
             catch (e) {
-                handleCreateList(objItem, e)
+                if (e.message === 'Network Error') {
+                    return Promise.reject('Network Error')
+                }
+                handleCreateList(objItem, e, GText.objOnSending.eOnUpdate)
             }
         }
     }
@@ -115,7 +136,7 @@ export default ({ route }) => {
         itens.forEach((obj) => {
             if (obj[FieldItem.Status] === GText.infoInputs.InitialStatusItem) {
                 obj[FieldItem.Status] = GText.infoInputs.SendedStatusItem
-                 // Format Date to: 2021-01-01 12:00:00
+                // Format Date to: 2021-01-01 12:00:00
                 for (let props in obj) {
                     if (props.toString().includes('Data')) {
                         obj[props] = obj[props] !== null ? obj[props].slice(0, 19).replace('T', ' ') : obj[props]
@@ -125,11 +146,11 @@ export default ({ route }) => {
                 }
                 const createdAt = obj[FieldItem.createdAt]
                 if (createdAt !== '' & createdAt !== undefined & createdAt !== null) {
-                        if (obj[FieldItem.id] !== null & obj[FieldItem.id] !== undefined & obj[FieldItem.id] !== '') {
+                    if (obj[FieldItem.id] !== null & obj[FieldItem.id] !== undefined & obj[FieldItem.id] !== '') {
                         ObjSeparate.ItemToUpdate.push(obj)
                     }
                     else {
-                        handleCreateList(objItens, { message: 'Coleta Sem ID do retaguarda para update.', error: [obj] })
+                        handleCreateList(objItens, GText.objOnSending.eOnUpdate, { message: 'Coleta Sem ID do retaguarda para update.', error: [obj] }, obj[FieldItem.IdMobile])
                     }
                 }
                 else {
@@ -139,21 +160,53 @@ export default ({ route }) => {
         })
         return ObjSeparate
     }
-    function handleCreateList(item, error) {
+
+    function handleCreateList(item, action, error) {
         let Object = {
-            NameRoute: '',
-            amountRegister: '',
-            ItemOnInsert: '',
+            action: '',
             Errors: [],
             data: {},
             showError: false,
         }
-        item['color'] = error ? Global.redCanceled : Global.white
+        Object.action = action
         Object.data = item
+        console.log(error.response.data.original)
+        //////  error[0] ? error[0].response.data.errors : error
+        if (error) {
+            if (error.response ) {
+                if (error.response?.data) {
+                    if (error.response.data?.original.message) {
+                        console.log('1')
+                        error && Object.Errors.push({ error: JSON.stringify(error.response.data.original, null, '\t'), message: error.response.data.original.message })
+                    }
+                    else if (error[0].message) {
+                        console.log('2')
+                        error && Object.Errors.push({ error: JSON.stringify(error[0], null, '\t'), message: error[0].message })
+                    }
+                    else if (error.message) {
+                        console.log('3')
+                        error && Object.Errors.push({ error: JSON.stringify(error, null, '\t'), message: error.message })
+                    }
+                    else {
+                        console.log('4')
+                        error && Object.Errors.push({ error: JSON.stringify(error, null, '\t'), message: 'Error!' })
+                    }
+                }
+                else {
+                    console.log('5')
+                    error && Object.Errors.push({ error: JSON.stringify(error, null, '\t'), message: 'Error!' })
+                }
+            }
+            else {
+                console.log('6')
+                error && Object.Errors.push({ error: JSON.stringify(error, null, '\t'), message: 'Error!' })
+            }
+        }
 
-        error && Object.Errors.push({ error: JSON.stringify(error[0] ? error[0] : error, null, '\t'), message: error[0] ? error[0].message : error.message })
+
+
+        //  error && Object.Errors.push({ error: JSON.stringify(error, null, '\t'), message: error[0] ? error[0].message : error.message })
         StatusRef.current.push({ ...Object })
-
         let copy = status
         error ? () => null : copy.sended = copy.sended + 1
         copy.error = CountErrors()
@@ -162,11 +215,16 @@ export default ({ route }) => {
     function handleTryAgain() {
         let ItensWithErrors = []
         let ColetaNumbers = []
-        StatusRef.current.map((obj) => {
-            let have = ColetaNumbers.find(number => number === obj.data[FieldItem.ColetaNumber])
-            ColetaNumbers.push(obj.data[FieldItem.ColetaNumber])
-            have === undefined & obj.Errors.length > 0 && ItensWithErrors.push(obj.data)
-        })
+        if (status.status === 'NoConnectionServer') {
+            ItensWithErrors = Data
+        }
+        else {
+            StatusRef.current.map((obj) => {
+                let have = ColetaNumbers.find(number => number === obj.data[FieldItem.ColetaNumber])
+                ColetaNumbers.push(obj.data[FieldItem.ColetaNumber])
+                have === undefined & obj.Errors.length > 0 && ItensWithErrors.push(obj.data)
+            })
+        }
         StatusRef.current = []
         handleSendItens(ItensWithErrors)
     }
@@ -178,7 +236,7 @@ export default ({ route }) => {
         return ret
     }
     function ShowButtons() {
-        if (status.status === 'Finish' | status.status === 'NoInternet') {
+        if (status.status === 'Finish' | status.status === 'NoInternet' | status.status === 'NoConnectionServer') {
             return true
         }
         else {
@@ -216,7 +274,7 @@ export default ({ route }) => {
 
     function handleTitleHeader() {
         let ret = ''
-        ret = status.status === 'Finish' ? GText.SendFinish : status.status === 'NoInternet' ? GText.noInternet : GText.Sending
+        ret = status.status === 'Finish' ? GText.SendFinish : status.status === 'NoInternet' ? GText.noInternet : status.status === 'NoConnectionServer' ? 'Falha ao se conectar ao Server' : GText.Sending
         return ret
     }
     function RenderAnimation() {
@@ -252,7 +310,8 @@ export default ({ route }) => {
             <RenderTotalOfItens />
             <ScrollView>
                 {StatusRef.current.map((item, key1) => (
-                    <ViewItens key={key1}>
+                    <ViewItens key={key1} style={{ backgroundColor: item.Errors.length > 0 ? Global.redCanceled : Global.white }}>
+                        <Text>{item.action}</Text>
                         <BoxColeta readyOnly={true} data={item.data} RouteName={RouteName} />
                         {item.Errors.map((item, key) => (
                             <View key={key} onLongPress={() => { ShowError(key1) }}>

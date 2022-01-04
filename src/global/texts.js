@@ -6,7 +6,7 @@ export const HourFormat = (DataNow.getHours().toString() + ":" + DataNow.getMinu
 export const DateFormat = FormatDate(DataNow)
 export function FormatDate(date) {
     let NewDate = date.toISOString().split('T')[0] + ' ' + date.toTimeString().split(' ')[0]
-    return  NewDate
+    return NewDate
 }
 const GText = {
     title: 'Coletas',
@@ -30,6 +30,14 @@ const GText = {
     messageDeleted: 'Deletado',
     messageTryAgainSync: 'Tentar Novamente',
     messageExitApp: 'Sair do aplicativo',
+    objOnSending: {
+        OnUpdate: 'Atualizado',
+        OnInsert: 'Novo Item',
+        OnGetLocal: 'Erro ao Recuperar Dados Locais',
+        eOnUpdate: 'Erro ao Atualizar Itens',
+        eOnInsert: 'Erro ao Inserir Novo Item',
+        noConnectionServer:'Sem conexão com servidor',
+    },
     objMessageExitApp: {
         title: 'Sair',
         message: 'Deseja sair do aplicativo?',
@@ -210,7 +218,7 @@ const GText = {
     LastItem: 'UltimoItem',
 
     infoInputs: {
-        nId:'id',
+        nId: 'id',
         nIdMobile: 'IdMobile',
         nCodImport: 'Cod_Importacao',
         nCodCompany: 'CodEmpresa',
@@ -315,7 +323,7 @@ const GText = {
 
 
         fiedlsHide: {
-            id:'id',
+            id: 'id',
             IdMobile: 'IdMobile',
             CodImport: 'Cod_Importacao',
             CodCompany: 'CodEmpresa',
@@ -384,7 +392,7 @@ const GText = {
                 userAccess: true,
                 fields: {
                     IdMobile: 'IdMobile',
-                    id:'id',
+                    id: 'id',
                     CodImport: 'Cod_Importacao',
                     CodCompany: 'CodEmpresa',
                     CodBranch: 'CodFilial',
@@ -568,10 +576,10 @@ const GText = {
 }
 export function CreateSQLUpdate(Nametable, fields, where, param, obj) {
     function format(value) {
-        if (value === undefined | value === null ) {
+        if (value === undefined | value === null) {
             return null
-        } else if(value.length <=0){
-            return null 
+        } else if (value.length <= 0) {
+            return null
         }
         else {
             return `'${value}'`
@@ -579,7 +587,7 @@ export function CreateSQLUpdate(Nametable, fields, where, param, obj) {
     }
     let SQL = `UPDATE ${Nametable} SET `
     for (let props in fields) {
-      //  console.log(fields[props] + ' = ' + format(obj[fields[props]]))
+        //  console.log(fields[props] + ' = ' + format(obj[fields[props]]))
         SQL = SQL + fields[props] + ' = ' + format(obj[fields[props]]) + ', '
     }
     SQL = SQL.substring(0, (SQL.length - 2))
@@ -605,7 +613,7 @@ export function CreateSQLInsert(Nametable, fields, obj) {
 
     for (let props in fields) {
         if (fields[props] !== 'IdMobile') {
-           SQL += format(obj[fields[props]]) + ', '
+            SQL += format(obj[fields[props]]) + ', '
         }
     }
     SQL = SQL.substring(0, (SQL.length - 2))

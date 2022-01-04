@@ -14,22 +14,18 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
     const field = tableItem.Item
 
     async function InsertItensOnDB() {
-        console.log('List: ',List)
-        console.log('Itens: ',itens)
         async function insert() {
             for (let i = 0; i < List.length; i++) {
                 let copy = List[i]
-                if (copy[tableItem.Status] === GText.infoInputs.SendedStatusItem) {
-                    copy[tableItem.Status] = GText.infoInputs.InitialStatusItem
-                }
+                // if (copy[tableItem.Status] === GText.infoInputs.SendedStatusItem) {
+                //     copy[tableItem.Status] = GText.infoInputs.InitialStatusItem
+                // }
                 if (itens !== undefined) {
                     const ret = await GetItensDB(tableItem.IdMobile, copy[tableItem.IdMobile])
                     if (ret) {
-                        console.log('Update: ')
                         await UpdateItensDB(tableItem.IdMobile, copy[tableItem.IdMobile], copy)
                     }
                     else {
-                        console.log('Insert: ')
                         await CreateItensDB(copy)
                     }
                 }
@@ -89,6 +85,10 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
             return list
         }
     }
+    function  OrderList(data) {
+        data.sort((a, b) => Number(a[field]) > Number(b[field]) ? 1 : Number(b[field]) > Number(a[field]) ? -1 : 0)
+        return data
+    }
     function CreateList(data) {
         //this enable the next item edit
         ControlEditing.current = false
@@ -97,14 +97,14 @@ const ItensList = ({ EditItem, itens, isFocused, details, refresh, RouteName, Hi
         copyList.push(data)
         copyList = VerifyAndChangeClient(copyList, data)
         //Order list by selected field
-        copyList.sort((a, b) => Number(a[field]) > Number(b[field]) ? 1 : Number(b[field]) > Number(a[field]) ? -1 : 0)
         //Refresch list with news itens
-        setList([...copyList])
+        setList([...OrderList(copyList)])
     }
     async function GetData() {
         let ret = []
         ret = await GetItensDB(tableItem.ColetaNumber, itens[tableItem.ColetaNumber])
-        setList(ret)
+        
+        setList([... OrderList(ret)])
     }
 
     useImperativeHandle(ref, () => ({

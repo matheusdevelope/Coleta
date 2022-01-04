@@ -370,13 +370,13 @@ const findLastItem = (field, param) => {
         param == undefined
           ?
           `SELECT * FROM ${GText.infoDB.Table.Itens.name} 
-        ORDER BY ${GText.infoDB.Table.Itens.fields.IdMobile} DESC  ;`
+        ORDER BY ${GText.infoDB.Table.Itens.fields.Item} DESC  ;`
           :
           ////tem que pesquisar com fazer o "TOP 1 no sqlite"
 
           `SELECT * FROM ${GText.infoDB.Table.Itens.name} 
         WHERE ${field} = ${param}
-        ORDER BY ${GText.infoDB.Table.Itens.fields.IdMobile} DESC  ;`,
+        ORDER BY ${GText.infoDB.Table.Itens.fields.Item} DESC  ;`,
         [],
         (sqlTxn, res) => {
           let results = null

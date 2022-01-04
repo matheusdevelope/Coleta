@@ -178,6 +178,7 @@ export async function CreateOnDB(TableName, data) {
         ret = await log.create(data);
         break;
     default:
+      alert("Failed on routesData CreateOnDB function!")
       console.log("Failed on routesData CreateOnDB function!");
   }
   return ret
