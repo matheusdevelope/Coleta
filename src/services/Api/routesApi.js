@@ -73,19 +73,7 @@ export async function UpdateItensAPI(data) {
 
     }
     catch (err) {
-        console.log(err)
-        // console.log('errroooo',err.response.data)
-        if (err.response !== undefined) {
-            if (err.response.status === 400) {
-                return Promise.reject(err.response.data.errors)
-            }
-            else {
-                return Promise.reject(err)
-            }
-        }
-        else {
             return Promise.reject(err)
-        }
     }
 }
 export async function CancelItensAPI(data) {

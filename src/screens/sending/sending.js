@@ -21,7 +21,6 @@ export default ({ route }) => {
     const Data = route.params.data
     const FieldItem = GText.infoDB.Table.Itens.fields
 
-
     ////animation
     const [offsetX] = useState(new Animated.Value(-400));
     const translate = Animated.timing(offsetX, {
@@ -68,7 +67,6 @@ export default ({ route }) => {
                     handleCreateList(Itens[i], GText.objOnSending.OnGetLocal, [{ message: 'Não encontrado no banco de dados' }])
             }
             catch (e) {
-                //  console.log(e)
                 if (e === 'Network Error') {
                     let copy = status
                     copy.status = 'NoConnectionServer'
@@ -79,7 +77,6 @@ export default ({ route }) => {
                 else {
                     handleCreateList(Itens[i], GText.objOnSending.OnGetLocal, e)
                 }
-
             }
         }
 
@@ -127,7 +124,7 @@ export default ({ route }) => {
                 if (e.message === 'Network Error') {
                     return Promise.reject('Network Error')
                 }
-                handleCreateList(objItem, e, GText.objOnSending.eOnUpdate)
+                handleCreateList(objItem, GText.objOnSending.eOnUpdate, e)
             }
         }
     }
@@ -168,44 +165,34 @@ export default ({ route }) => {
             data: {},
             showError: false,
         }
+
         Object.action = action
         Object.data = item
-        console.log(error.response.data.original)
-        //////  error[0] ? error[0].response.data.errors : error
         if (error) {
-            if (error.response ) {
-                if (error.response?.data) {
-                    if (error.response.data?.original.message) {
-                        console.log('1')
-                        error && Object.Errors.push({ error: JSON.stringify(error.response.data.original, null, '\t'), message: error.response.data.original.message })
+            if (error.response) {
+                if (error.response.data) {
+                    if (error.response.data.original.message) {
+                        error && Object.Errors.push({ error: JSON.stringify(error.response.data, null, '\t'), message: error.response.data.original.message })
                     }
-                    else if (error[0].message) {
-                        console.log('2')
-                        error && Object.Errors.push({ error: JSON.stringify(error[0], null, '\t'), message: error[0].message })
-                    }
-                    else if (error.message) {
-                        console.log('3')
-                        error && Object.Errors.push({ error: JSON.stringify(error, null, '\t'), message: error.message })
-                    }
+                    //  else if (error[0].message) { console.log('1')
+                    //      error && Object.Errors.push({ error: JSON.stringify(error[0], null, '\t'), message: error[0].message })
+                    //  }
+                    //  else if (error.message) { console.log('2')
+                    //      error && Object.Errors.push({ error: JSON.stringify(error, null, '\t'), message: error.message })
+                    //  }
                     else {
-                        console.log('4')
                         error && Object.Errors.push({ error: JSON.stringify(error, null, '\t'), message: 'Error!' })
                     }
                 }
                 else {
-                    console.log('5')
                     error && Object.Errors.push({ error: JSON.stringify(error, null, '\t'), message: 'Error!' })
                 }
             }
             else {
-                console.log('6')
                 error && Object.Errors.push({ error: JSON.stringify(error, null, '\t'), message: 'Error!' })
             }
         }
 
-
-
-        //  error && Object.Errors.push({ error: JSON.stringify(error, null, '\t'), message: error[0] ? error[0].message : error.message })
         StatusRef.current.push({ ...Object })
         let copy = status
         error ? () => null : copy.sended = copy.sended + 1
@@ -313,14 +300,16 @@ export default ({ route }) => {
                     <ViewItens key={key1} style={{ backgroundColor: item.Errors.length > 0 ? Global.redCanceled : Global.white }}>
                         <Text>{item.action}</Text>
                         <BoxColeta readyOnly={true} data={item.data} RouteName={RouteName} />
-                        {item.Errors.map((item, key) => (
-                            <View key={key} onLongPress={() => { ShowError(key1) }}>
-                                <TextStyled >{item.message}</TextStyled>
-                                {StatusRef.current[key1].showError &&
-                                    <TextStyled >{item.error}</TextStyled>
-                                }
-                            </View>
-                        ))}
+                        {item.Errors.map((item, key) => {
+                            return (
+                                <View key={key} onLongPress={() => { ShowError(key1) }}>
+                                    <TextStyled >{item.message}</TextStyled>
+                                    {StatusRef.current[key1].showError &&
+                                        <TextStyled >{item.error}</TextStyled>
+                                    }
+                                </View>
+                            )
+                        })}
                     </ViewItens>
                 ))}
             </ScrollView>

@@ -66,6 +66,7 @@ export default ({ route }) => {
     }
     async function handleDeleteDataOnDB(SelectedData) {
         for (let i = 0; i < SelectedData.length; i++) {
+            console.log(SelectedData[i])
             await DeleteOnDB(SelectedData[i])
             await CreateOnDB(GText.Routes.log, {
                 Acao: GText.Log.actions.delete,
@@ -95,7 +96,6 @@ export default ({ route }) => {
             :
             closelist && navigate.dispatch(DrawerActions.openDrawer())
     }
-
     function handleOnChangeCheckBox(checked, param, all) {
         let copyData = data
         const newData = copyData.map((obj, index) => {

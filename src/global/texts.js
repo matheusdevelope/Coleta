@@ -31,8 +31,8 @@ const GText = {
     messageTryAgainSync: 'Tentar Novamente',
     messageExitApp: 'Sair do aplicativo',
     objOnSending: {
-        OnUpdate: 'Atualizado',
-        OnInsert: 'Novo Item',
+        OnUpdate: 'Item Atualizado',
+        OnInsert: 'Novo Item Adicionado',
         OnGetLocal: 'Erro ao Recuperar Dados Locais',
         eOnUpdate: 'Erro ao Atualizar Itens',
         eOnInsert: 'Erro ao Inserir Novo Item',
