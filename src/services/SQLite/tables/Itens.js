@@ -1,6 +1,6 @@
 import GText, { CreateSQLInsert, CreateSQLUpdate } from "../../../global/texts";
 import db from "../SQLiteDatabase";
-const item = GText.infoDB.Table.Itens.fields
+const item = GText.infoDB.Table.Itens.fields;
 /**
  * INICIALIZAÇÃO DA TABELA
  * - Executa sempre, mas só cria a tabela caso não exista (primeira execução)
@@ -12,12 +12,12 @@ function Itens() {
     function droptable() {
       tx.executeSql(`DROP TABLE ${GText.infoDB.Table.Itens.name} ;`);
     }
-   //  droptable()
+    //  droptable()
     //   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
 
     function createTable() {
       tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS ${GText.infoDB.Table.Itens.name} 
+        `CREATE TABLE IF NOT EXISTS ${GText.infoDB.Table.Itens.name}
      (
        ${GText.infoDB.Table.Itens.fields.IdMobile} INTEGER PRIMARY KEY AUTOINCREMENT,
        ${GText.infoDB.Table.Itens.fields.id} INTEGER,
@@ -66,29 +66,28 @@ function Itens() {
        ${GText.infoDB.Table.Itens.fields.CancelDate}   TEXT,
        ${GText.infoDB.Table.Itens.fields.CancelHour} TIME,
        ${GText.infoDB.Table.Itens.fields.CancelUser} TEXT,
-       ${GText.infoDB.Table.Itens.fields.CancelStation} TEXT, 
+       ${GText.infoDB.Table.Itens.fields.CancelStation} TEXT,
        ${GText.infoDB.Table.Itens.fields.CodSituation} TEXT,
        ${GText.infoDB.Table.Itens.fields.CodWarranty} TEXT,
        ${GText.infoDB.Table.Itens.fields.CodBranch} TEXT,
        ${GText.infoDB.Table.Itens.fields.createdAt} TEXT,
-       ${GText.infoDB.Table.Itens.fields.updatedAt} TEXT     
-       
+       ${GText.infoDB.Table.Itens.fields.updatedAt} TEXT
+
    );
      `,
         [],
         (sqlTxn, res) => {
           //    console.log("table created successfully", GText.infoDB.Table.Itens.fields.CodWarranty);
         },
-        error => {
+        (error) => {
           console.log("error on creating table " + error.message);
-        },
+        }
       );
     }
-    createTable()
-
+    createTable();
   });
 }
-Itens()
+Itens();
 /**
  * CRIAÇÃO DE UM NOVO REGISTRO
  * - Recebe um objeto;
@@ -97,17 +96,20 @@ Itens()
  *  - Pode retornar erro (reject) caso exista erro no SQL ou nos parâmetros.
  */
 const create = (obj) => {
- // console.log(CreateSQLInsert(GText.infoDB.Table.Itens.name, GText.infoDB.Table.Itens.fields, obj))
-//  console.log(CreateValuesSQLInsert( GText.infoDB.Table.Itens.fields, obj))
+  // console.log(CreateSQLInsert(GText.infoDB.Table.Itens.name, GText.infoDB.Table.Itens.fields, obj))
+  //  console.log(CreateValuesSQLInsert( GText.infoDB.Table.Itens.fields, obj))
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        CreateSQLInsert(GText.infoDB.Table.Itens.name, GText.infoDB.Table.Itens.fields, obj),
-     []
-        ,
+        CreateSQLInsert(
+          GText.infoDB.Table.Itens.name,
+          GText.infoDB.Table.Itens.fields,
+          obj
+        ),
+        [],
         (sqlTxn, res) => {
           // console.log(sqlTxn)
-          let results = []
+          let results = [];
           let len = res.rows.length;
           if (len > 0) {
             for (let i = 0; i < len; i++) {
@@ -115,12 +117,15 @@ const create = (obj) => {
               results.push(item);
             }
           }
-          resolve(results)
+          resolve(results);
         },
-        error => {
-          reject(error.message, obj)
-          console.log(`error on create ${GText.infoDB.Table.Itens.name} ` + error.message, obj.idMobile);
-        },
+        (error) => {
+          reject(error.message, obj);
+          console.log(
+            `error on create ${GText.infoDB.Table.Itens.name} ` + error.message,
+            obj.idMobile
+          );
+        }
       );
     });
   });
@@ -137,27 +142,28 @@ const update = (where, param, obj) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        CreateSQLUpdate(GText.infoDB.Table.Itens.name, item ,where, param, obj)
-        ,
-        [  ],
+        CreateSQLUpdate(GText.infoDB.Table.Itens.name, item, where, param, obj),
+        [],
         //generate a object with the result of SQL
         (sqlTxn, res) => {
-          let results = false
+          let results = false;
           let len = res.rows.length;
           if (len > 0) {
-            results = []
+            results = [];
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
               results.push(item);
             }
           }
           //  console.log(results, res)
-          resolve(results)  //return de object when the Promisse is complete
+          resolve(results); //return de object when the Promisse is complete
         },
-        error => {
-          reject(error.message)
-          console.log(`error on update ${GText.infoDB.Table.Itens.name} ` + error.message);
-        },
+        (error) => {
+          reject(error.message);
+          console.log(
+            `error on update ${GText.infoDB.Table.Itens.name} ` + error.message
+          );
+        }
       );
     });
   });
@@ -175,24 +181,26 @@ const find = (id) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        `SELECT * FROM ${GText.infoDB.Table.Itens.name} 
+        `SELECT * FROM ${GText.infoDB.Table.Itens.name}
         WHERE ${GText.infoDB.Table.Itens.fields.IdMobile}=?;`,
         [id],
         (sqlTxn, res) => {
-          let results = false
+          let results = false;
           let len = res.rows.length;
           if (len > 0) {
-            results = []
+            results = [];
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
               results.push(item);
             }
           }
-          resolve(results)  //return de object when the Promisse is complete
+          resolve(results); //return de object when the Promisse is complete
         },
-        error => {
-          reject(error.message)
-          console.log(`error on find ${GText.infoDB.Table.Itens.name} ` + error.message);
+        (error) => {
+          reject(error.message);
+          console.log(
+            `error on find ${GText.infoDB.Table.Itens.name} ` + error.message
+          );
         }
       );
     });
@@ -210,28 +218,32 @@ const find = (id) => {
 const findLike = (field, param, field2, condition, param2) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
-      const sql = `SELECT * FROM ${GText.infoDB.Table.Itens.name} WHERE ${field} LIKE ? 
-      ${field2 !== undefined ? `AND ${field2} ${condition} '${param2}'` : ''}
-      ;`
+      const sql = `SELECT * FROM ${
+        GText.infoDB.Table.Itens.name
+      } WHERE ${field} LIKE ?
+      ${field2 !== undefined ? `AND ${field2} ${condition} '${param2}'` : ""}
+      ;`;
       //comando SQL modificável
       tx.executeSql(
         sql,
         [param],
         (sqlTxn, res) => {
-          let results = false
+          let results = false;
           let len = res.rows.length;
           if (len > 0) {
-            results = []
+            results = [];
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
               results.push(item);
             }
           }
-          resolve(results)  //return de object when the Promisse is complete
+          resolve(results); //return de object when the Promisse is complete
         },
-        error => {
-          reject(error.message)
-          console.log(`error on finBy ${GText.infoDB.Table.Itens.name} ` + error.message);
+        (error) => {
+          reject(error.message);
+          console.log(
+            `error on finBy ${GText.infoDB.Table.Itens.name} ` + error.message
+          );
         }
       );
     });
@@ -254,20 +266,22 @@ const all = () => {
         `SELECT * FROM ${GText.infoDB.Table.Itens.name};`,
         [],
         (sqlTxn, res) => {
-          let results = false
+          let results = false;
           let len = res.rows.length;
           if (len > 0) {
-            results = []
+            results = [];
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
               results.push(item);
             }
           }
-          resolve(results)  //return de object when the Promisse is complete
+          resolve(results); //return de object when the Promisse is complete
         },
-        error => {
-          reject(error.message)
-          console.log(`error on findAll ${GText.infoDB.Table.Itens.name} ` + error.message);
+        (error) => {
+          reject(error.message);
+          console.log(
+            `error on findAll ${GText.infoDB.Table.Itens.name} ` + error.message
+          );
         }
       );
     });
@@ -276,9 +290,9 @@ const all = () => {
 
 // (SELECT TOP 1 Table2.${GText.infoDB.Table.Itens.fields.Item}
 //   FROM ${GText.infoDB.Table.Itens.name} Table2
-//   WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} 
+//   WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber}
 //   = Table1.${GText.infoDB.Table.Itens.fields.ColetaNumber}
-//   order by ${GText.infoDB.Table.Itens.fields.Item} desc 
+//   order by ${GText.infoDB.Table.Itens.fields.Item} desc
 //   ) As ${GText.LastItem} ,
 
 const allGrouped = (where, param, param2) => {
@@ -286,29 +300,29 @@ const allGrouped = (where, param, param2) => {
     db.transaction((tx) => {
       const sql = `
       SELECT * FROM(
-      SELECT 
+      SELECT
       (SELECT SUM(Table2.${GText.infoDB.Table.Itens.fields.Value} )
         FROM ${GText.infoDB.Table.Itens.name} Table2
-        WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} 
+        WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber}
         = Table1.${GText.infoDB.Table.Itens.fields.ColetaNumber}
         ) As ${GText.ValueTotal} ,
         (SELECT COUNT(Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} )
         FROM ${GText.infoDB.Table.Itens.name} Table2
-        WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} 
+        WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber}
         = Table1.${GText.infoDB.Table.Itens.fields.ColetaNumber}
         ) As ${GText.ItensTotal} ,
         (SELECT COUNT(Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} )
         FROM ${GText.infoDB.Table.Itens.name} Table2
-        WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} 
+        WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber}
         = Table1.${GText.infoDB.Table.Itens.fields.ColetaNumber}
-        AND Table2.${GText.infoDB.Table.Itens.fields.Status} 
+        AND Table2.${GText.infoDB.Table.Itens.fields.Status}
         =  '${GText.infoInputs.CancelStatusItem}'
         ) As ${GText.ItensCanceledTotal} ,
         (SELECT COUNT(Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} )
         FROM ${GText.infoDB.Table.Itens.name} Table2
-        WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber} 
+        WHERE  Table2.${GText.infoDB.Table.Itens.fields.ColetaNumber}
         = Table1.${GText.infoDB.Table.Itens.fields.ColetaNumber}
-        AND Table2.${GText.infoDB.Table.Itens.fields.Status} 
+        AND Table2.${GText.infoDB.Table.Itens.fields.Status}
         =  '${GText.infoInputs.InitialStatusItem}'
         ) As ${GText.ItensNotSended} ,
         ${GText.infoDB.Table.Itens.fields.ColetaNumber},
@@ -316,26 +330,37 @@ const allGrouped = (where, param, param2) => {
         ('false') as checked
       FROM ${GText.infoDB.Table.Itens.name} Table1
 
-      ${where !== undefined ? `
+      ${
+        where !== undefined
+          ? `
       where ${where} = '${param}'
-      ` : ''}
-      ${param2 !== undefined ? `
+      `
+          : ""
+      }
+      ${
+        param2 !== undefined
+          ? `
       or ${where} = '${param2}'
-      ` : ''}
+      `
+          : ""
+      }
       Group By ${GText.infoDB.Table.Itens.fields.ColetaNumber}
       order by ${GText.infoDB.Table.Itens.fields.IdMobile} desc )
-      ${param2 !== undefined ? `
+      ${
+        param2 !== undefined
+          ? `
       where ${GText.ItensNotSended} = 0
-      ` : ''}
       `
+          : ""
+      }
+      `;
       //comando SQL modificável
       //  console.log(sql)
       tx.executeSql(
-        sql
-        ,
+        sql,
         [],
         (sqlTxn, res) => {
-          let results = []
+          let results = [];
           let len = res.rows.length;
           if (len > 0) {
             for (let i = 0; i < len; i++) {
@@ -343,11 +368,13 @@ const allGrouped = (where, param, param2) => {
               results.push(item);
             }
           }
-          resolve(results)  //return de object when the Promisse is complete
+          resolve(results); //return de object when the Promisse is complete
         },
-        error => {
-          reject(error.message)
-          console.log(`error on findAll ${GText.infoDB.Table.Itens.name} ` + error.message);
+        (error) => {
+          reject(error.message);
+          console.log(
+            `error on findAll ${GText.infoDB.Table.Itens.name} ` + error.message
+          );
         }
       );
     });
@@ -368,33 +395,34 @@ const findLastItem = (field, param) => {
       //comando SQL modificável
       tx.executeSql(
         param == undefined
-          ?
-          `SELECT * FROM ${GText.infoDB.Table.Itens.name} 
-        ORDER BY ${GText.infoDB.Table.Itens.fields.Item} DESC  ;`
-          :
-          ////tem que pesquisar com fazer o "TOP 1 no sqlite"
+          ? `SELECT * FROM ${GText.infoDB.Table.Itens.name}
+        ORDER BY ${GText.infoDB.Table.Itens.fields.IdMobile} DESC  ;`
+          : ////tem que pesquisar com fazer o "TOP 1 no sqlite"
 
-          `SELECT * FROM ${GText.infoDB.Table.Itens.name} 
+            `SELECT * FROM ${GText.infoDB.Table.Itens.name}
         WHERE ${field} = ${param}
         ORDER BY ${GText.infoDB.Table.Itens.fields.Item} DESC  ;`,
         [],
         (sqlTxn, res) => {
-          let results = null
+          let results = null;
           let len = res.rows.length;
           if (len > 0) {
-            results = []
-            results.push(res.rows.item(0))
+            results = [];
+            results.push(res.rows.item(0));
             // for (let i = 0; i < len; i++) {
             //   let item = res.rows.item(i);
             //   results.push(item);
             // }
           }
           // console.log(results)
-          resolve(results)  //return de object when the Promisse is complete
+          resolve(results); //return de object when the Promisse is complete
         },
-        error => {
-          reject(error.message)
-          console.log(`error on FindLastItem ${GText.infoDB.Table.Itens.name} ` + error.message);
+        (error) => {
+          reject(error.message);
+          console.log(
+            `error on FindLastItem ${GText.infoDB.Table.Itens.name} ` +
+              error.message
+          );
         }
       );
     });
@@ -413,24 +441,27 @@ const remove = (field, condition, param) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        `DELETE FROM ${GText.infoDB.Table.Itens.name} 
+        `DELETE FROM ${GText.infoDB.Table.Itens.name}
         WHERE ${field} ${condition} ?;`,
         [param],
         (sqlTxn, res) => {
-          let results = false
+          let results = false;
           let len = res.rows.length;
           if (len > 0) {
-            results = []
+            results = [];
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
               results.push(item);
             }
           }
-          resolve(results)  //return de object when the Promisse is complete
+          resolve(results); //return de object when the Promisse is complete
         },
-        error => {
-          reject(error.message)
-          console.log(`error on removeById ${GText.infoDB.Table.Itens.name} ` + error.message);
+        (error) => {
+          reject(error.message);
+          console.log(
+            `error on removeById ${GText.infoDB.Table.Itens.name} ` +
+              error.message
+          );
         }
       );
     });
@@ -451,20 +482,22 @@ const removeAll = () => {
         `DELETE From ${GText.infoDB.Table.Itens.name} ;`,
         [],
         (sqlTxn, res) => {
-          let results = false
+          let results = false;
           let len = res.rows.length;
           if (len > 0) {
-            results = []
+            results = [];
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
               results.push(item);
             }
           }
-          resolve(results)  //return de object when the Promisse is complete
+          resolve(results); //return de object when the Promisse is complete
         },
-        error => {
-          reject(error.message)
-          console.log(`error on find ${GText.infoDB.Table.Itens.name} ` + error.message);
+        (error) => {
+          reject(error.message);
+          console.log(
+            `error on find ${GText.infoDB.Table.Itens.name} ` + error.message
+          );
         }
       );
     });
@@ -473,35 +506,37 @@ const removeAll = () => {
 
 const updateStatus = (where, param, param2, newStatus) => {
   return new Promise((resolve, reject) => {
-    const sql = `UPDATE ${GText.infoDB.Table.Itens.name} SET 
+    const sql = `UPDATE ${GText.infoDB.Table.Itens.name} SET
     ${GText.infoDB.Table.Itens.fields.Status} = '${newStatus}'
-    WHERE ${where} = '${param}' 
-    and ${GText.infoDB.Table.Itens.fields.Status} = '${param2}';`
+    WHERE ${where} = '${param}'
+    and ${GText.infoDB.Table.Itens.fields.Status} = '${param2}';`;
     //  console.log(sql)
     db.transaction((tx) => {
       tx.executeSql(
         sql,
         [],
         (sqlTxn, res) => {
-          let results = false
+          let results = false;
           let len = res.rows.length;
           if (len > 0) {
-            results = []
+            results = [];
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
               results.push(item);
             }
           }
-          resolve(results)  //return de object when the Promisse is complete
+          resolve(results); //return de object when the Promisse is complete
         },
-        error => {
-          reject(error.message)
-          console.log(`error on update ${GText.infoDB.Table.Itens.name} ` + error.message);
-        },
+        (error) => {
+          reject(error.message);
+          console.log(
+            `error on update ${GText.infoDB.Table.Itens.name} ` + error.message
+          );
+        }
       );
     });
   });
-}
+};
 // all().then((obj)=>{console.log(obj)})
 
 export default {
@@ -514,5 +549,5 @@ export default {
   all,
   allGrouped,
   remove,
-  removeAll
+  removeAll,
 };
