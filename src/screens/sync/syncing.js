@@ -48,6 +48,7 @@ export default ({ route }) => {
     return Net.isConnected;
   }
   async function handleInitialSyncData(origin, routes) {
+    //  console.log(origin, routes);
     await LoopRoutes(routes);
     if (await HaveConnection()) {
       if (origin !== GText.Preload) {
@@ -94,29 +95,34 @@ export default ({ route }) => {
     }
   }
   async function CallApi(RoutesGet, i) {
+    console.log(RoutesGet, i);
     const retPro = await GetOnDB(GText.infoDB.Table.Profile.name);
-    const RetProfile =
+
+    ///Get the salesman id to send on param to the get metod api
+    const ParamIdSalesman =
       RoutesGet[i] === routes.Itens
         ? retPro[0][GText.infoDB.Table.Profile.fields.id]
         : "";
 
     try {
-      const ret = await GetAPI(RoutesGet[i], RetProfile);
+      const ret = await GetAPI(RoutesGet[i], ParamIdSalesman);
       StatusRef.current[i].amountRegister = ret.length;
       setShow(i);
-      // await DeleteOnDB(RoutesGet[i])
+      await DeleteOnDB(RoutesGet[i]);
       const ret1 = await GetOnDB(RoutesGet[i]);
-      if (ret1.length !== ret.length) {
-        if (RoutesGet[i] === routes.Itens) {
-          await DeleteOnDB(
-            RoutesGet[i],
-            GText.infoDB.Table.Itens.fields.Status,
-            "<>",
-            GText.infoInputs.InitialStatusItem
-          );
-        } else {
-          await DeleteOnDB(RoutesGet[i]);
-        }
+      if (true) {
+        //ret1.length !== ret.length) {
+        // if (RoutesGet[i] === routes.Itens) {
+        //   await DeleteOnDB(
+        //     RoutesGet[i],
+        //     GText.infoDB.Table.Itens.fields.Status,
+        //     "<>",
+        //     GText.infoInputs.InitialStatusItem
+        //   );
+        // } else {
+        //   await DeleteOnDB(RoutesGet[i]);
+        // }
+
         await InsertOnDb(RoutesGet[i], ret, i);
         StatusRef.current[i].ItemOnInsert = ret.length;
         setShow(i);

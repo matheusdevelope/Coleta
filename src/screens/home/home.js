@@ -50,7 +50,6 @@ function Home({ route }) {
         GText.infoInputs.CancelStatusItem
       );
     }
-    // console.log(ret);
     dataRef.current = OrderList(ret, field, true);
     setData(OrderList(ret, field, true));
   }
@@ -100,7 +99,7 @@ function Home({ route }) {
   function handleSyncColeta() {
     const routes = Routes();
     navigation.navigate(GText.Syncing, {
-      routes: [routes.itens],
+      routes: [routes.Itens],
       origin: GText.SendedColetas,
     });
   }

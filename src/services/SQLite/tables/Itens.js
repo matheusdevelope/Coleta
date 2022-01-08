@@ -12,7 +12,7 @@ function Itens() {
     function droptable() {
       tx.executeSql(`DROP TABLE ${GText.infoDB.Table.Itens.name} ;`);
     }
-    //  droptable()
+    //  droptable();
     //   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
 
     function createTable() {
@@ -71,7 +71,9 @@ function Itens() {
        ${GText.infoDB.Table.Itens.fields.CodWarranty} TEXT,
        ${GText.infoDB.Table.Itens.fields.CodBranch} TEXT,
        ${GText.infoDB.Table.Itens.fields.createdAt} TEXT,
-       ${GText.infoDB.Table.Itens.fields.updatedAt} TEXT
+       ${GText.infoDB.Table.Itens.fields.updatedAt} TEXT,
+
+       UNIQUE(id)
 
    );
      `,
@@ -96,11 +98,24 @@ Itens();
  *  - Pode retornar erro (reject) caso exista erro no SQL ou nos parâmetros.
  */
 const create = (obj) => {
-  // console.log(CreateSQLInsert(GText.infoDB.Table.Itens.name, GText.infoDB.Table.Itens.fields, obj))
-  //  console.log(CreateValuesSQLInsert( GText.infoDB.Table.Itens.fields, obj))
+  console.log(
+    CreateSQLInsert(
+      GText.infoDB.Table.Itens.name,
+      GText.infoDB.Table.Itens.fields,
+      obj
+    )
+  );
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
+        //   `
+        // INSERT INTO Coleta ( IdMobile, id, Cod_Importacao, CodEmpresa, CodFilial, Filial, CodVendedorIndex, CodPrioridade, DataColeta, CodVendedor, CodColetador, CodTecnico, CodCliente, CodSituacao, CodProduto, Situacao, CodMarca, CodTipo, CodCancelamento, CodGarantia, Item, NumeroColeta, Status, DataLancamento, HoraLancamento, UsuarioLancamento, EstacaoLancamentos, DataEmissao, NomeCliente, CPF_CNPJ, Celular, Garantia, ImportaColeta, NomeProduto, NumeroSerie, Marca, Modelo, Dimensao, Desenho, NumeroFogo, NumeroDot, Placa, ServicosExecutar, ExameInicial, Observacao, Valor, ObservacaoCancelamento, DataCancelamento, HoraCancelamento, UsuarioCancelamento, EstacaoCancelamento, updatedAt, createdAt)
+        // VALUES ( '122', '147', null, '1', null, null, null, null, '2022-01-05T01:10:55.000Z', '3', '3', '1', null, null, '1', null, null, null, null, null, '4', '200000', 'Recebido', '2022-01-05T01:10:55.000Z', null, 'Matheus', 'Coleta Mobile', '2022-01-05T01:10:55.000Z', 'Teste', null, null, null, 'Sim', null, null, null, null, null, null, null, null, null, 'Serv edit', null, null, '133', null, null, null, null, null, '2022-01-08T01:19:49.665Z', '2022-01-04T16:31:46.644Z' )
+        // ON CONFLICT (id)
+        // DO UPDATE SET IdMobile = '122', id = '147', Cod_Importacao = null, CodEmpresa = '1', CodFilial = null, Filial = null, CodVendedorIndex = null, CodPrioridade = null, DataColeta = '2022-01-05T01:10:55.000Z', CodVendedor = '3', CodColetador = '3', CodTecnico = '1', CodCliente = null, CodSituacao = null, CodProduto = '1', Situacao = null, CodMarca = null,
+        // CodTipo = null, CodCancelamento = null, CodGarantia = null, Item = '4', NumeroColeta = '200000', Status = 'Recebido', DataLancamento = '2022-01-05T01:10:55.000Z', HoraLancamento = null, UsuarioLancamento = 'Matheus', EstacaoLancamentos = 'Coleta Mobile', DataEmissao = '2022-01-05T01:10:55.000Z', NomeCliente = 'Teste', CPF_CNPJ = null, Celular = null, Garantia = null, ImportaColeta = 'Sim', NomeProduto = null, NumeroSerie = null, Marca = null, Modelo = null, Dimensao = null, Desenho = null, NumeroFogo = null, NumeroDot = null, Placa = null, ServicosExecutar = 'Serv edit', ExameInicial = null, Observacao = null, Valor = '133', ObservacaoCancelamento = null, DataCancelamento = null, HoraCancelamento = null, UsuarioCancelamento = null, EstacaoCancelamento = null, updatedAt = '2022-01-08T01:19:49.665Z', createdAt = '2022-01-04T16:31:46.644Z'
+        // WHERE IdMobile = 122`
+
         CreateSQLInsert(
           GText.infoDB.Table.Itens.name,
           GText.infoDB.Table.Itens.fields,
@@ -122,8 +137,7 @@ const create = (obj) => {
         (error) => {
           reject(error.message, obj);
           console.log(
-            `error on create ${GText.infoDB.Table.Itens.name} ` + error.message,
-            obj.idMobile
+            `error on create ${GText.infoDB.Table.Itens.name} ` + error.message
           );
         }
       );
