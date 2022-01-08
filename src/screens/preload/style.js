@@ -7,6 +7,7 @@ export const Container = styled.SafeAreaView`
   align-items: center;
   height: 100%;
 `;
+
 export const LoadingIcon = styled.ActivityIndicator``;
 export const Modal = styled.Modal``;
 export const ViewModal = styled.View`

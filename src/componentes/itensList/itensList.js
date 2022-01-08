@@ -3,25 +3,27 @@ import React, {
   forwardRef,
   useState,
   useRef,
+  useEffect,
 } from "react";
-import { useEffect } from "react/cjs/react.development";
-import GText from "../../global/texts";
-import { CancelItensAPI } from "../../services/Api/routesApi";
+import { Alert, FlatList } from "react-native";
+import Global from "../../global/global";
+import GText, { FormatErrorAPI } from "../../global/texts";
+import { UpdateItensAPI } from "../../services/Api/routesApi";
 import {
   CreateItensDB,
   DeleteItensDB,
   GetItensDB,
   UpdateItensDB,
-  UpdateStatusItensOnDB,
 } from "../../services/routesData/routesData";
 import BoxItemColeta from "../boxItemColeta/boxItemColeta";
-import { FlatList } from "./style";
+import { LoadingIcon } from "./style";
 
 const ItensList = (
   { EditItem, itens, isFocused, details, refresh, RouteName, HideCanceled },
   ref
 ) => {
   const [List, setList] = useState([]);
+  const [onLoading, setOnLoading] = useState(false);
   const ControlEditing = useRef(false);
   const tableItem = GText.infoDB.Table.Itens.fields;
   const field = tableItem.Item;
@@ -77,19 +79,30 @@ const ItensList = (
     }
   }
   async function CancelItem(data) {
-    const GT = tableItem;
-    const Itens = await GetItensDB(GT.IdMobile, data[GT.IdMobile]);
-    const ret = await CancelItensAPI(Itens);
-    if (ret) {
-      await UpdateStatusItensOnDB(
-        GT.IdMobile,
-        data[GT.IdMobile],
-        GText.infoInputs.SendedStatusItem,
-        GText.infoInputs.CancelStatusItem
-      );
+    if (data[tableItem.ImportColeta] === GText.ValueImportColeta) {
+      setOnLoading(true);
+      data[tableItem.Status] = GText.infoInputs.CancelStatusItem;
+
+      try {
+        await UpdateItensAPI([data]);
+        try {
+          await UpdateItensDB(tableItem.id, data[tableItem.id], data);
+        } catch (e) {
+          Alert.alert(
+            GText.failedOnCancelItens,
+            JSON.stringify(FormatErrorAPI(e), null, ",")
+          );
+        }
+      } catch (e) {
+        Alert.alert(
+          GText.failedOnCancelItens,
+          JSON.stringify(FormatErrorAPI(e), null, ",")
+        );
+      }
+      setOnLoading(false);
       GetData();
     } else {
-      alert(GText.failedOnCancelItens);
+      Alert.alert("Atenção", GText.messageCannotCancelItens);
     }
   }
   function VerifyAndChangeClient(list, newItem) {
@@ -166,21 +179,27 @@ const ItensList = (
   }, [isFocused]);
 
   return (
-    <FlatList
-      ref={ref}
-      data={List}
-      renderItem={({ item }) => (
-        <BoxItemColeta
-          data={item}
-          DeleteItem={DeleteItem}
-          EditItem={handleEditItem}
-          RouteName={RouteName}
-          HideCanceled={HideCanceled}
-          details={details}
-        />
+    <>
+      {onLoading && (
+        <LoadingIcon size="large" color={Global.black} style={{ margin: 4 }} />
       )}
-      keyExtractor={(item) => item[field]}
-    />
+
+      <FlatList
+        ref={ref}
+        data={List}
+        renderItem={({ item }) => (
+          <BoxItemColeta
+            data={item}
+            DeleteItem={DeleteItem}
+            EditItem={handleEditItem}
+            RouteName={RouteName}
+            HideCanceled={HideCanceled}
+            details={details}
+          />
+        )}
+        keyExtractor={(item) => item[field]}
+      />
+    </>
   );
 };
 

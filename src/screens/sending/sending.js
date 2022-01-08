@@ -38,7 +38,7 @@ export default ({ route }) => {
   const RouteName = route.params.routeName;
   const Data = route.params.data;
   const FieldItem = GText.infoDB.Table.Itens.fields;
-
+  // console.log(route.params);
   ////animation
   const [offsetX] = useState(new Animated.Value(-400));
   const translate = Animated.timing(offsetX, {
@@ -74,10 +74,21 @@ export default ({ route }) => {
     let ItemFromDB = [];
     for (let i = 0; i < Itens.length; i++) {
       try {
-        ItemFromDB = await GetItensDB(
-          FieldItem.ColetaNumber,
-          Itens[i][FieldItem.ColetaNumber]
-        );
+        if (route.params.action === "sending") {
+          ItemFromDB = await GetItensDB(
+            FieldItem.ColetaNumber,
+            Itens[i][FieldItem.ColetaNumber]
+          );
+        } else {
+          ItemFromDB = await GetItensDB(
+            FieldItem.ImportColeta,
+            GText.ValueImportColeta,
+            FieldItem.ColetaNumber,
+            "=",
+            Itens[i][FieldItem.ColetaNumber]
+          );
+        }
+
         ItemFromDB
           ? await handleSendToApi(SeparateItens(ItemFromDB, Itens[i]), Itens[i])
           : handleCreateList(Itens[i], GText.objOnSending.OnGetLocal, [
@@ -154,8 +165,7 @@ export default ({ route }) => {
   function SeparateItens(itens, objItens) {
     let ObjSeparate = { ItemToCreate: [], ItemToUpdate: [] };
     itens.forEach((obj) => {
-      if (obj[FieldItem.Status] === GText.infoInputs.InitialStatusItem) {
-        obj[FieldItem.Status] = GText.infoInputs.SendedStatusItem;
+      function Separate() {
         // Format Date to: 2021-01-01 12:00:00
         for (let props in obj) {
           if (props.toString().includes("Data")) {
@@ -166,6 +176,7 @@ export default ({ route }) => {
           } else {
           }
         }
+
         const createdAt = obj[FieldItem.createdAt];
         if (
           (createdAt !== "") &
@@ -193,6 +204,17 @@ export default ({ route }) => {
           ObjSeparate.ItemToCreate.push(obj);
         }
       }
+      if (route.params.action === "sending") {
+        if (obj[FieldItem.Status] === GText.infoInputs.InitialStatusItem) {
+          obj[FieldItem.Status] = GText.infoInputs.SendedStatusItem;
+          Separate();
+        }
+      } else if (route.params.action === "cancel") {
+        if (obj[FieldItem.Status] !== GText.infoInputs.CancelStatusItem) {
+          obj[FieldItem.Status] = GText.infoInputs.CancelStatusItem;
+          Separate();
+        }
+      }
     });
     return ObjSeparate;
   }
@@ -216,14 +238,7 @@ export default ({ route }) => {
                 error: JSON.stringify(error.response.data, null, "\t"),
                 message: error.response.data.original.message,
               });
-          }
-          //  else if (error[0].message) { console.log('1')
-          //      error && Object.Errors.push({ error: JSON.stringify(error[0], null, '\t'), message: error[0].message })
-          //  }
-          //  else if (error.message) { console.log('2')
-          //      error && Object.Errors.push({ error: JSON.stringify(error, null, '\t'), message: error.message })
-          //  }
-          else {
+          } else {
             error &&
               Object.Errors.push({
                 error: JSON.stringify(error, null, "\t"),
@@ -320,12 +335,17 @@ export default ({ route }) => {
     let ret = "";
     ret =
       status.status === "Finish"
-        ? GText.SendFinish
+        ? route.params.action === "sending"
+          ? GText.SendFinish
+          : GText.CancelFinish
         : status.status === "NoInternet"
         ? GText.noInternet
         : status.status === "NoConnectionServer"
-        ? "Falha ao se conectar ao Server"
-        : GText.Sending;
+        ? GText.noConectionServer
+        : route.params.action === "sending"
+        ? GText.Sending
+        : GText.Canceling;
+
     return ret;
   }
   function RenderAnimation() {

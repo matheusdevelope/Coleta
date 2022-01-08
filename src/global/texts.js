@@ -29,9 +29,13 @@ const GText = {
   Syncing: "Sincronizando Dados",
   SyncFinish: "Dados Sincronizados!",
   Sending: "Enviando Coletas",
+  Canceling: "Cancelando Coletas",
   SendFinish: "Coletas Enviadas",
+  CancelFinish: "Coletas Canceladas",
   messageCannotDeleteItens:
     "As seguintes coletas não podem ser deletadas pois já constam no servidor",
+  messageCannotCancelItens:
+    "Essa coleta não pode ser cancelada, solicite ao retaguarda!",
   messageLastSync: "Última Att.",
   messageDeleted: "Deletado",
   messageTryAgainSync: "Tentar Novamente",
@@ -56,6 +60,7 @@ const GText = {
     error: "Coletas com Erros",
   },
   noInternet: "Sem Conexão com a Internet!",
+  noConectionServer: "Falha ao se conectar ao Server",
   totalErrors: "Total de Erros",
   Send: "Enviar",
   Cancel: "Cancelar",
@@ -222,6 +227,7 @@ const GText = {
     buttonLeft: "Voltar",
     buttonRight: "Deletar",
   },
+  ValueImportColeta: "Sim",
   MessageAlertEditingItemNewColeta: "Termine de editar o item anterior!",
   ValueTotal: "ValorTotal",
   ItensTotal: "TotalItens",
@@ -583,6 +589,43 @@ const GText = {
     },
   },
 };
+
+export function FormatErrorAPI(error) {
+  let Errors = [];
+  if (error) {
+    if (error.response) {
+      if (error.response.data) {
+        if (error.response.data.original.message) {
+          error &&
+            Errors.push({
+              error: JSON.stringify(error.response.data, null, ","),
+              message: error.response.data.original.message,
+            });
+        } else {
+          error &&
+            Errors.push({
+              error: JSON.stringify(error, null, ","),
+              message: "Error!",
+            });
+        }
+      } else {
+        error &&
+          Errors.push({
+            error: JSON.stringify(error, null, ","),
+            message: "Error!",
+          });
+      }
+    } else {
+      error &&
+        Errors.push({
+          error: JSON.stringify(error, null, ","),
+          message: "Error!",
+        });
+    }
+  }
+  return Errors;
+}
+
 export function CreateSQLUpdate(Nametable, fields, where, param, obj) {
   function format(value) {
     if ((value === undefined) | (value === null)) {

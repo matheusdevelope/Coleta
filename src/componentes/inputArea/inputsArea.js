@@ -111,9 +111,9 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
   function handleSubmit(data) {
     data[GT.nStatus] = GT.InitialStatusItem;
     if (!setErrorsFields(data)) {
+      InsertNewItemOnList(data);
       InitialValueFields();
       SetCountItem();
-      InsertNewItemOnList(data);
       ClearFields();
       OnEdit && setOnEdit(false);
     }
@@ -130,6 +130,7 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
     let newItem = "";
     let Item = Number(formRef.current.getFieldValue(GT.fiedlsHide.Item));
     let Higher = HigherItem.current;
+    console.log(Item, Higher);
     if (Item < Higher) {
       newItem = Higher;
       formRef.current.setFieldValue(GT.fiedlsHide.Item, newItem.toString());

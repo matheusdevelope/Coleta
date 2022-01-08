@@ -222,7 +222,16 @@ const findLike = (field, param, field2, condition, param2) => {
         GText.infoDB.Table.Itens.name
       } WHERE ${field} LIKE ?
       ${field2 !== undefined ? `AND ${field2} ${condition} '${param2}'` : ""}
+
       ;`;
+      // ${
+      //   field2 !== undefined
+      //     ? condition === "IN"
+      //       ? "AND " + field2 + " " + condition + "(" + param2 + ")"
+      //       : "AND " + field2 + " " + condition + `'` + param2 + `'`
+      //     : ""
+      // }
+      // ${field2 !== undefined ? `AND ${field2} ${condition} '${param2}'` : ""}
       //comando SQL modificável
       tx.executeSql(
         sql,

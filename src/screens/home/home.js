@@ -116,6 +116,18 @@ function Home({ route }) {
       alert(GText.messageNoItensSelected);
     }
   }
+  function ShowItensCannotBeDeleted(params) {
+    let Itens = [];
+    dataRef.current.forEach((obj) => {
+      obj[GText.ItensTotal] !== obj[GText.ItensNotSended] &&
+        Itens.push(obj[field]);
+    });
+    Itens.length > 0 &&
+      alert(
+        `${GText.messageCannotDeleteItens}:
+${JSON.stringify(Itens, null, ",")}`
+      );
+  }
   async function ButtonModal(origin) {
     let arrayItens = [];
     dataRef.current.forEach((obj) => {
@@ -123,29 +135,13 @@ function Home({ route }) {
         arrayItens.push(obj);
       }
     });
-    function ShowItensCannotBeDeleted(params) {
-      let Itens = [];
-      dataRef.current.forEach((obj) => {
-        obj[GText.ItensTotal] !== obj[GText.ItensNotSended] &&
-          Itens.push(obj[field]);
-      });
-      Itens.length > 0 &&
-        alert(
-          `${GText.messageCannotDeleteItens}:
-  ${JSON.stringify(Itens, null, ",")}`
-        );
-    }
-    async function forArray(action) {
-      for (let i = 0; i < arrayItens.length; i++) {
-        await action(arrayItens[i], arrayItens, origin);
-      }
-    }
+
     async function routeName(action1, action2, origin) {
       if (RouteName == GText.MyColetas) {
-        await forArray(action1);
+        await action1(arrayItens, origin);
         origin === "left" && ShowItensCannotBeDeleted();
       } else if (RouteName == GText.SendedColetas) {
-        await forArray(action2);
+        await action2(arrayItens, origin);
       }
     }
     if (origin === "left") {
@@ -157,7 +153,6 @@ function Home({ route }) {
       toggleChecedkAll(true);
       await routeName(handleSendColeta, handleSyncColeta);
     }
-
     setItensCannotBeDeleted(false);
   }
   function handleOpenCheckBox() {
@@ -193,48 +188,36 @@ function Home({ route }) {
       FilterList(dataRef.current, GText.infoInputs.nNameClient, search.current)
     );
   }
-  async function handleDelete(data) {
-    if (data[GText.ItensNotSended] === data[GText.ItensTotal]) {
-      await DeleteItensDB(
-        GText.infoDB.Table.Itens.fields.ColetaNumber,
-        data[GText.infoDB.Table.Itens.fields.ColetaNumber]
-      );
-    } else {
-      !ItensCannotBeDeleted && setItensCannotBeDeleted(true);
-      //  console.log(data[GText.ItensNotSended]);
+  async function handleDelete(arrayItens) {
+    for (let i = 0; i < arrayItens.length; i++) {
+      if (
+        arrayItens[i][GText.ItensNotSended] === arrayItens[i][GText.ItensTotal]
+      ) {
+        await DeleteItensDB(
+          GText.infoDB.Table.Itens.fields.ColetaNumber,
+          arrayItens[i][GText.infoDB.Table.Itens.fields.ColetaNumber]
+        );
+      } else {
+        !ItensCannotBeDeleted && setItensCannotBeDeleted(true);
+      }
     }
   }
-  async function handleSendColeta(_, data, origin) {
+  async function handleSendColeta(data, origin) {
     navigation.navigate(GText.Sending, {
       data: data,
       buttonOrigin: origin,
       routeName: RouteName,
+      action: "sending",
     });
   }
-  async function handleCancelColeta(data) {
-    const GT = GText.infoDB.Table.Itens.fields;
-    await UpdateStatusItensOnDB(
-      GT.ColetaNumber,
-      data[GText.infoDB.Table.Itens.fields.ColetaNumber],
-      GText.infoInputs.SendedStatusItem,
-      GText.infoInputs.CancelStatusItem
-    );
-    const Itens = await GetItensDB(
-      GT.ColetaNumber,
-      data[GText.infoDB.Table.Itens.fields.ColetaNumber]
-    );
-    const ret = await CancelItensAPI(Itens);
-    if (ret) {
-      //   await UpdateStatusItensOnDB(GT.ColetaNumber, data, GText.infoInputs.SendedStatusItem, GText.infoInputs.CancelStatusItem)
-    } else {
-      await UpdateStatusItensOnDB(
-        GT.ColetaNumber,
-        data[GText.infoDB.Table.Itens.fields.ColetaNumber],
-        GText.infoInputs.CancelStatusItem,
-        GText.infoInputs.SendedStatusItem
-      );
-      alert(GText.failedOnCancelItens);
-    }
+
+  async function handleCancelColeta(data, origin) {
+    navigation.navigate(GText.Sending, {
+      data: data,
+      buttonOrigin: origin,
+      routeName: RouteName,
+      action: "cancel",
+    });
   }
   function getLabelModal(origin) {
     let ret = {};
