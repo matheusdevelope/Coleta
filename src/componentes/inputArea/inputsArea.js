@@ -25,7 +25,7 @@ import {
 function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
   const formRef = useRef(null);
   const DataDB = useRef(null);
-  const HigherItem = useRef(0);
+  const HigherItem = useRef(1);
   const [OnEdit, setOnEdit] = useState(false);
   const GT = GText.infoInputs;
 
@@ -127,19 +127,9 @@ function InputArea({ InsertNewItemOnList, itens, isFocused }, ref) {
     formRef.current.setFieldValue(field, data);
   }
   function SetCountItem() {
-    let newItem = "";
-    let Item = Number(formRef.current.getFieldValue(GT.fiedlsHide.Item));
-    let Higher = HigherItem.current;
-    console.log(Item, Higher);
-    if (Item < Higher) {
-      newItem = Higher;
-      formRef.current.setFieldValue(GT.fiedlsHide.Item, newItem.toString());
-      HigherItem.current = newItem;
-    } else {
-      newItem = Item + 1;
-      formRef.current.setFieldValue(GT.fiedlsHide.Item, newItem.toString());
-      HigherItem.current = newItem;
-    }
+    let newItem = !OnEdit ? HigherItem.current + 1 : HigherItem.current;
+    formRef.current.setFieldValue(GT.fiedlsHide.Item, newItem.toString());
+    HigherItem.current = newItem;
   }
   /**
    * The "LastNumberOfColeta" get and set the sequencial id to orders;
