@@ -48,7 +48,6 @@ export default ({ route }) => {
     return Net.isConnected;
   }
   async function handleInitialSyncData(origin, routes) {
-    //  console.log(origin, routes);
     await LoopRoutes(routes);
     if (await HaveConnection()) {
       if (origin !== GText.Preload) {
@@ -95,7 +94,6 @@ export default ({ route }) => {
     }
   }
   async function CallApi(RoutesGet, i) {
-    console.log(RoutesGet, i);
     const retPro = await GetOnDB(GText.infoDB.Table.Profile.name);
 
     ///Get the salesman id to send on param to the get metod api

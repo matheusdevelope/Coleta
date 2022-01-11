@@ -98,13 +98,6 @@ Itens();
  *  - Pode retornar erro (reject) caso exista erro no SQL ou nos parâmetros.
  */
 const create = (obj) => {
-  console.log(
-    CreateSQLInsert(
-      GText.infoDB.Table.Itens.name,
-      GText.infoDB.Table.Itens.fields,
-      obj
-    )
-  );
   //https://dev.to/mliakos/quick-post-about-the-sqlite-upsert-and-the-new-returning-clause-5fhl
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {

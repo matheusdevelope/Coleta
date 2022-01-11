@@ -62,9 +62,7 @@ const BoxItemColeta = ({
           }}
         >
           <Text style={{ margin: "auto", fontSize: Global.fontSize_n }}>
-            Item: {data[GText.infoInputs.nItem]} ID:{data[GText.infoInputs.nId]}{" "}
-            {data[GText.infoInputs.nStatus]} IDMobile:
-            {data[GText.infoInputs.nIdMobile]}
+            Item: {data[GText.infoInputs.nItem]}
           </Text>
           <Line>
             <Text style={{ fontWeight: "bold" }}>
