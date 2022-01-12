@@ -7,8 +7,8 @@ import React, {
 } from "react";
 import { Alert, FlatList } from "react-native";
 import Global from "../../global/global";
-import GText, { FormatErrorAPI } from "../../global/texts";
-import { UpdateItensAPI } from "../../services/Api/routesApi";
+import GText, { FormatErrorAPI, Tables } from "../../global/texts";
+import { GetAPIp, UpdateItensAPI } from "../../services/Api/routesApi";
 import {
   CreateItensDB,
   DeleteItensDB,
@@ -81,28 +81,40 @@ const ItensList = (
   async function CancelItem(data) {
     if (data[tableItem.ImportColeta] === GText.ValueImportColeta) {
       setOnLoading(true);
-      data[tableItem.Status] = GText.infoInputs.CancelStatusItem;
-
       try {
-        await UpdateItensAPI([data]);
-        try {
-          await UpdateItensDB(tableItem.id, data[tableItem.id], data);
-        } catch (e) {
-          Alert.alert(
-            GText.failedOnCancelItens,
-            JSON.stringify(FormatErrorAPI(e), null, ",")
-          );
+        const ret = await GetAPIp(Tables().Itens, `id=${data[tableItem.id]}`);
+        if (ret.data.length > 0) {
+          if (ret.data[0][tableItem.ImportColeta] === GText.ValueImportColeta) {
+            let NewData = ret.data[0];
+            //  NewData[tableItem.ImportColeta] = "Sim";
+            NewData[tableItem.Status] = GText.infoInputs.CancelStatusItem;
+            try {
+              await UpdateItensAPI([NewData]);
+              try {
+                await UpdateItensDB(tableItem.id, data[tableItem.id], NewData);
+              } catch (e) {
+                Alert.alert(GText.failedOnCancelItens, FormatErrorAPI(e));
+              }
+            } catch (e) {
+              Alert.alert(GText.failedOnCancelItens, FormatErrorAPI(e));
+            }
+          } else {
+            Alert.alert(
+              GText.failedOnCancelItens,
+              GText.messageCannotCancelItens
+            );
+          }
+        } else {
+          Alert.alert(GText.failedOnCancelItens, FormatErrorAPI(ret));
         }
       } catch (e) {
-        Alert.alert(
-          GText.failedOnCancelItens,
-          JSON.stringify(FormatErrorAPI(e), null, ",")
-        );
+        Alert.alert(GText.failedOnCancelItens, FormatErrorAPI(e));
       }
       setOnLoading(false);
       GetData();
     } else {
       Alert.alert("Atenção", GText.messageCannotCancelItens);
+      return;
     }
   }
   function VerifyAndChangeClient(list, newItem) {

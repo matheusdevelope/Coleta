@@ -74,12 +74,17 @@ const GText = {
   ButtonFinishSync: "Voltar",
   failedOnSendItens: "Falha ao enviar coleta para o retaguarda!",
   failedOnCancelItens: "Falha ao cancelar coleta no retaguarda!",
+  messageCannotCancelItens:
+    "Está coleta não pode ser cancelada pois já foi processada.",
+  messageCannotActionWithNoInternet:
+    "Você precisa estar conectado à internet para executar essa ação!",
   messageNoItensSelected: "Selecione pelo menos um item!",
   placeholderPasswordLogin: "Insira sua senha",
   placeholderEmailLogin: "Insira seu email",
   money: "R$",
   yes: "Sim",
   no: "Não",
+  atention: "Atenção",
 
   nameMenuLogoff: "Sair da Conta",
   nameMenuChangeServer: "Configurar Servidor",
@@ -598,32 +603,33 @@ export function FormatErrorAPI(error) {
         if (error.response.data.original.message) {
           error &&
             Errors.push({
-              error: JSON.stringify(error.response.data, null, ","),
-              message: error.response.data.original.message,
+              error: error.response.data,
+              message: error.response.data.original.message + " 0",
             });
         } else {
           error &&
             Errors.push({
-              error: JSON.stringify(error, null, ","),
-              message: "Error!",
+              error: error,
+              message: "Error! 1",
             });
         }
       } else {
         error &&
           Errors.push({
-            error: JSON.stringify(error, null, ","),
-            message: "Error!",
+            error: error,
+            message: "Error! 2",
           });
       }
     } else {
       error &&
         Errors.push({
-          error: JSON.stringify(error, null, ","),
-          message: "Error!",
+          //JSON.stringify(
+          error: error, ///, null, ",")
+          message: "Error! 3",
         });
     }
   }
-  return Errors;
+  return JSON.stringify(Errors, null, "\t");
 }
 
 export function CreateSQLUpdate(Nametable, fields, where, param, obj) {

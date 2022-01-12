@@ -32,7 +32,8 @@ const BoxItemColeta = ({
   }
   function OnLongPress() {
     if (RouteName === GText.SendedColetas) {
-      data[GText.infoInputs.nStatus] !== GText.infoInputs.CancelStatusItem &&
+      (data[GText.infoInputs.nStatus] !== GText.infoInputs.CancelStatusItem) &
+        (data[GText.infoInputs.nImportColeta] === GText.ValueImportColeta) &&
         setToggle(!toggle);
     } else {
       data[GText.infoInputs.nId] === "" && setToggle(!toggle);
@@ -44,7 +45,9 @@ const BoxItemColeta = ({
         display:
           HideCanceled &
           (details === undefined) &
-          (data[GText.infoInputs.nStatus] == GText.infoInputs.CancelStatusItem)
+          ((data[GText.infoInputs.nStatus] ===
+            GText.infoInputs.CancelStatusItem) |
+            (data[GText.infoInputs.nImportColeta] !== GText.ValueImportColeta))
             ? "none"
             : "flex",
       }}
@@ -62,7 +65,8 @@ const BoxItemColeta = ({
           }}
         >
           <Text style={{ margin: "auto", fontSize: Global.fontSize_n }}>
-            Item: {data[GText.infoInputs.nItem]}
+            Item: {data[GText.infoInputs.nItem]}{" "}
+            {data[GText.infoInputs.nImportColeta]}
           </Text>
           <Line>
             <Text style={{ fontWeight: "bold" }}>
